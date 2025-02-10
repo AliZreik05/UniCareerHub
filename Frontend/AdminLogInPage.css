@@ -1,0 +1,57 @@
+body{
+    padding-top: 100px;
+    justify-items: center;
+    background-color: rgb(213, 215, 215);
+}
+.js-Field-Container
+{
+    width: 250px;
+    height: 300px;
+    display: block;
+    box-shadow: 0px 0px 2px 2px rgb(42, 42, 42);
+    background-color: white;
+    align-content: center;
+}
+.admin-login-text-container
+{
+    justify-items: center;
+}
+.Username-Container
+{
+    justify-items: center;
+}
+.Password-Container
+{
+    justify-items: center;
+}
+.Login-Button-Container
+{
+    justify-items: center;
+}
+.js-Admin-Text
+{
+    display: block;
+    margin-bottom: 30px;
+    font-size: large;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.js-Password-Field
+{
+    display: block;
+    margin-bottom: 10px;
+}
+.js-Reset-Field
+{
+    display: block;
+    margin-bottom: 10px;
+}
+.js-Username-Field
+{
+    display: block;
+    margin-bottom: 10px;
+}
+.Login-Button
+{
+    display: block;
+}
+
