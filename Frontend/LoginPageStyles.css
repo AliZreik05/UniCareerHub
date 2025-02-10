@@ -17,19 +17,20 @@ h1{
    position: absolute;
    top: 20px;
    left: 0;
-   font-size: 28px;
+   font-size: 29px;
    
 }
 
 .tagline {
     text-align: center;
+    font-style: italic;
     width: 100%;
     position: absolute;
-    top: 60px; /* Positioning it below the h1 */
+    top: 60px;
     left: 0;
     font-size: 18px;
     font-weight: normal;
-    color: #555;
+    color: black;
 }
 
 .container {
@@ -43,7 +44,7 @@ h1{
 }
 
 h2 {
-    color: #d1ae89;
+    color: black;
     margin-bottom: 20px;
 }
 
