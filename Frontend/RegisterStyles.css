@@ -21,7 +21,6 @@ h1{
     
  }
  
- 
  .tagline {
      text-align: center;
      width: 100%;
@@ -31,7 +30,8 @@ h1{
      font-size: 18px;
      font-weight: normal;
      color: #555;
- }
+}
+
 .register-container {
     background-color: #ffffff;
     padding: 30px;
@@ -53,10 +53,12 @@ input[type="email"], input[type="password"] {
     border-radius: 4px;
     border: 1px solid #90caf9;
     background-color: #e3f2fd;
+    box-sizing: border-box;
 }
 
 button {
-    width: 100%;
+    width: 90%;
+    margin: 10px auto;
     padding: 10px;
     background-color: #0d47a1;
     color: white;
@@ -64,11 +66,15 @@ button {
     border-radius: 4px;
     cursor: pointer;
     font-size: 16px;
+    transition: transform 0.2s ease-in-out; 
+    display: block;
 }
 
-button:hover {
-    background-color: #1565c0;
+button:hover, button:active { 
+    transform: scale(1.1); 
+    background-color: #1565c0; 
 }
+
 
 .links {
     margin-top: 10px;
@@ -78,6 +84,10 @@ button:hover {
     color: #0d47a1;
     text-decoration: none;
     font-weight: bold;
+}
+
+.links a:hover {
+   text-decoration: underline;
 }
 
 .password-feedback, .match-feedback {
