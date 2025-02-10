@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e3f2fd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 320px;
+            text-align: center;
+        }
+        h2 {
+            color: #0d47a1;
+            margin-bottom: 20px;
+        }
+        input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #90caf9;
+            background-color: #e3f2fd;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0d47a1;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1565c0;
+        }
+        .links {
+            margin-top: 10px;
+        }
+        .links a {
+            color: #0d47a1;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .password-feedback, .match-feedback {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 5px 0;
+            display: none; /* Initially Hidden */
+        }
+    </style>
+    <script>
+        function checkPasswordStrength() {
+            var password = document.getElementById("password").value;
+            var strengthFeedback = document.getElementById("password-strength");
+
+            var strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+            var mediumPasswordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+
+            // Show feedback only when user starts typing
+            strengthFeedback.style.display = password.length > 0 ? "block" : "none";
+
+            if (strongPasswordRegex.test(password)) {
+                strengthFeedback.textContent = "✅ Strong Password";
+                strengthFeedback.style.color = "green";
+            } else if (mediumPasswordRegex.test(password)) {
+                strengthFeedback.textContent = "⚠️ Medium Strength Password";
+                strengthFeedback.style.color = "orange";
+            } else {
+                strengthFeedback.textContent = "❌ Weak Password";
+                strengthFeedback.style.color = "red";
+            }
+        }
+
+        function checkPasswordMatch() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+            var matchFeedback = document.getElementById("password-match");
+
+            // Show feedback only when user starts typing
+            matchFeedback.style.display = confirmPassword.length > 0 ? "block" : "none";
+
+            if (password === confirmPassword && password.length > 0) {
+                matchFeedback.textContent = "✅ Passwords Match";
+                matchFeedback.style.color = "green";
+            } else {
+                matchFeedback.textContent = "❌ Passwords Do Not Match";
+                matchFeedback.style.color = "red";
+            }
+        }
+
+        function validateForm(event) {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+            var strongPasswordRegex = /^(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+            if (!strongPasswordRegex.test(password)) {
+                alert("Your password is not strong enough!");
+                event.preventDefault();
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match!");
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+
+    <div class="register-container">
+        <h2>Register</h2>
+        <form action="your-backend-register-url" method="POST" onsubmit="return validateForm(event)">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" onkeyup="checkPasswordStrength()" required>
+            <p id="password-strength" class="password-feedback">❌ Weak Password</p>
+
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" onkeyup="checkPasswordMatch()" required>
+            <p id="password-match" class="match-feedback">❌ Passwords Do Not Match</p>
+
+            <button type="submit">Register</button>
+        </form>
+        <div class="links">
+            <p>Already a member? <a href="index.html">Login</a></p>
+        </div>
+    </div>
+
+</body>
+</html>
