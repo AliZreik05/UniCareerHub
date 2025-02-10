@@ -7,6 +7,7 @@ body {
     overflow-y: scroll;
     height: 100vh;
 }
+
 section {
     height: 100vh;
     display: flex;
@@ -17,6 +18,7 @@ section {
     padding: 50px;
 }
 
+/* Navbar */
 .navbar {
     background-color: #d1ae89;
     padding: 20px 20px;
@@ -49,26 +51,61 @@ section {
     font-size: 18px;
 }
 
+/* Main Section */
 .hero-text {
     font-size: 40px;
     font-weight: bold;
     margin-bottom: 20px;
 }
-.image-container {
+
+.image-main {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-top: 20px;
 }
 
-.image-container img {
+.image-main img {
     width: 40%;
     height: auto;
     border-radius: 10px;
 }
+
+
+/* About, Reviews, & Q&As  Section */
+.reviews-container, .qas-container, .about-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 80%;
+    max-width: 1200px;
+    text-align: left;
+}
+
+.reviews-text, .qas-text, .about-text {
+    flex: 1;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.image-reviews, .image-qas, .image-about {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.image-reviews img, .image-qas img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+    justify-content: right;
+}
+
 .button-container {
     margin-top: 20px;
 }
+
 .button-container button {
     background-color: #ffcc00;
     border: none;
@@ -76,6 +113,6 @@ section {
     font-size: 16px;
     font-weight: bold;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 40px;
     margin: 5px;
-}
+} 
