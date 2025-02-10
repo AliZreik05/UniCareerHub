@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
     text-align: center;
@@ -49,6 +51,10 @@ section {
     text-decoration: none;
     color: black;
     font-size: 18px;
+}
+
+.nav-links a:hover {
+    text-decoration:underline;
 }
 
 /* Main Section */
@@ -116,3 +122,8 @@ section {
     border-radius: 40px;
     margin: 5px;
 } 
+
+.button-container button:hover {
+    transform: scale(1.1);
+    color: rgb(224, 43, 43);
+}
