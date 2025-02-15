@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/LoginPageStyles.css">
+    <title>Login</title>
+</head>
+<body>
+    <h1 class ="Name-Of-Company">UniCareerHub</h1>
+    <h2 class ="tagline">Connecting Students for Career Success</h2>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <button type="submit">Login</button> 
+        </form>
+
+        <div class="links">
+            <p><a href="ForgetPassword.html">Forgot Password?</a></p>
+            <p>Not a member? <a href="register.html">Register</a></p>
+        </div>
+    </div>
+</body>
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try
+    {
+        await fetch("http://localhost:3500/login", 
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user: email, password })
+        });
+        window.location.href = "/";
+    } 
+    catch (error) 
+    {
+        console.error("Error:", error);
+    }
+});
+</script>
+</html>

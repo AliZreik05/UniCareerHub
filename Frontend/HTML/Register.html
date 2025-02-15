@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/RegisterStyles.css">
+    <title>Register Page</title>
+</head>
+<body>
+    <h1 class ="Name-Of-Company">UniCareerHub</h1>
+    <h2 class ="tagline">Connecting Students for Career Success</h2>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" required>
+
+            <button type="submit">Register</button>
+        </form>
+        <div class="links">
+            <p>Already a member? <a href="LoginPage.html">Login</a></p>
+        </div>
+    </div>
+</body>
+<script>
+    document.getElementById("registerForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    try
+    {
+        await fetch("http://localhost:3500/register", 
+        {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user: email, password })
+        });
+        window.location.href = "/login";
+    } 
+    catch (error) 
+    {
+        console.error("Error:", error);
+    }
+});
+</script>
+</html>
