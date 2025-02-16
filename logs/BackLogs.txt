@@ -990,3 +990,13 @@
 20250215	22:48:35	da8f757f-55e8-4c3c-8f69-36a3db977e2f	GET	undefined	/Pics/pic3.png
 20250215	22:48:35	1feb5903-a3ee-4425-a1f2-2b1e1f1ee29e	GET	undefined	/Pics/pic4.jpg
 20250215	22:48:35	2bac787f-cac3-445f-a282-5e3dbbcb67b2	GET	undefined	/Pics/pic5.jpg
+20250216	13:54:10	950eeb43-6ede-4f79-8442-d6f0ba233289	GET	undefined	/
+20250216	13:54:10	3fe4a540-bc06-445c-995e-2aa92224dedf	GET	undefined	/css/LandingPageStyles.css
+20250216	13:54:10	05e872f3-4f19-4835-a893-c65761ea1c76	GET	undefined	/Pics/pic1.jpg
+20250216	13:54:10	d09d3fc3-1aed-434b-a80a-4b50784ebdcc	GET	undefined	/Pics/pic2.jpg
+20250216	13:54:10	cf3754e1-0450-47d6-bb07-f92e475657dd	GET	undefined	/Pics/pic3.png
+20250216	13:54:10	8e5b5cae-b65e-41b0-ac36-2d24fc14d207	GET	undefined	/Pics/pic4.jpg
+20250216	13:54:10	73fc2e6e-f84f-4928-913e-0055c3809497	GET	undefined	/Pics/pic5.jpg
+20250216	13:54:10	29ffa78a-8469-4db1-979a-590a34ca0e78	GET	undefined	/favicon.ico
+20250216	13:54:15	39e2ec2e-1b5e-4025-a1ff-ef7978bcaf37	GET	undefined	/login
+20250216	13:54:15	1daffa51-1c9a-404c-aa0f-1d2b4fe2a9df	GET	undefined	/css/LoginPageStyles.css
