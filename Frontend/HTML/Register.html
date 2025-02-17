@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/RegisterStyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Register Page</title>
 </head>
 <body>
     <h1 class ="Name-Of-Company">UniCareerHub</h1>
     <h2 class ="tagline">Connecting Students for Career Success</h2>
-    <div class="register-container">
-        <h2>Register</h2>
-        <form id="registerForm">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Re-enter your password" required>
-
-            <button type="submit">Register</button>
+    <div class="container">
+        <form id="loginForm">
+            <h2>Register</h2>
+            <div class="input-box">
+                <input type="email" id="email" placeholder="Email" required>
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" placeholder="Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="input-box">
+                <input type="password" id="password" placeholder="Confirm Password" required>
+                <i class="fas fa-lock"></i>
+            </div>
+            <button type="submit">Register</button> 
         </form>
-        <div class="links">
-            <p>Already a member? <a href="LoginPage.html">Login</a></p>
-        </div>
-    </div>
 </body>
 <script>
     document.getElementById("registerForm").addEventListener("submit", async (event) => {

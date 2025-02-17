@@ -1007,3 +1007,12 @@
 20250215	22:53:15	a3ece259-7a4a-48cd-bcf7-f4a90b7a5f22	GET	undefined	/css/style.css
 20250215	22:53:23	baa6f2df-a572-4126-9231-35a9701f1860	GET	undefined	/ReviewsSection.html
 20250215	22:53:23	415a8ad7-52cc-4541-9917-6fc977800b74	GET	undefined	/css/style.css
+20250217	18:48:54	7fffd6a3-eb33-4628-9861-6add2a0c0ec2	GET	undefined	/login
+20250217	18:48:54	a2f5b9d6-0bb3-4be7-a5bc-d5149a07a3b1	GET	undefined	/css/LoginPageStyles.css
+20250217	18:49:00	5d708334-b26a-4838-9cd6-e0253a05a779	GET	undefined	/favicon.ico
+20250217	18:49:11	6aaf040e-0c65-48cf-a426-d7887cd1e8c7	GET	undefined	/ForgetPassword.html
+20250217	18:49:11	9fc6ad7f-11d6-4fcb-ac76-23605f13e418	GET	undefined	/css/style.css
+20250217	18:49:17	6079965b-80cd-4421-a72b-67050e04429f	GET	undefined	/ForgetPassword
+20250217	18:49:17	08eea065-acf1-4fd0-9283-daa35b63ca0f	GET	undefined	/css/style.css
+20250217	18:49:20	53d20b68-902e-482d-848c-dabbf52367fd	GET	undefined	/ForgetPassword
+20250217	18:49:20	bd081f98-169d-477f-84d9-6f562856651a	GET	undefined	/css/style.css
