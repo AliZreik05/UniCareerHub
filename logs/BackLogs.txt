@@ -1016,3 +1016,6 @@
 20250217	18:49:17	08eea065-acf1-4fd0-9283-daa35b63ca0f	GET	undefined	/css/style.css
 20250217	18:49:20	53d20b68-902e-482d-848c-dabbf52367fd	GET	undefined	/ForgetPassword
 20250217	18:49:20	bd081f98-169d-477f-84d9-6f562856651a	GET	undefined	/css/style.css
+20250218	07:42:13	46bf152a-258a-4e8c-8a8f-dd0b5c1c4972	GET	undefined	/login
+20250218	07:42:14	d8bd45a6-915c-4bc5-b245-25d9c44cfe81	GET	undefined	/css/LoginPageStyles.css
+20250218	07:42:14	df0dfd4a-acdb-4bbf-a223-2a6e02f40ab8	GET	undefined	/favicon.ico
