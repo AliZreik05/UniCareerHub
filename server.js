@@ -8,6 +8,7 @@ const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
+const sendVerificationEmail = require('./middleware/verifyByMail');
 const PORT = process.env.PORT || 3500;
 
 //middleware for cookies
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // built-in middleware for json 
 app.use(express.json());
+
 
 //serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));

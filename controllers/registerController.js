@@ -6,7 +6,14 @@ const usersDB =
 const fsPromises = require('fs').promises;
 const path = require('path');
 const bcrypt = require('bcrypt');
-
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const sendVerificationEmail = require('../middleware/verifyByMail');
+function generateCode() 
+{
+    return crypto.randomBytes(3).toString('hex');
+}
 const handleNewUser = async (req, res) => 
     {
     const { user, password } = req.body;
@@ -17,10 +24,13 @@ const handleNewUser = async (req, res) =>
     const duplicate = usersDB.users.find(person => person.username === user); // check for duplicate usernames in the db
     if (duplicate) 
     {
-        return res.sendStatus(409);                     //Conflict 
+
+        return res.redirect('/register?error=' + encodeURIComponent('Email already in use.'));                     //Conflict 
     }
     try 
     {
+        const generatedCode = generateCode();
+        await sendVerificationEmail(user,generatedCode);
         const hashedPassword = await bcrypt.hash(password, 10);   //encrypt the password
         const newUser =                                 //store the new user
         {
@@ -30,14 +40,17 @@ const handleNewUser = async (req, res) =>
             {
                 "User": 2001
             },
+            "verified": false,
+            "verificationCode":generatedCode,
+            "verificationExpirationPeriod":Date.now() + 15 * 60 * 1000 
         };
         usersDB.setUsers([...usersDB.users, newUser]);
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'model', 'users.json'),
             JSON.stringify(usersDB.users)
         );
-        console.log(usersDB.users);
-        res.status(201).json({ 'success': `New user ${user} created!` });
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        res.redirect(`/verify?token=${encodeURIComponent(token)}`);
     } 
     catch (error) 
     {

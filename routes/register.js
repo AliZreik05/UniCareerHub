@@ -9,4 +9,5 @@ router.get('/', (req, res) => {
 
 router.post('/', registerController.handleNewUser);
 
+
 module.exports = router;
