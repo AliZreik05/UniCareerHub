@@ -30,9 +30,13 @@
   }
   const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
-    if (error) 
-    {
-      document.getElementById('error').textContent = error;
-    }
+    if (error === 'Expired') 
+  {
+    document.getElementById('error').innerHTML = 'Your verification code has expired. <a href="/verify/resend?token=' + encodeURIComponent(token) + '">Request a new code</a>.';
+  }
+  else
+  {
+    document.getElementById('error').textContent = error;
+  }
 </script>
 </html>
