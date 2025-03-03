@@ -10,8 +10,4 @@ router.get('/',(req,res)=>
 
 router.post('/',verifyContoller.handleVerification);
 
-router.get('/resend', verifyContoller.handleResend);
-
-
-
 module.exports = router;

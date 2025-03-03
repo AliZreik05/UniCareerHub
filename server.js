@@ -8,7 +8,6 @@ const errorHandler = require('./middleware/errorHandler');
 const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
-const sendVerificationEmail = require('./middleware/verifyByMail');
 const PORT = process.env.PORT || 3500;
 
 //middleware for cookies
@@ -38,8 +37,9 @@ app.use('/', express.static(path.join(__dirname, '/public')));
 app.use('/', require('./routes/root'));
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
-app.use('/reset',require('./routes/reset'))
-app.use('/verify',require('./routes/verify'))
+app.use('/reset',require('./routes/reset'));
+app.use('/resetPassword/verify',require('./routes/resetVerification'));
+app.use('/verify',require('./routes/verify'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
