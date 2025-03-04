@@ -33,7 +33,11 @@
 <script>
     const params = new URLSearchParams(window.location.search);
     const error = params.get('error');
-    if (error) 
+    if (error === 'Passwords do not match') 
+    {
+      document.getElementById('error').innerHTML = 'Password and confirm password do not match';
+    }
+    else
     {
       document.getElementById('error').textContent = error;
     }

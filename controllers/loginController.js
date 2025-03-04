@@ -14,17 +14,23 @@ const handleLogin = async (req, res) =>
     const { user, password } = req.body;
     if (!user || !password) 
     {
-        return res.status(400).json({ 'message': 'Username and password are required.' });
+        return res.redirect('/login?error=' + encodeURIComponent('Invalid email or password.')); 
     }
     const foundUser = usersDB.users.find(person => person.username === user);
     if (!foundUser) 
     {
-        return res.sendStatus(401); //Unauthorized 
+        return res.redirect('/login?error=' + encodeURIComponent('User not found')); 
     }
+    
     const match = await bcrypt.compare(password, foundUser.password); // evaluate password 
     if (match) 
     {
-        console.log('there is a match');
+        const userIndex = usersDB.users.findIndex(person => person.username === user);
+        const isVerified = usersDB.users.at(userIndex).verified;
+        if(!isVerified)
+        {
+            return res.redirect('/login?error=' + encodeURIComponent('User email not verified')); 
+        }
         const roles = Object.values(foundUser.roles); // create JWTs
         const accessToken = jwt.sign(
             {
@@ -48,7 +54,6 @@ const handleLogin = async (req, res) =>
                 expiresIn: '1d' 
             }
         );
-        // Saving refreshToken with current user
         const otherUsers = usersDB.users.filter(person => person.username !== foundUser.username);
         const currentUser = { ...foundUser, refreshToken };
         usersDB.setUsers([...otherUsers, currentUser]);
@@ -58,11 +63,11 @@ const handleLogin = async (req, res) =>
         );
         //secure: true          USE THIS WHEN WE GO LIVE(WHEN WE BECOME HTTPS)
         res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000, path:'/'});
-        res.json({ accessToken });
+        res.redirect('/');
     } 
     else 
     {
-        res.sendStatus(401);
+        return res.redirect('/login?error=' + encodeURIComponent('Incorrect password')); 
     }
 }
 

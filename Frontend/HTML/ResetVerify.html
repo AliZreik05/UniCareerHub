@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="css/VerifyCodeStyles.css">
+  <link rel="stylesheet" href="/css/ResetVerificationStyle.css">
   <title>Verify Code</title>
 </head>
 <body>
   <h1 class="Name-Of-Company">UniCareerHub</h1>
   <h2 class="tagline">Connecting Students for Career Success</h2>
   <div class="container">
-    <form id="loginForm" action="/verify" method="POST">
+    <form id="loginForm" action="/resetPassword/verify" method="POST">
       <h2>Enter the code sent to your email</h2>
       <input type="hidden" id="token" name="token">
       <div class="error" id="error"></div>
@@ -32,11 +32,12 @@
     const error = params.get('error');
     if (error === 'Expired') 
   {
-    document.getElementById('error').innerHTML = 'Your verification code has expired. <a href="/verify/resend?token=' + encodeURIComponent(token) + '">Request a new code</a>.';
+    document.getElementById('error').innerHTML = 'Your verification code has expired. <a href="/resetPassword/verify?token=' + encodeURIComponent(token) + '">Request a new code</a>.';
   }
   else
   {
     document.getElementById('error').textContent = error;
   }
+  
 </script>
 </html>

@@ -16,10 +16,14 @@ function generateCode()
 }
 const handleNewUser = async (req, res) => 
     {
-    const { user, password } = req.body;
-    if (!user || !password) 
+    const {user,password,confirmPassword} = req.body;
+    if (!user || !password || !confirmPassword) 
         {
             return res.status(400).json({ 'message': 'Username and password are required.' });
+        }
+        if(password !== confirmPassword)
+        {
+            return res.redirect('/register?error='+encodeURIComponent('Passwords do not match.'))
         }
     const duplicate = usersDB.users.find(person => person.username === user); // check for duplicate usernames in the db
     if (duplicate) 
@@ -42,7 +46,7 @@ const handleNewUser = async (req, res) =>
             },
             "verified": false,
             "verificationCode":generatedCode,
-            "verificationExpirationPeriod":Date.now() + 15 * 60 * 1000 
+            "verificationExpirationPeriod":Date.now() + 0.5 * 60 * 1000 
         };
         usersDB.setUsers([...usersDB.users, newUser]);
         await fsPromises.writeFile(
