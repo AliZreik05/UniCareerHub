@@ -7,9 +7,12 @@
     <title>Document</title>
 </head>
 <body>
+    <div class="navbar">
+        <div class="logo">UniCareerHub</div>
+        <div class="nameOfSection">Questions & Answers</div>   
+    </div>
     <section id="qa-section">
         <div class="container">
-            <h2>Questions & Answers</h2>
             <div class="ask-question">
                 <h3>Ask a Question</h3>
                 <form id="question-form">
@@ -28,13 +31,12 @@
             </div>
     
             <div class="questions-list" id="questions-list">
-                <!-- Questions will appear here -->
+                
             </div>
         </div>
     </section>
     
     <script>
-        // Handle question submission
         document.getElementById('question-form').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -61,7 +63,6 @@
                     <div class="replies-list"></div>
                 `;
 
-                // Add functionality to reply button
                 const replyBtn = newQuestion.querySelector('.reply-btn');
                 const repliesDiv = newQuestion.querySelector('.replies');
                 const submitReplyBtn = newQuestion.querySelector('.submit-reply');
