@@ -17,6 +17,7 @@ function generateCode()
 const handleNewUser = async (req, res) => 
     {
     const {user,password,confirmPassword} = req.body;
+    
     if (!user || !password || !confirmPassword) 
         {
             return res.status(400).json({ 'message': 'Username and password are required.' });

@@ -3,9 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Q&As</title>
+    <link rel="stylesheet" href="css/Q&AStyles.css">
+    <title>Document</title>
 </head>
 <body>
+    <section id="qa-section">
+        <div class="container">
+            <h2>Questions & Answers</h2>
+            <div class="ask-question">
+                <h3>Ask a Question</h3>
+                <form id="question-form">
+                    <div class="form-group">
+                        <label for="question-title">Title of Your Question</label>
+                        <input type="text" id="question-title" name="title" placeholder="Enter a descriptive question title" required>
+                    </div>
     
+                    <div class="form-group">
+                        <label for="question-body">Details</label>
+                        <textarea id="question-body" name="body" placeholder="Provide details about your question" required></textarea>
+                    </div>
+    
+                    <button type="submit" class="submit-btn">Post Question</button>
+                </form>
+            </div>
+    
+            <div class="questions-list" id="questions-list">
+                <!-- Questions will appear here -->
+            </div>
+        </div>
+    </section>
+    
+    <script>
+        // Handle question submission
+        document.getElementById('question-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const title = document.getElementById('question-title').value;
+            const body = document.getElementById('question-body').value;
+
+            if (title && body) {
+                const newQuestion = document.createElement('div');
+                newQuestion.classList.add('question');
+                
+                newQuestion.innerHTML = `
+                    <div class="question-header">
+                        <h4>${title}</h4>
+                        <p class="question-meta"><strong>Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                    </div>
+                    <div class="question-body">
+                        <p>${body}</p>
+                    </div>
+                    <button class="reply-btn">Reply</button>
+                    <div class="replies" style="display:none;">
+                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+                        <button class="submit-reply">Post Reply</button>
+                    </div>
+                    <div class="replies-list"></div>
+                `;
+
+                // Add functionality to reply button
+                const replyBtn = newQuestion.querySelector('.reply-btn');
+                const repliesDiv = newQuestion.querySelector('.replies');
+                const submitReplyBtn = newQuestion.querySelector('.submit-reply');
+                const repliesList = newQuestion.querySelector('.replies-list');
+
+                replyBtn.addEventListener('click', function() {
+                    repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
+                });
+
+                submitReplyBtn.addEventListener('click', function() {
+                    const replyBody = newQuestion.querySelector('.reply-body').value;
+                    if (replyBody) {
+                        const newReply = document.createElement('div');
+                        newReply.classList.add('reply');
+                        newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
+                        repliesList.appendChild(newReply);
+                        newQuestion.querySelector('.reply-body').value = ''; // Clear the reply input
+                    }
+                });
+
+                document.getElementById('questions-list').prepend(newQuestion);
+                document.getElementById('question-title').value = '';
+                document.getElementById('question-body').value = '';
+            }
+        });
+    </script>
 </body>
 </html>
