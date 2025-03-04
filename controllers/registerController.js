@@ -14,6 +14,23 @@ function generateCode()
 {
     return crypto.randomBytes(3).toString('hex');
 }
+function isStrongPassword(password) 
+{
+    const minLength = 8;
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasDigit = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return 
+    (
+        password.length >= minLength &&
+        hasLowerCase &&
+        hasUpperCase &&
+        hasDigit &&
+        hasSpecialChar
+    );
+}
 const handleNewUser = async (req, res) => 
     {
     const {user,password,confirmPassword} = req.body;
@@ -22,9 +39,17 @@ const handleNewUser = async (req, res) =>
         {
             return res.status(400).json({ 'message': 'Username and password are required.' });
         }
+        if(!user.includes("@mail.aub.edu"))
+        {
+            return res.redirect('/register?error='+encodeURIComponent('The email you used is not an AUB email. Please use an AUB email.'))
+        }
         if(password !== confirmPassword)
         {
             return res.redirect('/register?error='+encodeURIComponent('Passwords do not match.'))
+        }
+        if (!isStrongPassword(password)) 
+        {
+            return res.redirect('/register?error='+encodeURIComponent('Password is not strong enough. Your password has to be atleast 8 characters long and has atleast one upper case, one lower case, one digit (0-9) and one special character (!@#$%^&*(),.?":{}|<>)'));
         }
     const duplicate = usersDB.users.find(person => person.username === user); // check for duplicate usernames in the db
     if (duplicate) 

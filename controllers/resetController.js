@@ -14,6 +14,24 @@ function generateCode()
     return crypto.randomBytes(3).toString('hex');
 }
 
+function isStrongPassword(password) 
+{
+    const minLength = 8;
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasDigit = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return 
+    (
+        password.length >= minLength &&
+        hasLowerCase &&
+        hasUpperCase &&
+        hasDigit &&
+        hasSpecialChar
+    );
+}
+
 const handleReset= async(req,res) =>
 {
     const {user,password,confirmPassword} = req.body;
@@ -26,6 +44,10 @@ const handleReset= async(req,res) =>
     {
         return res.redirect('/reset?error='+encodeURIComponent('Password and confirm do not match'));
     }
+    if (!isStrongPassword(password)) 
+        {
+            return res.redirect('/reset?error='+encodeURIComponent('Password is not strong enough. Your password has to be atleast 8 characters long and has atleast one upper case, one lower case, one digit (0-9) and one special character (!@#$%^&*(),.?":{}|<>)'));
+        }
         const generatedCode = generateCode();
         const expiration = Date.now() + 10 * 60 * 1000;
         userFound.resetVerificationCode = generatedCode;
