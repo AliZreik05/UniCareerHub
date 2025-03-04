@@ -4,74 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/Q&AStyles.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Questions & Answers</title>
 </head>
 <body>
     <div class="navbar">
         <div class="logo">UniCareerHub</div>
-        <div class="nameOfSection">Questions & Answers</div>   
+        <div class="nav-title">Questions & Answers</div>
     </div>
+
+    <div class="intro-text">
+        Got a question? Don't hesitate to ask!<br>
+        Engage with students and professionals
+        to get the answers you need.
+    </div>
+
     <section id="qa-section">
         <div class="container">
-            <div class="ask-question">
-                <h3>Ask a Question</h3>
-                <form id="question-form">
-                    <div class="form-group">
-                        <label for="question-title">Title of Your Question</label>
-                        <input type="text" id="question-title" name="title" placeholder="Enter a descriptive question title" required>
-                    </div>
-    
-                    <div class="form-group">
-                        <label for="question-body">Details</label>
-                        <textarea id="question-body" name="body" placeholder="Provide details about your question" required></textarea>
-                    </div>
-    
-                    <button type="submit" class="submit-btn">Post Question</button>
-                </form>
-            </div>
-    
-            <div class="questions-list" id="questions-list">
-                
-            </div>
+            <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Ask a Question</button>
+            <div class="questions-list" id="questions-list"></div>
         </div>
     </section>
     
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3><i class="fas fa-pen-nib"></i> Ask a Question</h3>
+            <form id="question-form" class="ask-question">
+                <div class="form-group">
+                    <label for="question-title">Title of Your Question</label>
+                    <input type="text" id="question-title" name="title" placeholder="Enter a descriptive question title" required>
+                </div>
+                <div class="form-group">
+                    <label for="question-body">Details</label>
+                    <textarea id="question-body" name="body" placeholder="Provide details about your question" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Post Question</button>
+            </form>
+        </div>
+    </div>
+    
     <script>
+        document.getElementById('open-modal').addEventListener('click', function() {
+            document.getElementById('review-modal').style.display = 'block';
+        });
+        
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.getElementById('review-modal').style.display = 'none';
+        });
+        
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('review-modal')) {
+                document.getElementById('review-modal').style.display = 'none';
+            }
+        };
+        
         document.getElementById('question-form').addEventListener('submit', function(event) {
             event.preventDefault();
-
             const title = document.getElementById('question-title').value;
             const body = document.getElementById('question-body').value;
-
             if (title && body) {
                 const newQuestion = document.createElement('div');
                 newQuestion.classList.add('question');
-                
                 newQuestion.innerHTML = `
                     <div class="question-header">
                         <h4>${title}</h4>
-                        <p class="question-meta"><strong>Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                        <p class="question-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
                     </div>
                     <div class="question-body">
                         <p>${body}</p>
                     </div>
-                    <button class="reply-btn">Reply</button>
+                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
                     <div class="replies" style="display:none;">
                         <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
                         <button class="submit-reply">Post Reply</button>
                     </div>
                     <div class="replies-list"></div>
                 `;
-
                 const replyBtn = newQuestion.querySelector('.reply-btn');
                 const repliesDiv = newQuestion.querySelector('.replies');
                 const submitReplyBtn = newQuestion.querySelector('.submit-reply');
                 const repliesList = newQuestion.querySelector('.replies-list');
-
                 replyBtn.addEventListener('click', function() {
                     repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
                 });
-
                 submitReplyBtn.addEventListener('click', function() {
                     const replyBody = newQuestion.querySelector('.reply-body').value;
                     if (replyBody) {
@@ -79,13 +95,13 @@
                         newReply.classList.add('reply');
                         newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
                         repliesList.appendChild(newReply);
-                        newQuestion.querySelector('.reply-body').value = ''; // Clear the reply input
+                        newQuestion.querySelector('.reply-body').value = '';
                     }
                 });
-
                 document.getElementById('questions-list').prepend(newQuestion);
                 document.getElementById('question-title').value = '';
                 document.getElementById('question-body').value = '';
+                document.getElementById('review-modal').style.display = 'none';
             }
         });
     </script>
