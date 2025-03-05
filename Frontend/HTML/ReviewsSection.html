@@ -44,17 +44,14 @@
     </div>
     
     <script>
-        // Open the modal when the submit button is clicked
         document.getElementById('open-modal').addEventListener('click', function() {
             document.getElementById('review-modal').style.display = 'block';
         });
         
-        // Close the modal when the close button is clicked
         document.querySelector('.close-btn').addEventListener('click', function() {
             document.getElementById('review-modal').style.display = 'none';
         });
         
-        // Close the modal if user clicks outside it
         window.onclick = function(event) {
             if (event.target === document.getElementById('review-modal')) {
                 document.getElementById('review-modal').style.display = 'none';
@@ -63,14 +60,14 @@
 
         async function loadLatestReviews() {
             try {
-                const response = await fetch('/reviews/latest');  // Make sure this endpoint returns the latest 10 reviews in JSON format
+                const response = await fetch('/reviews/latest');
                 if (!response.ok) {
                     console.error('Failed to load reviews');
                     return;
                 }
                 const latestReviews = await response.json();
                 const reviewsList = document.getElementById('reviews-list');
-                reviewsList.innerHTML = "";  // Clear any existing reviews
+                reviewsList.innerHTML = "";
                 latestReviews.forEach(review => {
                     const reviewElem = document.createElement('div');
                     reviewElem.classList.add('review');
@@ -90,7 +87,6 @@
             }
         }
 
-        // Handle the review form submission
         document.getElementById('review-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const title = document.getElementById('review-title').value;
@@ -102,7 +98,6 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        // Pass the keys matching your backend: user, title, and review
                         body: JSON.stringify({ user: "DefaultUser", title: title, review: body })
                     });
                     if (!response.ok) {
@@ -110,7 +105,6 @@
                         return;
                     }
                     const result = await response.json();
-                    // Create a new review element with consistent naming
                     const newReview = document.createElement('div');
                     newReview.classList.add('review');
                     newReview.innerHTML = `
@@ -121,32 +115,8 @@
                     <div class="review-body">
                         <p>${body}</p>
                     </div>
-                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
-                    <div class="replies" style="display:none;">
-                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-                        <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
-                    </div>
-                    <div class="replies-list"></div>
                     `;
-                    const replyBtn = newReview.querySelector('.reply-btn');
-                    const repliesDiv = newReview.querySelector('.replies');
-                    const submitReplyBtn = newReview.querySelector('.submit-reply');
-                    const repliesList = newReview.querySelector('.replies-list');
-                    replyBtn.addEventListener('click', function() {
-                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
-                    });
-                    submitReplyBtn.addEventListener('click', function() {
-                        const replyBody = newReview.querySelector('.reply-body').value;
-                        if (replyBody) {
-                            const newReply = document.createElement('div');
-                            newReply.classList.add('reply');
-                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
-                            repliesList.appendChild(newReply);
-                            newReview.querySelector('.reply-body').value = '';
-                        }
-                    });
                     document.getElementById('reviews-list').prepend(newReview);
-                    // Clear form fields and hide modal
                     document.getElementById('review-title').value = '';
                     document.getElementById('review-body').value = '';
                     document.getElementById('review-modal').style.display = 'none';
