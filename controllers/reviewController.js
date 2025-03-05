@@ -1,7 +1,7 @@
 const fsPromises = require('fs').promises;
 const path = require('path');
-const crypto = require('crypto');
-const { format } = require('date-fns');
+const { format, parse } = require('date-fns');
+const dateFormat = "dd/MM/yyyy hh:mm a";
 const reviewsDB = 
 {
     reviews: require('../model/reviews.json'),
@@ -58,4 +58,36 @@ const postReview = async (req,res)=>
     return res.status(200).json({ message: 'Review posted successfully' });
 }
 }
-module.exports = {postReview};
+const getLatestReviews = async(req,res)=>
+{
+    try
+    {
+        const data = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'reviews.json'), 'utf8');
+        const reviewsDB = JSON.parse(data);
+        const listOfReviews = [];
+        reviewsDB.forEach(userObj => 
+        {
+            userObj.reviews.forEach
+            (
+                q=> 
+                {
+                    listOfReviews.push({ ...q, username: userObj.username });
+                }
+            );
+        });
+        listOfReviews.sort((a, b) => 
+            {
+            const dateA = parse(a.time, dateFormat, new Date());
+            const dateB = parse(b.time, dateFormat, new Date());
+            return dateB - dateA;
+            });
+          const latest10 = listOfReviews.slice(0, 10);
+          res.status(200).json(latest10);
+    }
+    catch (error) 
+    {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+}
+module.exports = {postReview,getLatestReviews};

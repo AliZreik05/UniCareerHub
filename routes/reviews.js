@@ -7,6 +7,7 @@ router.get('/',(req,res)=>
 {
     res.sendFile(path.join(__dirname,'..','Frontend','HTML','ReviewsSection.html'));
 })
+router.get('/latest',reviewsController.getLatestReviews)
 
 router.post('/',reviewsController.postReview);
 module.exports = router;

@@ -7,6 +7,7 @@ router.get('/',(req,res)=>
 {
     res.sendFile(path.join(__dirname,'..','Frontend','HTML','Q&ASection.html'));
 })
+router.get('/latest', qnaController.getLatestQuestions);
 
 router.post('/',qnaController.postQuestion);
 module.exports = router;

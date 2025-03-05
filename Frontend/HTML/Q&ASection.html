@@ -59,6 +59,35 @@
             }
         };
         
+        async function loadLatestQuestions() {
+            try {
+                const response = await fetch('/Q&A/latest');  // Make sure this endpoint returns the latest 10 questions in JSON format
+                if (!response.ok) {
+                    console.error('Failed to load questions');
+                    return;
+                }
+                const latestQuestions = await response.json();
+                const questionsList = document.getElementById('questions-list');
+                questionsList.innerHTML = "";  // Clear any existing questions
+                latestQuestions.forEach(q => {
+                    const questionElem = document.createElement('div');
+                    questionElem.classList.add('question');
+                    questionElem.innerHTML = `
+                    <div class="question-header">
+                        <h4>${q.title}</h4>
+                        <p class="question-meta"><i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}</p>
+                    </div>
+                    <div class="question-body">
+                        <p>${q.question}</p>
+                    </div>
+                    `;
+                    questionsList.appendChild(questionElem);
+                });
+            } catch (error) {
+                console.error('Error loading latest questions:', error);
+            }
+        }
+
         document.getElementById('question-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const title = document.getElementById('question-title').value;
@@ -123,6 +152,8 @@
                 }
             }
         });
+        document.addEventListener('DOMContentLoaded', loadLatestQuestions);
+
     </script>
 </body>
 </html>

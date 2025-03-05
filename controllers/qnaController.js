@@ -1,6 +1,7 @@
 const fsPromises = require('fs').promises;
 const path = require('path');
-const { format } = require('date-fns');
+const { format, parse } = require('date-fns');
+const dateFormat = "dd/MM/yyyy hh:mm a";
 const questionsDB = 
 {
     questions: require('../model/questions.json'),
@@ -39,6 +40,37 @@ const postQuestion = async (req,res)=>
         JSON.stringify(questionsDB.questions)
     );
     return res.status(200).json({ message: 'Question posted successfully' });
-
 }
-module.exports = {postQuestion};
+const getLatestQuestions = async(req,res)=>
+{
+    try
+    {
+        const data = await fsPromises.readFile(path.join(__dirname, '..', 'model', 'questions.json'), 'utf8');
+        const questionsDB = JSON.parse(data);
+        const listOfQuestions = [];
+        questionsDB.forEach(userObj => 
+        {
+            userObj.questions.forEach
+            (
+                q=> 
+                {
+                    listOfQuestions.push({ ...q, username: userObj.username });
+                }
+            );
+        });
+        listOfQuestions.sort((a, b) => 
+            {
+            const dateA = parse(a.time, dateFormat, new Date());
+            const dateB = parse(b.time, dateFormat, new Date());
+            return dateB - dateA;
+            });
+          const latest10 = listOfQuestions.slice(0, 10);
+          res.status(200).json(latest10);
+    }
+    catch (error) 
+    {
+        console.error(error);
+        res.status(500).send("Server error");
+    }
+}
+module.exports = {postQuestion,getLatestQuestions};

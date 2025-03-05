@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- You can either use your ReviewsStyles.css or reuse Q&AStyles.css for identical structure -->
-    <link rel="stylesheet" href="css/Q&AStyles.css">
+    <link rel="stylesheet" href="css/ReviewsStyles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Reviews</title>
 </head>
@@ -61,7 +61,36 @@
                 document.getElementById('review-modal').style.display = 'none';
             }
         };
-        
+
+        async function loadLatestReviews() {
+            try {
+                const response = await fetch('/reviews/latest');  // Make sure this endpoint returns the latest 10 reviews in JSON format
+                if (!response.ok) {
+                    console.error('Failed to load reviews');
+                    return;
+                }
+                const latestReviews = await response.json();
+                const reviewsList = document.getElementById('reviews-list');
+                reviewsList.innerHTML = "";  // Clear any existing reviews
+                latestReviews.forEach(review => {
+                    const reviewElem = document.createElement('div');
+                    reviewElem.classList.add('review');
+                    reviewElem.innerHTML = `
+                    <div class="review-header">
+                        <h4>${review.title}</h4>
+                        <p class="review-meta"><i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}</p>
+                    </div>
+                    <div class="review-body">
+                        <p>${review.review}</p>
+                    </div>
+                    `;
+                    reviewsList.appendChild(reviewElem);
+                });
+            } catch (error) {
+                console.error('Error loading latest reviews:', error);
+            }
+        }
+
         // Handle the review form submission
         document.getElementById('review-form').addEventListener('submit', async function(event) {
             event.preventDefault();
@@ -82,15 +111,15 @@
                         return;
                     }
                     const result = await response.json();
-                    // Create a new review element replicating the Q&A structure
+                    // Create a new review element with consistent naming
                     const newReview = document.createElement('div');
-                    newReview.classList.add('question');  // using same class as Q&A for structure
+                    newReview.classList.add('review');
                     newReview.innerHTML = `
-                    <div class="question-header">
+                    <div class="review-header">
                         <h4>${title}</h4>
-                        <p class="question-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                        <p class="review-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
                     </div>
-                    <div class="question-body">
+                    <div class="review-body">
                         <p>${body}</p>
                     </div>
                     <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
@@ -100,7 +129,6 @@
                     </div>
                     <div class="replies-list"></div>
                     `;
-                    // Set up reply functionality (if desired)
                     const replyBtn = newReview.querySelector('.reply-btn');
                     const repliesDiv = newReview.querySelector('.replies');
                     const submitReplyBtn = newReview.querySelector('.submit-reply');
@@ -129,6 +157,8 @@
                 }
             }
         });
+        
+        document.addEventListener('DOMContentLoaded', loadLatestReviews);
     </script>
 </body>
 </html>
