@@ -1,7 +1,7 @@
 const fsPromises = require('fs').promises;
 const path = require('path');
 const { format, parse } = require('date-fns');
-const dateFormat = "dd/MM/yyyy hh:mm a";
+const dateFormat = "dd/MM/yyyy hh:mm:ss a";
 const crypto = require('crypto');
 const reviewsDB = 
 {
@@ -12,7 +12,7 @@ const reviewsDB =
 const postReview = async (req,res)=>
 {
     const postId = crypto.randomUUID();
-    const dateTime = format(new Date(), "dd/MM/yyyy hh:mm a");
+    const dateTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
     const {operation,ID,user,company,review} = req.body;            //,category
     if(operation === 'remove')
     {

@@ -1,7 +1,7 @@
 const fsPromises = require('fs').promises;
 const path = require('path');
 const { format, parse } = require('date-fns');
-const dateFormat = "dd/MM/yyyy hh:mm a";
+const dateFormat = "dd/MM/yyyy hh:mm:ss a";
 const crypto = require('crypto');
 
 const questionsDB = 
@@ -13,7 +13,7 @@ const questionsDB =
 const postQuestion = async (req,res)=>
 {
     const postId = crypto.randomUUID();
-    const dateTime = format(new Date(), "dd/MM/yyyy hh:mm a");
+    const dateTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
     const {user,title,question} = req.body;            //,category
     const existingUser = questionsDB.questions.find(person => person.username===user);
     if(!existingUser)
