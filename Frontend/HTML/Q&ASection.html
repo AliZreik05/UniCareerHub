@@ -61,14 +61,14 @@
         
         async function loadLatestQuestions() {
             try {
-                const response = await fetch('/Q&A/latest');  // Make sure this endpoint returns the latest 10 questions in JSON format
+                const response = await fetch('/Q&A/latest');
                 if (!response.ok) {
                     console.error('Failed to load questions');
                     return;
                 }
                 const latestQuestions = await response.json();
                 const questionsList = document.getElementById('questions-list');
-                questionsList.innerHTML = "";  // Clear any existing questions
+                questionsList.innerHTML = "";
                 latestQuestions.forEach(q => {
                     const questionElem = document.createElement('div');
                     questionElem.classList.add('question');
@@ -80,14 +80,41 @@
                     <div class="question-body">
                         <p>${q.question}</p>
                     </div>
+                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
+                    <div class="replies" style="display:none;">
+                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+                        <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
+                    </div>
+                    <div class="replies-list"></div>
                     `;
+                    
+                    const replyBtn = questionElem.querySelector('.reply-btn');
+                    const repliesDiv = questionElem.querySelector('.replies');
+                    const submitReplyBtn = questionElem.querySelector('.submit-reply');
+                    const repliesList = questionElem.querySelector('.replies-list');
+                    
+                    replyBtn.addEventListener('click', function() {
+                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
+                    });
+                    
+                    submitReplyBtn.addEventListener('click', function() {
+                        const replyBody = questionElem.querySelector('.reply-body').value;
+                        if (replyBody) {
+                            const newReply = document.createElement('div');
+                            newReply.classList.add('reply');
+                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
+                            repliesList.appendChild(newReply);
+                            questionElem.querySelector('.reply-body').value = '';
+                        }
+                    });
+                    
                     questionsList.appendChild(questionElem);
                 });
             } catch (error) {
                 console.error('Error loading latest questions:', error);
             }
         }
-
+        
         document.getElementById('question-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const title = document.getElementById('question-title').value;
@@ -96,43 +123,24 @@
                 try {
                     const response = await fetch('/Q&A', {
                         method: 'POST',
-                        headers: 
-                        {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ user: "DefaultUser", title: title, question: body })
                     });
-                    if (!response.ok) 
-                    {
+                    if (!response.ok) {
                         alert('Error posting question.');
                         return;
                     }
-                    const result = await response.json();
-                    const newQuestion = document.createElement('div');
-                    newQuestion.classList.add('question');
-                    newQuestion.innerHTML = `
-                    <div class="question-header">
-                        <h4>${title}</h4>
-                        <p class="question-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
-                    </div>
-                    <div class="question-body">
-                        <p>${body}</p>
-                    </div>
-                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
-                    <div class="replies" style="display:none;">
-                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-                    </div>
-                    `
-                    document.getElementById('questions-list').prepend(newQuestion);
                     document.getElementById('question-title').value = '';
                     document.getElementById('question-body').value = '';
                     document.getElementById('review-modal').style.display = 'none';
+                    loadLatestQuestions();
                 } catch (error) {
                     console.error('Error posting question:', error);
                     alert('Error posting question.');
                 }
             }
         });
+        
         document.addEventListener('DOMContentLoaded', loadLatestQuestions);
 
     </script>
