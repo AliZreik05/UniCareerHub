@@ -2,6 +2,7 @@ const fsPromises = require('fs').promises;
 const path = require('path');
 const { format, parse } = require('date-fns');
 const dateFormat = "dd/MM/yyyy hh:mm a";
+const crypto = require('crypto');
 const reviewsDB = 
 {
     reviews: require('../model/reviews.json'),
@@ -10,14 +11,15 @@ const reviewsDB =
 
 const postReview = async (req,res)=>
 {
+    const postId = crypto.randomUUID();
     const dateTime = format(new Date(), "dd/MM/yyyy hh:mm a");
-    const {operation,user,company,review} = req.body;            //,category
+    const {operation,ID,user,company,review} = req.body;            //,category
     if(operation === 'remove')
     {
         const existingUser = reviewsDB.reviews.find(person => person.username === user);
         if (existingUser) 
         {
-            existingUser.reviews = existingUser.reviews.filter(r => !(r["company-name"] === company && r.review === review));
+            existingUser.reviews = existingUser.reviews.filter(r => !(r.ID =ID));
             reviewsDB.setReviews(reviewsDB.reviews.filter(person => person.username !== user || person.reviews.length > 0))
           
         await fsPromises.writeFile(
@@ -37,6 +39,7 @@ const postReview = async (req,res)=>
             "reviews": 
             [
                 {
+            "ID": ID,
             "company-name": company,
             "review": review,
             //"category": category,
@@ -48,7 +51,7 @@ const postReview = async (req,res)=>
     }
     else
     {
-        existingUser.reviews.push({ "company-name": company, "review": review, "time": dateTime })
+        existingUser.reviews.push({"ID":ID, "company-name": company, "review": review, "time": dateTime })
     }
     await fsPromises.writeFile
     (

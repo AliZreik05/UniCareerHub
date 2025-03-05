@@ -2,6 +2,8 @@ const fsPromises = require('fs').promises;
 const path = require('path');
 const { format, parse } = require('date-fns');
 const dateFormat = "dd/MM/yyyy hh:mm a";
+const crypto = require('crypto');
+
 const questionsDB = 
 {
     questions: require('../model/questions.json'),
@@ -10,6 +12,7 @@ const questionsDB =
 
 const postQuestion = async (req,res)=>
 {
+    const postId = crypto.randomUUID();
     const dateTime = format(new Date(), "dd/MM/yyyy hh:mm a");
     const {user,title,question} = req.body;            //,category
     const existingUser = questionsDB.questions.find(person => person.username===user);
@@ -21,6 +24,7 @@ const postQuestion = async (req,res)=>
             "questions": 
             [
                 {
+            "ID" : postId,
             "title": title,
             "question": question,
             //"category": category,
@@ -32,7 +36,7 @@ const postQuestion = async (req,res)=>
     }
     else
     {
-        existingUser.questions.push({ "title":title,"question":question, "time": dateTime })
+        existingUser.questions.push({ "ID" : postId,"title":title,"question":question, "time": dateTime })
     }
     await fsPromises.writeFile
     (
@@ -72,5 +76,12 @@ const getLatestQuestions = async(req,res)=>
         console.error(error);
         res.status(500).send("Server error");
     }
+}
+
+const handleReply = (req,res) =>
+{
+    const {user,reply} = req.body;
+    const existingUser = questionsDB.questions.find(person => person.username===user);
+
 }
 module.exports = {postQuestion,getLatestQuestions};
