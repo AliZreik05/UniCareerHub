@@ -78,10 +78,42 @@ const getLatestQuestions = async(req,res)=>
     }
 }
 
-const handleReply = (req,res) =>
+const handleReply = async(req,res) =>
 {
-    const {user,reply} = req.body;
-    const existingUser = questionsDB.questions.find(person => person.username===user);
-
+    const {user,ID,reply} = req.body;
+    const replyTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
+    questionsDB.questions.forEach(userObj => 
+        {
+            userObj.questions.forEach
+            (
+                q=> 
+                {
+                    if (q.ID === ID)
+                    {
+                        if (!q.replies || !Array.isArray(q.replies)) 
+                        {
+                            q.replies = [];
+                        }
+                        q.replies.push(
+                            {
+                                user: user, reply: reply,time: replyTime,
+                            }
+                        )
+                    }
+                }
+            );
+        });
+        try 
+        {
+            await fsPromises.writeFile(
+              path.join(__dirname, '..', 'model', 'questions.json'),
+              JSON.stringify(questionsDB.questions, null, 2)
+            );
+            return res.status(200).json({ message: 'Reply posted successfully' });
+          } catch (error) 
+          {
+            console.error("Error writing to file:", error);
+            return res.status(500).json({ message: 'Server error' });
+          }
 }
-module.exports = {postQuestion,getLatestQuestions};
+module.exports = {postQuestion,getLatestQuestions,handleReply};
