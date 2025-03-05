@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
+/* Global Styles */
 body {
     font-family: 'Poppins', sans-serif;
     margin: 0;
@@ -19,6 +20,53 @@ section {
     padding: 50px;
 }
 
+/* Container & Review Form */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+/* Dynamic review card layout */
+.review-card {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 1rem;
+    margin: 1rem 0;
+    background-color: #f5f5f5; /* light grey */
+}
+
+/* Row styling for review form */
+.user-row,
+.company-row,
+.review-row,
+.actions-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.user-row img.profile-img {
+    width: 40px;
+    height: 40px;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+}
+
+/* Label spacing */
+.user-row label,
+.company-row label,
+.review-row label {
+    margin-right: 0.5rem;
+    font-weight: bold;
+}
+
+/* Review textarea sizing */
+textarea.review-textarea {
+    width: 100%;
+    height: 80px;
+    resize: vertical;
+}
 
 /* Navbar */
 .navbar {
@@ -32,7 +80,7 @@ section {
     top: 0;
     left: 0;
     z-index: 1000;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
 
 .logo {
@@ -42,7 +90,7 @@ section {
 
 .nav-links {
     display: flex;
-    gap: 50px; 
+    gap: 50px;
     margin-left: auto;
     white-space: nowrap;
 }
@@ -54,7 +102,7 @@ section {
 }
 
 .nav-links a:hover {
-    text-decoration:underline;
+    text-decoration: underline;
 }
 
 /* Main Section */
@@ -77,9 +125,10 @@ section {
     border-radius: 10px;
 }
 
-
-/* About, Reviews, & Q&As  Section */
-.reviews-container, .qas-container, .about-container {
+/* About, Reviews, & Q&As Sections */
+.reviews-container,
+.qas-container,
+.about-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -88,26 +137,31 @@ section {
     text-align: left;
 }
 
-.reviews-text, .qas-text, .about-text {
+.reviews-text,
+.qas-text,
+.about-text {
     flex: 1;
     font-weight: bold;
     font-size: 24px;
 }
 
-.image-reviews, .image-qas, .image-about {
+.image-reviews,
+.image-qas,
+.image-about {
     flex: 1;
     display: flex;
     justify-content: center;
 }
 
-.image-reviews img, .image-qas img {
+.image-reviews img,
+.image-qas img {
     width: 100%;
     max-width: 400px;
     height: auto;
     border-radius: 10px;
-    justify-content: right;
 }
 
+/* Button Container */
 .button-container {
     margin-top: 60px;
 }
@@ -121,22 +175,25 @@ section {
     cursor: pointer;
     border-radius: 40px;
     margin: 5px;
-} 
+}
 
 .button-container button:hover {
     transform: scale(1.1);
     color: rgb(224, 43, 43);
 }
 
-main{
+/* Main element and Reviews section */
+main {
     margin-top: 20px;
     padding: 20px;
 }
-.reviews{
+
+.reviews {
     display: flex;
     flex-direction: column;
 }
 
+/* Add Review Button */
 #addReview {
     background-color: black;
     color: white;
@@ -155,32 +212,30 @@ main{
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
-/* Hover Effect */
 #addReview:hover {
     background-color: #ffcc00; /* Yellow on hover */
     color: black;
     transform: scale(1.1); /* Slight zoom effect */
 }
 
-/* Click Effect */
 #addReview:active {
     transform: scale(1.05);
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+/* Dynamic Inner Review Card Elements */
 .inner-child-div {
     display: flex;
     flex-direction: column;
     background-color: #d1ae89;
-    color: black; 
-    border: 5px solid #334155; 
+    color: black;
+    border: 5px solid #334155;
     border-radius: 3px;
     font-weight: bold;
     padding: 15px;
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin: 20px 0;
 }
 
 /* User Profile & Name Input */
@@ -198,7 +253,7 @@ main{
     border: 2px solid #ddd;
 }
 
-/* Middle Section (Company Input) */
+/* Company Input Section */
 .inner-inner-child-div-2 {
     display: flex;
     align-items: center;
@@ -219,25 +274,21 @@ main{
     outline: none;
 }
 
-/* Text Area (Review Box) */
+/* Review Text Area inside Dynamic Card */
 .inner-child-div textarea {
-    display: block; /* Ensures proper alignment */
-    width: 100%; /* Takes full width of the parent */
+    display: block;
+    width: 100%;
     height: 120px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
     outline: none;
-    resize: none; /* Prevents manual resizing */
+    resize: none;
     background: #fff;
-    box-sizing: border-box; /* Ensures padding doesn’t cause overflow */
-    margin-top: 10px; /* Creates spacing from the elements above */
-
-    margin-right: 10px;
-    margin-left: 10px;
+    box-sizing: border-box;
+    margin: 10px;
 }
-
 
 /* Improve Inputs Inside Review Box */
 .inner-child-div input {
@@ -250,12 +301,11 @@ main{
     background: #fafafa;
 }
 
-
-
-/* General Button Styling */
+/* Merged Button Styling (for .buttons-design) */
 .buttons-design {
     margin-top: 15px;
-    background: linear-gradient(135deg, #3b82f6, #1e40af); /* Smooth blue gradient */
+    margin-right: 0.5rem;
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
     color: white;
     font-size: 16px;
     font-weight: bold;
@@ -267,20 +317,18 @@ main{
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Hover Effect */
 .buttons-design:hover {
     background: linear-gradient(135deg, #2563eb, #1e3a8a);
     transform: scale(1.05);
 }
 
-/* Click Effect */
 .buttons-design:active {
     transform: scale(0.98);
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-
-.div_current{
+/* Additional Utility Classes */
+.div_current {
     display: flex;
     justify-content: center;
     gap: 30px;

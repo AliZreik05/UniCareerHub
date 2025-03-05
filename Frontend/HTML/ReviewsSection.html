@@ -3,185 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/ReviewsStyles.css" rel="stylesheet" type="text/css">
-
-    <script src = "scripts/Reviews-1.js" type = "text/javascript"></script>
-
-    <title>Document</title>
+    <!-- You can either use your ReviewsStyles.css or reuse Q&AStyles.css for identical structure -->
+    <link rel="stylesheet" href="css/Q&AStyles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Reviews</title>
 </head>
 <body>
-
-   
     <div class="navbar">
         <div class="logo">UniCareerHub</div>
-        <div class="nav-links">
-            <a href="LandingPage.html">Main</a>
-            <a href="#about">About</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#qas">Q&As</a>   
-        </div>    
+        <div class="nav-title">Reviews</div>
     </div>
-  
-<main>
-<br> <br>
-<h1 style="text-align: center;"> Reviews section</h1>
 
-    <button id="addReview">
-    Add A Review
-    </button>     
-    <div class = "reviews">
+    <div class="intro-text">
+        Have a review? Share your experience!<br>
+        Connect with fellow students and professionals.
     </div>
-       
-</main>
 
+    <section id="qa-section">
+        <div class="container">
+            <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Submit a Review</button>
+            <div class="questions-list" id="reviews-list"></div>
+        </div>
+    </section>
     
+    <div id="review-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3><i class="fas fa-pen-nib"></i> Submit a Review</h3>
+            <form id="review-form" class="ask-question">
+                <div class="form-group">
+                    <label for="review-title">Title of Your Review</label>
+                    <input type="text" id="review-title" name="title" placeholder="Enter a descriptive review title" required>
+                </div>
+                <div class="form-group">
+                    <label for="review-body">Details</label>
+                    <textarea id="review-body" name="body" placeholder="Provide details about your review" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Post Review</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Open the modal when the submit button is clicked
+        document.getElementById('open-modal').addEventListener('click', function() {
+            document.getElementById('review-modal').style.display = 'block';
+        });
+        
+        // Close the modal when the close button is clicked
+        document.querySelector('.close-btn').addEventListener('click', function() {
+            document.getElementById('review-modal').style.display = 'none';
+        });
+        
+        // Close the modal if user clicks outside it
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('review-modal')) {
+                document.getElementById('review-modal').style.display = 'none';
+            }
+        };
+        
+        // Handle the review form submission
+        document.getElementById('review-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const title = document.getElementById('review-title').value;
+            const body = document.getElementById('review-body').value;
+            if (title && body) {
+                try {
+                    const response = await fetch('/reviews', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        // Pass the keys matching your backend: user, title, and review
+                        body: JSON.stringify({ user: "DefaultUser", title: title, review: body })
+                    });
+                    if (!response.ok) {
+                        alert('Error posting review.');
+                        return;
+                    }
+                    const result = await response.json();
+                    // Create a new review element replicating the Q&A structure
+                    const newReview = document.createElement('div');
+                    newReview.classList.add('question');  // using same class as Q&A for structure
+                    newReview.innerHTML = `
+                    <div class="question-header">
+                        <h4>${title}</h4>
+                        <p class="question-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
+                    </div>
+                    <div class="question-body">
+                        <p>${body}</p>
+                    </div>
+                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
+                    <div class="replies" style="display:none;">
+                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+                        <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
+                    </div>
+                    <div class="replies-list"></div>
+                    `;
+                    // Set up reply functionality (if desired)
+                    const replyBtn = newReview.querySelector('.reply-btn');
+                    const repliesDiv = newReview.querySelector('.replies');
+                    const submitReplyBtn = newReview.querySelector('.submit-reply');
+                    const repliesList = newReview.querySelector('.replies-list');
+                    replyBtn.addEventListener('click', function() {
+                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
+                    });
+                    submitReplyBtn.addEventListener('click', function() {
+                        const replyBody = newReview.querySelector('.reply-body').value;
+                        if (replyBody) {
+                            const newReply = document.createElement('div');
+                            newReply.classList.add('reply');
+                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
+                            repliesList.appendChild(newReply);
+                            newReview.querySelector('.reply-body').value = '';
+                        }
+                    });
+                    document.getElementById('reviews-list').prepend(newReview);
+                    // Clear form fields and hide modal
+                    document.getElementById('review-title').value = '';
+                    document.getElementById('review-body').value = '';
+                    document.getElementById('review-modal').style.display = 'none';
+                } catch (error) {
+                    console.error('Error posting review:', error);
+                    alert('Error posting review.');
+                }
+            }
+        });
+    </script>
 </body>
-<script>
-    function $(id){
-    return document.getElementById(id);
-}
-
-function class_elem(class_name){
-    return document.getElementsByClassName(class_name)[0];
-}
-
-window.onload = function (){
-  $("addReview").onclick = addComment;
-};
-
-function removeElement(element){
-    element.parentNode.removeChild(element);
-}
-
-function addComment(){
-   var parent_div = class_elem("reviews"); 
-
-   var link = document.createElement("a");
-
-   var child_div = document.createElement("div");
-   child_div.className = "inner-child-div";
-
-   var child_child_div_1 = document.createElement("div");
-   child_child_div_1.className = "inner-inner-child-div-1";
-
-   var img1 = document.createElement("img");
-   img1.src = "images/blank-profile-picture.png";
-   
-
-   child_child_div_1.appendChild(img1);
-
-   child_child_div_1.appendChild(document.createTextNode("User: "));
-   var text_box_1 = document.createElement("input");
-   child_child_div_1.appendChild(text_box_1); 
-
-   child_div.appendChild(child_child_div_1);
-  
-   var child_child_div_2 = document.createElement("div"); // Fixed
-
-   var text_box_2 = document.createElement("textArea"); // Fixed
-  
-   child_child_div_2.appendChild(text_box_2);
-
-   
-  
-   var child_child_div_1_1 =
-   document.createElement("div");
-    
-   child_child_div_1_1.className = "inner-inner-child-div-2";
-
-   var text_box_1_1 = document.createElement("input");
-
-   child_child_div_1_1.appendChild(document.createTextNode("Company Name: "));
-
-   child_child_div_1_1.appendChild(text_box_1_1);
-
-
-
-   child_div.appendChild(child_child_div_1_1);
-
-   child_div.appendChild(child_child_div_2);
-    
-   
-   
-
-
-   var child_child_div_3 = document.createElement("div");
-
-   child_child_div_3.className = "inner-inner-child-div-2";
-  
-   var submitBtn = 
-   document.createElement("button");
-
-   submitBtn.innerText = "Submit";
-   submitBtn.className = "buttons-design";
-
-   submitBtn.onclick = function(){Submit(child_div);};
-   
-   child_child_div_3.appendChild(submitBtn);
-
-   child_div.append(child_child_div_3);
-
-   link.appendChild(child_div);
-   
-   
-   
-   parent_div.appendChild(link);
-
-   
-
-}
-
-function Submit(c){
-    var parent_div = class_elem("reviews");
-    
-    
-
-    var child_divs = c.children;
-
-    for(var i = 0; i < child_divs.length; i++){
-        var currentDiv = child_divs[i];
-        
-        var currentInput = currentDiv.getElementsByTagName("input")[0];
-        var btn = currentDiv.getElementsByTagName("button")[0];
-        var currentTextBox = currentDiv.getElementsByTagName("textArea")[0];
-          
-        if(currentInput)
-        currentInput.readOnly = true;
-          
-        if(currentTextBox)
-        currentTextBox.readOnly = true;
-         
-        if(btn){
-        current_div = btn.parentNode;
-        current_div.className = "div_current";
-        removeElement(btn);
-        var comment_btn = document.createElement("button");
-        comment_btn.innerText = "Comments";
-        comment_btn.className = "buttons-design";
-        comment_btn.onclick = function(){
-            Comment_current;
-        }
-        
-        current_div.appendChild(comment_btn);
-
-        var delete_btn = document.createElement("button");
-        delete_btn.innerText = "Delete";
-        delete_btn.className = "buttons-design";
-        delete_btn.onclick = function(){
-            removeElement(current_div.parentNode.parentNode);
-        }
-
-        current_div.appendChild(delete_btn);
-        }
-    }
-
-
-    
-}
-
-
-function Comment_current(){
-
-}
-</script>
 </html>

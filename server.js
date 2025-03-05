@@ -44,7 +44,7 @@ app.use('/refresh', require('./routes/refresh'));
 app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
 app.use('/reviews',require('./routes/reviews'));
-app.use('/Q&A',require('./routes/QnA'));
+app.use('/Q&A',require('./routes/question'));
 
 //app.use(verifyJWT);
 

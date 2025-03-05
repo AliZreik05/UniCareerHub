@@ -59,14 +59,29 @@
             }
         };
         
-        document.getElementById('question-form').addEventListener('submit', function(event) {
+        document.getElementById('question-form').addEventListener('submit', async function(event) {
             event.preventDefault();
             const title = document.getElementById('question-title').value;
             const body = document.getElementById('question-body').value;
             if (title && body) {
-                const newQuestion = document.createElement('div');
-                newQuestion.classList.add('question');
-                newQuestion.innerHTML = `
+                try {
+                    const response = await fetch('/Q&A', {
+                        method: 'POST',
+                        headers: 
+                        {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ user: "DefaultUser", title: title, question: body })
+                    });
+                    if (!response.ok) 
+                    {
+                        alert('Error posting question.');
+                        return;
+                    }
+                    const result = await response.json();
+                    const newQuestion = document.createElement('div');
+                    newQuestion.classList.add('question');
+                    newQuestion.innerHTML = `
                     <div class="question-header">
                         <h4>${title}</h4>
                         <p class="question-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
@@ -80,28 +95,32 @@
                         <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
                     </div>
                     <div class="replies-list"></div>
-                `;
-                const replyBtn = newQuestion.querySelector('.reply-btn');
-                const repliesDiv = newQuestion.querySelector('.replies');
-                const submitReplyBtn = newQuestion.querySelector('.submit-reply');
-                const repliesList = newQuestion.querySelector('.replies-list');
-                replyBtn.addEventListener('click', function() {
-                    repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
-                });
-                submitReplyBtn.addEventListener('click', function() {
-                    const replyBody = newQuestion.querySelector('.reply-body').value;
-                    if (replyBody) {
-                        const newReply = document.createElement('div');
-                        newReply.classList.add('reply');
-                        newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
-                        repliesList.appendChild(newReply);
-                        newQuestion.querySelector('.reply-body').value = '';
-                    }
-                });
-                document.getElementById('questions-list').prepend(newQuestion);
-                document.getElementById('question-title').value = '';
-                document.getElementById('question-body').value = '';
-                document.getElementById('review-modal').style.display = 'none';
+                    `;
+                    const replyBtn = newQuestion.querySelector('.reply-btn');
+                    const repliesDiv = newQuestion.querySelector('.replies');
+                    const submitReplyBtn = newQuestion.querySelector('.submit-reply');
+                    const repliesList = newQuestion.querySelector('.replies-list');
+                    replyBtn.addEventListener('click', function() {
+                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
+                    });
+                    submitReplyBtn.addEventListener('click', function() {
+                        const replyBody = newQuestion.querySelector('.reply-body').value;
+                        if (replyBody) {
+                            const newReply = document.createElement('div');
+                            newReply.classList.add('reply');
+                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
+                            repliesList.appendChild(newReply);
+                            newQuestion.querySelector('.reply-body').value = '';
+                        }
+                    });
+                    document.getElementById('questions-list').prepend(newQuestion);
+                    document.getElementById('question-title').value = '';
+                    document.getElementById('question-body').value = '';
+                    document.getElementById('review-modal').style.display = 'none';
+                } catch (error) {
+                    console.error('Error posting question:', error);
+                    alert('Error posting question.');
+                }
             }
         });
     </script>
