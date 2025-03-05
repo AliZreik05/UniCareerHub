@@ -53,10 +53,12 @@ h1{
     text-align: center;
     letter-spacing: 1px;
 }
+
 .error
 {
     color:red;
 }
+
 .input-box{
     position: relative;
     width: 100%;

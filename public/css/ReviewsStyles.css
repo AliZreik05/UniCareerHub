@@ -1,4 +1,6 @@
 /* Global Reset */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,7 +8,7 @@
 }
 
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Poppins', sans-serif;
     background-color: #f4f7fc;
     color: #333;
     line-height: 1.6;   
@@ -27,6 +29,16 @@ body {
     font-weight: bold;
     font-size: 24px;
     box-sizing: border-box;
+}
+
+.logo a {
+    color: black;
+    text-decoration: none;
+    font-weight: bold; 
+}
+
+.logo a:hover {
+    text-decoration: underline;
 }
 
 /* Section and Container */
