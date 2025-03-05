@@ -121,27 +121,8 @@
                     <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
                     <div class="replies" style="display:none;">
                         <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-                        <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
                     </div>
-                    <div class="replies-list"></div>
-                    `;
-                    const replyBtn = newQuestion.querySelector('.reply-btn');
-                    const repliesDiv = newQuestion.querySelector('.replies');
-                    const submitReplyBtn = newQuestion.querySelector('.submit-reply');
-                    const repliesList = newQuestion.querySelector('.replies-list');
-                    replyBtn.addEventListener('click', function() {
-                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
-                    });
-                    submitReplyBtn.addEventListener('click', function() {
-                        const replyBody = newQuestion.querySelector('.reply-body').value;
-                        if (replyBody) {
-                            const newReply = document.createElement('div');
-                            newReply.classList.add('reply');
-                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
-                            repliesList.appendChild(newReply);
-                            newQuestion.querySelector('.reply-body').value = '';
-                        }
-                    });
+                    `
                     document.getElementById('questions-list').prepend(newQuestion);
                     document.getElementById('question-title').value = '';
                     document.getElementById('question-body').value = '';
