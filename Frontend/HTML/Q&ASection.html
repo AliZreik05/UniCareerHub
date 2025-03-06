@@ -1,148 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/Q&AStyles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="css/Q&AStyles.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <title>Questions & Answers</title>
-</head>
-<body>
+  </head>
+  <body>
     <div class="navbar">
-        <div class="logo"><a href="/">UniCareerHub</a></div>
-        <div class="nav-title">Questions & Answers</div>
+      <div class="logo"><a href="/">UniCareerHub</a></div>
+      <div class="nav-title">Questions & Answers</div>
     </div>
 
     <div class="intro-text">
-        Got a question? Don't hesitate to ask!<br>
-        Engage with students and professionals
-        to get the answers you need.
+      Got a question? Don't hesitate to ask!<br />
+      Engage with students and professionals to get the answers you need.
     </div>
 
     <section id="qa-section">
-        <div class="container">
-            <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Ask a Question</button>
-            <div class="questions-list" id="questions-list"></div>
-        </div>
+      <div class="container">
+        <button id="open-modal" class="submit-btn">
+          <i class="fas fa-plus"></i> Ask a Question
+        </button>
+        <div class="questions-list" id="questions-list"></div>
+      </div>
     </section>
-    
-    <div id="review-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3><i class="fas fa-pen-nib"></i> Ask a Question</h3>
-            <form id="question-form" class="ask-question">
-                <div class="form-group">
-                    <label for="question-title">Title of Your Question</label>
-                    <input type="text" id="question-title" name="title" placeholder="Enter a descriptive question title" required>
-                </div>
-                <div class="form-group">
-                    <label for="question-body">Details</label>
-                    <textarea id="question-body" name="body" placeholder="Provide details about your question" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Post Question</button>
-            </form>
-        </div>
-    </div>
-    
-    <script>
-        document.getElementById('open-modal').addEventListener('click', function() {
-            document.getElementById('review-modal').style.display = 'block';
-        });
-        
-        document.querySelector('.close-btn').addEventListener('click', function() {
-            document.getElementById('review-modal').style.display = 'none';
-        });
-        
-        window.onclick = function(event) {
-            if (event.target === document.getElementById('review-modal')) {
-                document.getElementById('review-modal').style.display = 'none';
-            }
-        };
-        
-        async function loadLatestQuestions() {
-            try {
-                const response = await fetch('/Q&A/latest');
-                if (!response.ok) {
-                    console.error('Failed to load questions');
-                    return;
-                }
-                const latestQuestions = await response.json();
-                const questionsList = document.getElementById('questions-list');
-                questionsList.innerHTML = "";
-                latestQuestions.forEach(q => {
-                    const questionElem = document.createElement('div');
-                    questionElem.classList.add('question');
-                    questionElem.innerHTML = `
-                    <div class="question-header">
-                        <h4>${q.title}</h4>
-                        <p class="question-meta"><i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}</p>
-                    </div>
-                    <div class="question-body">
-                        <p>${q.question}</p>
-                    </div>
-                    <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
-                    <div class="replies" style="display:none;">
-                        <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-                        <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
-                    </div>
-                    <div class="replies-list"></div>
-                    `;
-                    
-                    const replyBtn = questionElem.querySelector('.reply-btn');
-                    const repliesDiv = questionElem.querySelector('.replies');
-                    const submitReplyBtn = questionElem.querySelector('.submit-reply');
-                    const repliesList = questionElem.querySelector('.replies-list');
-                    
-                    replyBtn.addEventListener('click', function() {
-                        repliesDiv.style.display = repliesDiv.style.display === 'none' ? 'block' : 'none';
-                    });
-                    
-                    submitReplyBtn.addEventListener('click', function() {
-                        const replyBody = questionElem.querySelector('.reply-body').value;
-                        if (replyBody) {
-                            const newReply = document.createElement('div');
-                            newReply.classList.add('reply');
-                            newReply.innerHTML = `<p><strong>You</strong>: ${replyBody}</p>`;
-                            repliesList.appendChild(newReply);
-                            questionElem.querySelector('.reply-body').value = '';
-                        }
-                    });
-                    
-                    questionsList.appendChild(questionElem);
-                });
-            } catch (error) {
-                console.error('Error loading latest questions:', error);
-            }
-        }
-        
-        document.getElementById('question-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const title = document.getElementById('question-title').value;
-            const body = document.getElementById('question-body').value;
-            if (title && body) {
-                try {
-                    const response = await fetch('/Q&A', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ user: "DefaultUser", title: title, question: body })
-                    });
-                    if (!response.ok) {
-                        alert('Error posting question.');
-                        return;
-                    }
-                    document.getElementById('question-title').value = '';
-                    document.getElementById('question-body').value = '';
-                    document.getElementById('review-modal').style.display = 'none';
-                    loadLatestQuestions();
-                } catch (error) {
-                    console.error('Error posting question:', error);
-                    alert('Error posting question.');
-                }
-            }
-        });
-        
-        document.addEventListener('DOMContentLoaded', loadLatestQuestions);
 
+    <div id="review-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h3><i class="fas fa-pen-nib"></i> Ask a Question</h3>
+        <form id="question-form" class="ask-question">
+          <div class="form-group">
+            <label for="question-title">Title of Your Question</label>
+            <input
+              type="text"
+              id="question-title"
+              name="title"
+              placeholder="Enter a descriptive question title"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="question-body">Details</label>
+            <textarea
+              id="question-body"
+              name="body"
+              placeholder="Provide details about your question"
+              required
+            ></textarea>
+          </div>
+          <button type="submit" class="submit-btn">
+            <i class="fas fa-paper-plane"></i> Post Question
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("open-modal").addEventListener("click", function () {
+        document.getElementById("review-modal").style.display = "block";
+      });
+      document.querySelector(".close-btn").addEventListener("click", function () {
+        document.getElementById("review-modal").style.display = "none";
+      });
+      window.onclick = function (event) {
+        if (event.target === document.getElementById("review-modal")) {
+          document.getElementById("review-modal").style.display = "none";
+        }
+      };
+
+      async function loadLatestQuestions() {
+        try {
+          const response = await fetch("/Q&A/latest");
+          if (!response.ok) {
+            console.error("Failed to load questions");
+            return;
+          }
+          const latestQuestions = await response.json();
+          const questionsList = document.getElementById("questions-list");
+          questionsList.innerHTML = "";
+          latestQuestions.forEach((q) => {
+            const questionElem = document.createElement("div");
+            questionElem.classList.add("question");
+            questionElem.innerHTML = `
+              <div class="question-header">
+                <h4>${q.title}</h4>
+                <p class="question-meta">
+                  <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
+                </p>
+              </div>
+              <div class="question-body">
+                <p>${q.question}</p>
+              </div>
+              <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
+              <div class="replies" style="display:none;">
+                <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+                <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
+              </div>
+              <div class="replies-list"></div>
+            `;
+            const replyBtn = questionElem.querySelector(".reply-btn");
+            const repliesDiv = questionElem.querySelector(".replies");
+            const submitReplyBtn = questionElem.querySelector(".submit-reply");
+            const repliesList = questionElem.querySelector(".replies-list");
+
+            replyBtn.addEventListener("click", function () {
+              repliesDiv.style.display = repliesDiv.style.display === "none" ? "block" : "none";
+            });
+
+            if (q.replies && Array.isArray(q.replies)) {
+              q.replies.forEach((reply) => {
+                const replyDiv = document.createElement("div");
+                replyDiv.classList.add("reply");
+                replyDiv.innerHTML = `<p><strong>${reply.user}</strong>: ${reply.reply}</p>`;
+                repliesList.appendChild(replyDiv);
+              });
+            }
+
+            submitReplyBtn.addEventListener("click", async function (event) {
+              event.preventDefault();
+              const replyText = questionElem.querySelector(".reply-body").value;
+              if (replyText) {
+                try {
+                  const replyResponse = await fetch("/Q&A/reply", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      user: "DefaultUser",
+                      reply: replyText,
+                      ID: q.ID,
+                    }),
+                  });
+                  if (!replyResponse.ok) {
+                    alert("Error posting reply.");
+                    return;
+                  }
+                  const newReply = document.createElement("div");
+                  newReply.classList.add("reply");
+                  newReply.innerHTML = `<p><strong>You</strong>: ${replyText}</p>`;
+                  repliesList.appendChild(newReply);
+                  questionElem.querySelector(".reply-body").value = "";
+                } catch (error) {
+                  console.error("Error posting reply:", error);
+                  alert("Error posting reply.");
+                }
+              }
+            });
+            questionsList.appendChild(questionElem);
+          });
+        } catch (error) {
+          console.error("Error loading latest questions:", error);
+        }
+      }
+
+      document.getElementById("question-form").addEventListener("submit", async function (event) {
+        event.preventDefault();
+        const title = document.getElementById("question-title").value;
+        const body = document.getElementById("question-body").value;
+        if (title && body) {
+          try {
+            const response = await fetch("/Q&A", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ user: "DefaultUser", title: title, question: body }),
+            });
+            if (!response.ok) {
+              alert("Error posting question.");
+              return;
+            }
+            document.getElementById("question-title").value = "";
+            document.getElementById("question-body").value = "";
+            document.getElementById("review-modal").style.display = "none";
+            loadLatestQuestions();
+          } catch (error) {
+            console.error("Error posting question:", error);
+            alert("Error posting question.");
+          }
+        }
+      });
+
+      document.addEventListener("DOMContentLoaded", loadLatestQuestions);
     </script>
-</body>
+  </body>
 </html>
