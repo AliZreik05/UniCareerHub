@@ -25,8 +25,17 @@ const handleLogout = async (req, res) =>
         JSON.stringify(usersDB.users)
     );
     //secure: true for both under
-    res.clearCookie('accessToken', { httpOnly: true,sameSite: 'Lax', sameSite: 'None' });
-    res.clearCookie('jwt', { httpOnly: true, sameSite: 'None'});
+    res.clearCookie('accessToken', {
+        httpOnly: true,
+        sameSite: 'Lax',
+        path: '/'
+      });
+      res.clearCookie('jwt', {
+        httpOnly: true,
+        sameSite: 'Lax',
+        path: '/'
+      });
+      
     res.redirect('/login')
 }
 
