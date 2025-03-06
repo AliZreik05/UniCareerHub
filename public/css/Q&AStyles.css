@@ -43,9 +43,8 @@ body {
 
 /* Section and Container */
 #qa-section {
-    background-color: #f9f9f9;
     padding: 50px 0;
-    margin-top: 100px; 
+    margin-top: 20px; 
 }
 
 .container {
@@ -69,12 +68,18 @@ h3 {
     color: #444;
 }
 
+
 .intro-text {
-    font-size: 1.5em;
+    background: url('/Pics/QA.png') no-repeat center center;
+    background-size: cover;
+    min-height: 550px;
+    display: flex;
+    justify-content: center;
     text-align: center;
-    color: #555;
-    margin-top: 200px;
+    padding: 100px;
     font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
 }
 
 /* Button Styling */
