@@ -22,8 +22,7 @@ function isStrongPassword(password)
     const hasDigit = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    return 
-    (
+    return (
         password.length >= minLength &&
         hasLowerCase &&
         hasUpperCase &&
@@ -49,7 +48,7 @@ const handleReset= async(req,res) =>
             return res.redirect('/reset?error='+encodeURIComponent('Password is not strong enough. Your password has to be atleast 8 characters long and has atleast one upper case, one lower case, one digit (0-9) and one special character (!@#$%^&*(),.?":{}|<>)'));
         }
         const generatedCode = generateCode();
-        const expiration = Date.now() + 10 * 60 * 1000;
+        const expiration = Date.now() + 15 * 60 * 1000;
         userFound.resetVerificationCode = generatedCode;
         userFound.resetVerificationExpirationPeriod = expiration;
         userFound.pendingPassword = password;
@@ -59,7 +58,7 @@ const handleReset= async(req,res) =>
             path.join(__dirname, '..', 'model', 'users.json'),
             JSON.stringify(usersDB.users)
         );
-        const resetToken = jwt.sign({ user: userFound.username }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const resetToken = jwt.sign({ user: userFound.username }, process.env.JWT_SECRET, { expiresIn: '15m' });
         return res.redirect(`/resetPassword/verify?token=${encodeURIComponent(resetToken)}`);
         
 }

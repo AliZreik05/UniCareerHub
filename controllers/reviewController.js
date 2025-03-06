@@ -13,7 +13,8 @@ const postReview = async (req,res)=>
 {
     const postId = crypto.randomUUID();
     const dateTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
-    const {operation,ID,user,company,review} = req.body;            //,category
+    const user = req.user.username;
+    const {operation,ID,company,review} = req.body;            //,category
     if(operation === 'remove')
     {
         const existingUser = reviewsDB.reviews.find(person => person.username === user);

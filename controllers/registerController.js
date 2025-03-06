@@ -22,14 +22,13 @@ function isStrongPassword(password)
     const hasDigit = /\d/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
-    return 
-    (
+    return (
         password.length >= minLength &&
         hasLowerCase &&
         hasUpperCase &&
         hasDigit &&
         hasSpecialChar
-    );
+    )
 }
 const handleNewUser = async (req, res) => 
     {
@@ -51,18 +50,18 @@ const handleNewUser = async (req, res) =>
         {
             return res.redirect('/register?error='+encodeURIComponent('Password is not strong enough. Your password has to be atleast 8 characters long and has atleast one upper case, one lower case, one digit (0-9) and one special character (!@#$%^&*(),.?":{}|<>)'));
         }
-    const duplicate = usersDB.users.find(person => person.username === user); // check for duplicate usernames in the db
+    const duplicate = usersDB.users.find(person => person.username === user); 
     if (duplicate) 
     {
 
-        return res.redirect('/register?error=' + encodeURIComponent('Email already in use.'));                     //Conflict 
+        return res.redirect('/register?error=' + encodeURIComponent('Email already in use.'));                     
     }
     try 
     {
         const generatedCode = generateCode();
         await sendVerificationEmail(user,generatedCode);
-        const hashedPassword = await bcrypt.hash(password, 10);   //encrypt the password
-        const newUser =                                 //store the new user
+        const hashedPassword = await bcrypt.hash(password, 10);  
+        const newUser =                                
         {
             "username": user,
             "password": hashedPassword,
@@ -72,14 +71,14 @@ const handleNewUser = async (req, res) =>
             },
             "verified": false,
             "verificationCode":generatedCode,
-            "verificationExpirationPeriod":Date.now() + 0.5 * 60 * 1000 
+            "verificationExpirationPeriod":Date.now() + 15 * 60 * 1000 
         };
         usersDB.setUsers([...usersDB.users, newUser]);
         await fsPromises.writeFile(
             path.join(__dirname, '..', 'model', 'users.json'),
             JSON.stringify(usersDB.users)
         );
-        const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '15m' });
         res.redirect(`/verify?token=${encodeURIComponent(token)}`);
     } 
     catch (error) 

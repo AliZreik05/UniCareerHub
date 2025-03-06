@@ -13,8 +13,7 @@ const handleRefreshToken = (req, res) =>
     const refreshToken = cookies.jwt;
 
     const foundUser = usersDB.users.find(person => person.refreshToken === refreshToken);
-    if (!foundUser) return res.sendStatus(403); //Forbidden 
-    // evaluate jwt 
+    if (!foundUser) return res.sendStatus(403); 
     jwt.verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
@@ -26,11 +25,11 @@ const handleRefreshToken = (req, res) =>
                     "UserInfo" : 
                     {
                         "username": decoded.username,
-                        "roles:": roles
+                        "roles": roles
                     },
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '30s' }
+                { expiresIn: '6h' }
             );
             res.json({ accessToken })
         }

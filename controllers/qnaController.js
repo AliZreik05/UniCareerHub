@@ -14,7 +14,8 @@ const postQuestion = async (req,res)=>
 {
     const postId = crypto.randomUUID();
     const dateTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
-    const {user,title,question} = req.body;            //,category
+    const {title,question} = req.body;            //,category
+    const user = req.user.username;
     const existingUser = questionsDB.questions.find(person => person.username===user);
     if(!existingUser)
     {
@@ -80,7 +81,8 @@ const getLatestQuestions = async(req,res)=>
 
 const handleReply = async(req,res) =>
 {
-    const {user,ID,reply} = req.body;
+    const {ID,reply} = req.body;
+    const user = req.user.username;
     const replyTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
     questionsDB.questions.forEach(userObj => 
         {

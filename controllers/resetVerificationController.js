@@ -29,6 +29,13 @@ const verifyReset = async (req,res)=>
         }
         if (Date.now() > userFound.resetVerificationExpirationPeriod) 
         {   
+            delete userFound.resetVerificationCode;
+            delete userFound.resetVerificationExpirationPeriod;
+            delete userFound.pendingPassword;
+            await fsPromises.writeFile(
+            path.join(__dirname, '..', 'model', 'users.json'),
+            JSON.stringify(usersDB.users, null, 2)
+      );
             return res.redirect(`/resetPassword/verify?error=${encodeURIComponent('Verification code expired')}&token=${encodeURIComponent(token)}`);
         }
         userFound.password = await bcrypt.hash(userFound.pendingPassword, 10);

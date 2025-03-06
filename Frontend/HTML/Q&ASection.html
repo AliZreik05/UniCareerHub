@@ -137,10 +137,10 @@
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                      user: "DefaultUser",
                       reply: replyText,
                       ID: q.ID,
                     }),
+                    credentials: "include"
                   });
                   if (!replyResponse.ok) {
                     alert("Error posting reply.");
@@ -173,7 +173,8 @@
             const response = await fetch("/Q&A", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ user: "DefaultUser", title: title, question: body }),
+              body: JSON.stringify({title: title, question: body }),
+              credentials: 'include'
             });
             if (!response.ok) {
               alert("Error posting question.");

@@ -22,7 +22,7 @@ const handleLogin = async (req, res) =>
         return res.redirect('/login?error=' + encodeURIComponent('User not found')); 
     }
     
-    const match = await bcrypt.compare(password, foundUser.password); // evaluate password 
+    const match = await bcrypt.compare(password, foundUser.password); 
     if (match) 
     {
         const userIndex = usersDB.users.findIndex(person => person.username === user);
@@ -31,7 +31,7 @@ const handleLogin = async (req, res) =>
         {
             return res.redirect('/login?error=' + encodeURIComponent('User email not verified')); 
         }
-        const roles = Object.values(foundUser.roles); // create JWTs
+        const roles = Object.values(foundUser.roles); 
         const accessToken = jwt.sign(
             {
             "UserInfo":
@@ -40,10 +40,8 @@ const handleLogin = async (req, res) =>
                     "roles": roles
                 }
             },
-            process.env.ACCESS_TOKEN_SECRET,
-            { 
-                expiresIn: '5m' 
-            }
+             process.env.ACCESS_TOKEN_SECRET,   
+            { expiresIn: '5m'}
         );
         const refreshToken = jwt.sign(
             { 
@@ -62,7 +60,19 @@ const handleLogin = async (req, res) =>
             JSON.stringify(usersDB.users)
         );
         //secure: true          USE THIS WHEN WE GO LIVE(WHEN WE BECOME HTTPS)
-        res.cookie('jwt', refreshToken, { httpOnly: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000, path:'/'});
+        res.cookie('accessToken', accessToken, {
+            httpOnly: true,
+            sameSite: 'Lax', 
+            maxAge: 5 * 60 * 1000, 
+            path: '/'
+          });
+          
+          res.cookie('jwt', refreshToken, {
+            httpOnly: true,
+            sameSite: 'Lax', 
+            maxAge: 24 * 60 * 60 * 1000,
+            path: '/'
+          });
         res.redirect('/');
     } 
     else 

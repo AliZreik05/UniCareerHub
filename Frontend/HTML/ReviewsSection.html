@@ -98,7 +98,8 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ user: "DefaultUser", title: title, review: body })
+                        body: JSON.stringify({title: title, review: body }),
+                        credentials: 'include'
                     });
                     if (!response.ok) {
                         alert('Error posting review.');

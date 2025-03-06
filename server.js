@@ -10,30 +10,20 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const PORT = process.env.PORT || 3500;
 
-//middleware for cookies
 app.use(cookieParser());
 
-// custom middleware logger
 app.use(EventsLogger);
 
-// Handle options credentials check - before CORS!
-// and fetch cookies credentials requirement
 app.use(credentials);
 
-// Cross Origin Resource Sharing
 app.use(cors(corsOptions));
 
-// built-in middleware to handle urlencoded form data
 app.use(express.urlencoded({ extended: false }));
 
-// built-in middleware for json 
 app.use(express.json());
 
-
-//serve static files
 app.use('/', express.static(path.join(__dirname, '/public')));
 
-// routes
 app.use('/', require('./routes/root'));
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
@@ -43,10 +33,10 @@ app.use('/verify',require('./routes/verify'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
+app.use(verifyJWT);
 app.use('/reviews',require('./routes/reviews'));
 app.use('/Q&A',require('./routes/question'));
 
-//app.use(verifyJWT);
 
 app.all('*', (req, res) => 
     {
@@ -64,7 +54,6 @@ app.all('*', (req, res) =>
         res.type('txt').send("404 Not Found");
     }
 });
-
 
 app.use(errorHandler);
 
