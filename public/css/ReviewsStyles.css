@@ -41,11 +41,27 @@ body {
     text-decoration: underline;
 }
 
+.logout-btn {
+    background: none;
+    border: 2px solid black; 
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    padding: 6px 15px;
+    border-radius: 20px; 
+}
+
+.logout-btn:hover {
+    background-color: black;
+    color: white; 
+}
+
 /* Section and Container */
-#qa-section {  /* You may rename this ID to #reviews-section if desired */
-    background-color: #f9f9f9;
+#review-section { 
     padding: 50px 0;
-    margin-top: 100px;  /* Adjusting margin to avoid overlap with the navbar */
+    margin-top: 100px;
 }
 
 .container {
