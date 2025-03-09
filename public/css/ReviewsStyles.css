@@ -11,7 +11,7 @@ body {
     font-family: 'Poppins', sans-serif;
     background-color: #f4f7fc;
     color: #333;
-    line-height: 1.6;   
+    line-height: 1.6;
 }
 
 /* Navbar Styling */
@@ -34,7 +34,7 @@ body {
 .logo a {
     color: black;
     text-decoration: none;
-    font-weight: bold; 
+    font-weight: bold;
 }
 
 .logo a:hover {
@@ -43,25 +43,25 @@ body {
 
 .logout-btn {
     background: none;
-    border: 2px solid black; 
+    border: 2px solid black;
     color: black;
     font-size: 18px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s ease;
     padding: 6px 15px;
-    border-radius: 20px; 
+    border-radius: 20px;
 }
 
 .logout-btn:hover {
     background-color: black;
-    color: white; 
+    color: white;
 }
 
 /* Section and Container */
-#review-section { 
-    padding: 50px 0;
-    margin-top: 100px;
+#review-section {
+    padding: 0 30px;
+    margin-bottom: 100px;
 }
 
 .container {
@@ -71,30 +71,21 @@ body {
     padding: 30px 0;
 }
 
-/* Headings */
-h2 {
-    text-align: center;
-    font-size: 2.2em;
-    margin-bottom: 20px;
-    color: #333;
-}
-
-h3 {
-    font-size: 1.8em;
-    margin-bottom: 20px;
-    color: #444;
-}
-
 .intro-text {
-    font-size: 1.5em;
+    background: url('/Pics/review-pic.png') no-repeat center center;
+    background-size: cover;
+    min-height: 550px;
+    display: flex;
+    justify-content: center;
     text-align: center;
-    color: #555;
-    margin-top: 200px;
+    padding: 100px;
     font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
 }
 
 /* Button Styling */
-.submit-btn, .reply-btn, .submit-reply {
+.submit-btn {
     background-color: #ffcc00;
     color: black;
     font-size: 1.1em;
@@ -104,28 +95,15 @@ h3 {
     cursor: pointer;
     transition: background-color 0.3s ease;
     text-align: center;
-}
-
-.submit-btn:hover, .reply-btn:hover, .submit-reply:hover {
-    background-color: #ffcc00;
-}
-
-.submit-btn {
     margin-bottom: 30px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.reply-btn {
-    margin-top: 10px;
-    transition: background-color 0.3s;
+.submit-btn:hover {
+    background-color: #ffcc00;
 }
 
-.reply-btn:focus {
-    outline: none;
-    border: 2px solid #ffcc00;
-}
-
-/* Ask Review Section */
+/* Review Form */
 .ask-question {
     background-color: #fff;
     border-radius: 8px;
@@ -145,7 +123,8 @@ h3 {
 }
 
 .ask-question input,
-.ask-question textarea {
+.ask-question textarea,
+.ask-question select {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -155,7 +134,8 @@ h3 {
 }
 
 .ask-question input:focus,
-.ask-question textarea:focus {
+.ask-question textarea:focus,
+.ask-question select:focus {
     border-color: #ffcc00;
     outline: none;
 }
@@ -197,109 +177,11 @@ h3 {
     font-size: 1.1em;
 }
 
-/* Replies Section */
-.replies {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 6px;
-}
-
-.replies textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1em;
-    background-color: #fafafa;
-}
-
-.replies .submit-reply {
-    background-color: #ffcc00;
-    color: black;
-    padding: 8px 16px;
-    font-size: 1em;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.replies .submit-reply:hover {
-    background-color: #ffcc00;
-}
-
-/* Reply Styling */
-.reply {
-    margin-top: 15px;
-    padding: 10px;
-    background-color: #f1f1f1;
-    border-radius: 6px;
-}
-
-.reply p {
-    font-size: 1em;
-}
-
-/* Modal Styling */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
-    
-}
-
-.modal-content {
-    background-color: white;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 50%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.close-btn {
-    float: right;
-    font-size: 28px;
-    cursor: pointer;
-}
-
-.close-btn:hover {
-    color: red;
-}
-
-
-.ask-question select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 1em;
-    background-color: #fafafa;
-    appearance: none;
-    background-image: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/angle-down.svg');
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 15px;
-    cursor: pointer;
-}
-
-.ask-question select:focus {
-    border-color: #ffcc00;
-    outline: none;
-}
-
 .company-name, .industry-name {
     font-size: 0.9em;
     color: #666;
     margin-top: 5px;
 }
-
 
 /* Filter Bar Styling */
 .filter-container {
@@ -323,114 +205,34 @@ h3 {
     outline: none;
 }
 
-
-.intro-text {
-    margin-top: 0;
-    margin-bottom:0;
-    background: url('/Pics/review-pic.png') no-repeat center center;
-    background-size: cover;
-    min-height: 550px;
-    display: flex;
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
     justify-content: center;
-    text-align: center;
-    padding: 100px;
-    font-weight: bold;
-    font-style: italic;
-    font-size: 1.5em;
+    align-items: center;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.close-btn {
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: red;
+}
