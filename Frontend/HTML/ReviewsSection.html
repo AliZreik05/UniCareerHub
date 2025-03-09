@@ -24,6 +24,22 @@
     <section id="review-section">
         <div class="container">
             <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Submit a Review</button>
+            <div class="filter-container">
+                <input type="text" id="company-filter" placeholder="Search by Company Name">
+                <select id="industry-filter">
+                    <option value="">Filter by Industry</option>
+                    <option value="Tech">Technology</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Education">Education</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Marketing">Marketing</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            
             <div class="questions-list" id="reviews-list"></div>
         </div>
     </section>
@@ -128,6 +144,32 @@
         console.error('Error loading latest reviews:', error);
     }
 }
+
+document.getElementById('company-filter').addEventListener('input', filterReviews);
+document.getElementById('industry-filter').addEventListener('change', filterReviews);
+
+function filterReviews() {
+    const companySearch = document.getElementById('company-filter').value.toLowerCase();
+    const industryFilter = document.getElementById('industry-filter').value.toLowerCase();
+    
+    const reviews = document.querySelectorAll('.review');
+
+    reviews.forEach(review => {
+        const companyName = review.querySelector('.company-name')?.textContent.toLowerCase() || "";
+        const industry = review.querySelector('.industry-name')?.textContent.toLowerCase() || "";
+
+        // Check if review matches filters
+        const companyMatch = companyName.includes(companySearch);
+        const industryMatch = industryFilter === "" || industry.includes(industryFilter);
+
+        if (companyMatch && industryMatch) {
+            review.style.display = "block";
+        } else {
+            review.style.display = "none";
+        }
+    });
+}
+
 
 
 

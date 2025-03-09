@@ -251,6 +251,7 @@ h3 {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.4);
+    
 }
 
 .modal-content {
@@ -300,3 +301,24 @@ h3 {
 }
 
 
+/* Filter Bar Styling */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#company-filter, #industry-filter {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+    width: 200px;
+}
+
+#company-filter:focus, #industry-filter:focus {
+    border-color: #ffcc00;
+    outline: none;
+}
