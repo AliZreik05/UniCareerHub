@@ -322,3 +322,115 @@ h3 {
     border-color: #ffcc00;
     outline: none;
 }
+
+
+.intro-text {
+    margin-top: 0;
+    margin-bottom:0;
+    background: url('/Pics/review-pic.png') no-repeat center center;
+    background-size: cover;
+    min-height: 550px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    padding: 100px;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 1.5em;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
