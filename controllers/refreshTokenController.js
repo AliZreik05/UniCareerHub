@@ -29,9 +29,15 @@ const handleRefreshToken = (req, res) =>
                     },
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '6h' }
+                { expiresIn: '30m' }
             );
-            res.json({ accessToken })
+            res.cookie('accessToken', accessToken, {
+                httpOnly: true,
+                sameSite: 'Lax',
+                maxAge: 5 * 60 * 1000,
+                path: '/'
+            });
+            res.json({ accessToken });
         }
     );
 }
