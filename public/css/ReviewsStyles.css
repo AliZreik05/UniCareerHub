@@ -271,3 +271,31 @@ h3 {
 .close-btn:hover {
     color: red;
 }
+
+
+
+.ask-question select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1em;
+    background-color: #fafafa;
+    appearance: none;
+    background-image: url('https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/svgs/solid/angle-down.svg');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+    cursor: pointer;
+}
+
+.ask-question select:focus {
+    border-color: #ffcc00;
+    outline: none;
+}
+
+.company-name, .industry-name {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
