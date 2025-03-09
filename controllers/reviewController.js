@@ -14,7 +14,7 @@ const postReview = async (req,res)=>
     const postId = crypto.randomUUID();
     const dateTime = format(new Date(), "dd/MM/yyyy hh:mm:ss a");
     const user = req.user.username;
-    const {operation,ID,company,review} = req.body;            //,category
+    const {operation,title,review,company,industry} = req.body;            //,category
     if(operation === 'remove')
     {
         const existingUser = reviewsDB.reviews.find(person => person.username === user);
@@ -40,10 +40,11 @@ const postReview = async (req,res)=>
             "reviews": 
             [
                 {
-            "ID": ID,
+            "ID": postId,
+            "title": title,
             "company-name": company,
             "review": review,
-            //"category": category,
+            "industry": industry,
             "time": dateTime,
                 }
             ]
@@ -52,7 +53,13 @@ const postReview = async (req,res)=>
     }
     else
     {
-        existingUser.reviews.push({"ID":ID, "company-name": company, "review": review, "time": dateTime })
+        existingUser.reviews.push({
+            "ID": postId,
+            "title": title,
+            "company-name": company,
+            "review": review,
+            "industry": industry,
+            "time": dateTime,})
     }
     await fsPromises.writeFile
     (

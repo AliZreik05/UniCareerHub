@@ -123,23 +123,24 @@
         reviewsList.innerHTML = "";
 
         latestReviews.forEach(review => {
-            const reviewElem = document.createElement('div');
-            reviewElem.classList.add('review');
-            reviewElem.innerHTML = `
-                <div class="review-header">
-                    <h4>${review.title}</h4>
-                    <p class="review-meta">
-                        <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}
-                    </p>
-                    <p class="company-name"><strong>Company:</strong> ${review.company}</p>
-                    <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
-                </div>
-                <div class="review-body">
-                    <p>${review.review}</p>
-                </div>
-            `;
-            reviewsList.appendChild(reviewElem);
-        });
+    const reviewElem = document.createElement('div');
+    reviewElem.classList.add('review');
+    reviewElem.innerHTML = `
+        <div class="review-header">
+            <h4>${review.title}</h4>
+            <p class="review-meta">
+                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}
+            </p>
+            <p class="company-name"><strong>Company:</strong> ${review['company-name']}</p>
+            <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+        </div>
+        <div class="review-body">
+            <p>${review.review}</p>
+        </div>
+    `;
+    reviewsList.appendChild(reviewElem);
+});
+
     } catch (error) {
         console.error('Error loading latest reviews:', error);
     }
