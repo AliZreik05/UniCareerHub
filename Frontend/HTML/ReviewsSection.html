@@ -34,10 +34,16 @@
             <h3><i class="fas fa-pen-nib"></i> Submit a Review</h3>
             <form id="review-form" class="ask-question">
                 <div class="form-group">
-                    <label for="review-title">Name Of Company</label>
-                    <input type="text" id="review-title" name="title" placeholder="Enter the company name" required>
+                    <label for="review-title">Title</label>
+                    <input type="text" id="review-title" name="title" placeholder="Enter review title" required>
                 </div>
-
+            
+                <!-- New Input for Company Name -->
+                <div class="form-group">
+                    <label for="company-name">Company Name</label>
+                    <input type="text" id="company-name" name="company" placeholder="Enter company name" required>
+                </div>
+            
                 <div class="form-group">
                     <label for="industry-select">Industry Type</label>
                     <select id="industry-select" name="industry" required>
@@ -53,15 +59,17 @@
                         <option value="Other">Other</option>
                     </select>
                 </div>
-                
-        
+            
                 <div class="form-group">
                     <label for="review-body">Details</label>
                     <textarea id="review-body" name="body" placeholder="Provide details about your review" required></textarea>
                 </div>
-                
-                <button type="submit" class="submit-btn"><i class="fas fa-paper-plane"></i> Post Review</button>
+            
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Post Review
+                </button>
             </form>
+            
         </div>
     </div>
     
@@ -82,74 +90,105 @@
         };
 
         async function loadLatestReviews() {
-            try {
-                const response = await fetch('/reviews/latest');
-                if (!response.ok) {
-                    console.error('Failed to load reviews');
-                    return;
-                }
-                const latestReviews = await response.json();
-                const reviewsList = document.getElementById('reviews-list');
-                reviewsList.innerHTML = "";
-                latestReviews.forEach(review => {
-                    const reviewElem = document.createElement('div');
-                    reviewElem.classList.add('review');
-                    reviewElem.innerHTML = `
-                    <div class="review-header">
-                        <h4>${review.title}</h4>
-                        <p class="review-meta"><i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}</p>
-                    </div>
-                    <div class="review-body">
-                        <p>${review.review}</p>
-                    </div>
-                    `;
-                    reviewsList.appendChild(reviewElem);
-                });
-            } catch (error) {
-                console.error('Error loading latest reviews:', error);
-            }
+    try {
+        const response = await fetch('/reviews/latest');
+        if (!response.ok) {
+            console.error('Failed to load reviews');
+            return;
         }
+        const latestReviews = await response.json();
+        const reviewsList = document.getElementById('reviews-list');
+        reviewsList.innerHTML = "";
 
-        document.getElementById('review-form').addEventListener('submit', async function(event) {
-            event.preventDefault();
-            const title = document.getElementById('review-title').value;
-            const body = document.getElementById('review-body').value;
-            if (title && body) {
-                try {
-                    const response = await fetch('/reviews', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({title: title, review: body }),
-                        credentials: 'include'
-                    });
-                    if (!response.ok) {
-                        alert('Error posting review.');
-                        return;
-                    }
-                    const result = await response.json();
-                    const newReview = document.createElement('div');
-                    newReview.classList.add('review');
-                    newReview.innerHTML = `
-                    <div class="review-header">
-                        <h4>${title}</h4>
-                        <p class="review-meta"><i class="fas fa-user"></i><strong> Posted by:</strong> You | <strong>Time:</strong> ${new Date().toLocaleString()}</p>
-                    </div>
-                    <div class="review-body">
-                        <p>${body}</p>
-                    </div>
-                    `;
-                    document.getElementById('reviews-list').prepend(newReview);
-                    document.getElementById('review-title').value = '';
-                    document.getElementById('review-body').value = '';
-                    document.getElementById('review-modal').style.display = 'none';
-                } catch (error) {
-                    console.error('Error posting review:', error);
-                    alert('Error posting review.');
-                }
-            }
+        latestReviews.forEach(review => {
+            const reviewElem = document.createElement('div');
+            reviewElem.classList.add('review');
+            reviewElem.innerHTML = `
+                <div class="review-header">
+                    <h4>${review.title}</h4>
+                    <p class="review-meta">
+                        <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}
+                    </p>
+                    <p class="company-name"><strong>Company:</strong> ${review.company}</p>
+                    <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+                </div>
+                <div class="review-body">
+                    <p>${review.review}</p>
+                </div>
+            `;
+            reviewsList.appendChild(reviewElem);
         });
+    } catch (error) {
+        console.error('Error loading latest reviews:', error);
+    }
+}
+
+
+
+document.getElementById('review-form').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    // Correctly fetch each input value
+    const title = document.getElementById('review-title').value;
+    const body = document.getElementById('review-body').value;
+    const company = document.getElementById('company-name').value; // new input
+    const industry = document.getElementById('industry-select').value;
+
+    // Check required fields
+    if (title && body && company && industry) {
+        try {
+            const response = await fetch('/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title, review: body, company, industry }),
+                credentials: 'include'
+            });
+
+            if (!response.ok) {
+                alert('Error posting review.');
+                return;
+            }
+
+            const result = await response.json();
+
+            // Create new review element including Company Name
+            const newReview = document.createElement('div');
+            newReview.classList.add('review');
+            newReview.innerHTML = `
+                <div class="review-header">
+                    <h4>${title}</h4>
+                    <p class="review-meta">
+                        <i class="fas fa-user"></i> <strong>Posted by:</strong> You | 
+                        <strong>Time:</strong> ${new Date().toLocaleString()}
+                    </p>
+                    <p class="company-name"><strong>Company Name:</strong> ${company}</p>
+                    <p class="industry-name"><strong>Industry:</strong> ${industry}</p>
+                </div>
+                <div class="review-body">
+                    <p>${body}</p>
+                </div>
+            `;
+
+            document.getElementById('reviews-list').prepend(newReview);
+
+            // Reset form inputs
+            document.getElementById('review-title').value = '';
+            document.getElementById('review-body').value = '';
+            document.getElementById('company-name').value = '';
+            document.getElementById('industry-select').value = '';
+
+            // Close modal
+            document.getElementById('review-modal').style.display = 'none';
+        } catch (error) {
+            console.error('Error posting review:', error);
+            alert('Error posting review.');
+        }
+    } else {
+        alert('Please fill in all required fields.');
+    }
+});
+
+
         
         document.addEventListener('DOMContentLoaded', loadLatestReviews);
 
