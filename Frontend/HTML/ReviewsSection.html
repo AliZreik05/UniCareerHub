@@ -241,68 +241,6 @@ document.getElementById('review-form').addEventListener('submit', async function
         document.addEventListener('DOMContentLoaded', loadLatestReviews);
 
 
-        document.getElementById('review-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    // Grab input values clearly from the form
-    const title = document.getElementById('review-title').value;
-    const body = document.getElementById('review-body').value;
-    const company = document.getElementById('company-name').value;
-    const industry = document.getElementById('industry-select').value;
-
-    // Check all required fields
-    if (title && body && company && industry) {
-        try {
-            const response = await fetch('/reviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ title, body, company, industry }),
-                credentials: 'include'
-            });
-
-            if (!response.ok) {
-                alert('Error posting review.');
-                return;
-            }
-
-            const result = await response.json();
-
-            // Create new review element
-            const newReview = document.createElement('div');
-            newReview.classList.add('review');
-            newReview.innerHTML = `
-                <div class="review-header">
-                    <h4>${title}</h4>
-                    <p class="review-meta">
-                        <i class="fas fa-user"></i> <strong>Posted by:</strong> You | 
-                        <strong>Time:</strong> ${new Date().toLocaleString()}
-                    </p>
-                    <p class="company-name"><strong>Company:</strong> ${company}</p>
-                    <p class="industry-name"><strong>Industry:</strong> ${industry}</p>
-                <div class="review-body">
-                    <p>${body}</p>
-                </div>
-            `;
-
-            // Add to top of list
-            document.getElementById('reviews-list').prepend(newReview);
-
-            // Reset form inputs
-            document.getElementById('review-title').value = '';
-            document.getElementById('review-body').value = '';
-            document.getElementById('company-name').value = '';
-            document.getElementById('industry-select').value = '';
-
-            // Close modal
-            document.getElementById('review-modal').style.display = 'none';
-        } catch (error) {
-            console.error('Error posting review:', error);
-            alert('Error posting review.');
-        }
-    } else {
-        alert('Please fill in all required fields.');
-    }
-});
 
 
     </script>
