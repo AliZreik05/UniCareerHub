@@ -34,6 +34,7 @@ h1{
     font-size: 18px;
     font-weight: normal;
     color: black;
+    z-index: 2;
 }
 
 .container {
@@ -45,6 +46,8 @@ h1{
     box-shadow: 0 0 10px #0000001a;
     text-align: center;
     backdrop-filter: blur(9px);
+    z-index: 1;
+    margin-top: auto;
 }
 
 .container h2{
