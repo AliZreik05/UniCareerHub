@@ -33,7 +33,8 @@ const handleLogin = async (req, res) =>
                 }
             },
              process.env.ACCESS_TOKEN_SECRET,   
-            { expiresIn: '5m'}
+             { expiresIn: '30m' }
+
         );
         const refreshToken = jwt.sign(
             { 
@@ -51,7 +52,7 @@ const handleLogin = async (req, res) =>
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             sameSite: 'Lax', 
-            maxAge: 5 * 60 * 1000, 
+            maxAge: 30 * 60 * 1000, // 30 minutes
             path: '/'
           });
           
