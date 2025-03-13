@@ -238,43 +238,54 @@ body {
 }
 
 
-/* STAR RATING SYSTEM */
+/* STAR RATING SYSTEM - FORM */
+/* STAR RATING SYSTEM - FORM */
 .star-rating {
     display: flex;
     flex-direction: row-reverse;
-    justify-content: flex-end;
-    font-size: 1.5rem;
+    justify-content: flex-start; /* Align to left */
+    font-size: 1.8rem; /* Reduced by 10% */
     cursor: pointer;
+    gap: 5px;
+    margin-top: 5px;
+    width: fit-content; /* Prevent it from stretching */
 }
+
 
 /* Hide radio inputs */
 .star-rating input[type="radio"] {
     display: none;
 }
 
-/* Default star color */
+/* Default empty star */
 .star-rating label {
-    color: #ccc;
-    padding: 5px;
+    color: #ccc; /* Light gray stars */
     cursor: pointer;
-    transition: color 0.2s;
+    transition: color 0.3s;
 }
 
 /* Change star color on hover */
 .star-rating label:hover,
 .star-rating label:hover ~ label {
-    color: #ffcc00;
+    color: #ffcc00; /* Yellow on hover */
 }
 
-/* When a star is selected, highlight it */
+/* When selected, fill stars */
 .star-rating input[type="radio"]:checked ~ label {
     color: #ffcc00;
 }
 
-/* Review Footer (Stars in Bottom-Right) */
-.review-footer {
-    text-align: right;
-    margin-top: 10px;
-    font-size: 1.2em;
-    color: #ffcc00;
+/* REVIEW DISPLAY STARS (Under Title) */
+.review-stars {
+    display: flex;
+    justify-content: flex-start; /* Align to left */
+    font-size: 1.8rem; /* Reduced by 10% */
+    color: #ccc; /* Default empty stars */
+    margin-top: 5px; /* Space under title */
+    margin-bottom: 10px;
+}
+
+/* Ensure filled stars are yellow */
+.review-stars .fas {
+    color: #ffcc00 !important; /* Force yellow */
 }

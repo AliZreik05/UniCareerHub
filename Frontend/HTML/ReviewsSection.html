@@ -216,12 +216,23 @@ document.getElementById('review-form').addEventListener('submit', function(event
     });
 
     if (title && body && company && industry) {
+        // Generate filled stars based on user rating
+        let starsHtml = "";
+        for (let i = 1; i <= 5; i++) {
+            if (i <= ratingValue) {
+                starsHtml += '<i class="fas fa-star"></i>'; // Filled star (yellow)
+            } else {
+                starsHtml += '<i class="far fa-star"></i>'; // Empty star
+            }
+        }
+
         // Create a new review element
         const newReview = document.createElement('div');
         newReview.classList.add('review');
         newReview.innerHTML = `
             <div class="review-header">
                 <h4>${title}</h4>
+                <div class="review-stars">${starsHtml}</div> <!-- Stars under title -->
                 <p class="review-meta">
                     <i class="fas fa-user"></i> <strong>Posted by:</strong> You | 
                     <strong>Time:</strong> ${new Date().toLocaleString()}
@@ -231,9 +242,6 @@ document.getElementById('review-form').addEventListener('submit', function(event
             </div>
             <div class="review-body">
                 <p>${body}</p>
-            </div>
-            <div class="review-footer">
-                ${'★'.repeat(ratingValue)}
             </div>
         `;
 
@@ -254,6 +262,8 @@ document.getElementById('review-form').addEventListener('submit', function(event
         alert('Please fill in all required fields.');
     }
 });
+
+
 
 
         
