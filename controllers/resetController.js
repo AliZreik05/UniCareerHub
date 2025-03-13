@@ -1,13 +1,8 @@
-const fsPromises = require('fs').promises;
-const path = require('path');
+const User = require('../model/User');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const sendVerificationEmail = require('../middleware/verifyByMail');
-const usersDB = 
-{
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-};
+
 
 function generateCode() 
 {
@@ -34,7 +29,7 @@ function isStrongPassword(password)
 const handleReset= async(req,res) =>
 {
     const {user,password,confirmPassword} = req.body;
-    const userFound = usersDB.users.find(person => person.username===user);
+    const userFound = await User.findOne({ username: user });
     if(!userFound)
     {
        return res.redirect('/reset?error='+encodeURIComponent('User does not exist'));
@@ -50,14 +45,11 @@ const handleReset= async(req,res) =>
         const generatedCode = generateCode();
         const expiration = Date.now() + 15 * 60 * 1000;
         userFound.resetVerificationCode = generatedCode;
-        userFound.resetVerificationExpirationPeriod = expiration;
+        userFound.resetVerificationExpirationPeriod = Date.now() + 15 * 60 * 1000;
         userFound.pendingPassword = password;
+  
         await sendVerificationEmail(userFound.username, generatedCode);
-        await fsPromises.writeFile
-        (
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+        await userFound.save();
         const resetToken = jwt.sign({ user: userFound.username }, process.env.JWT_SECRET, { expiresIn: '15m' });
         return res.redirect(`/resetPassword/verify?token=${encodeURIComponent(resetToken)}`);
         

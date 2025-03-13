@@ -1,13 +1,7 @@
-const usersDB = 
-{
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-};
+const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const fsPromises = require('fs').promises;
-const path = require('path');
 
 const handleLogin = async (req, res) => 
 {
@@ -16,7 +10,7 @@ const handleLogin = async (req, res) =>
     {
         return res.redirect('/login?error=' + encodeURIComponent('Invalid email or password.')); 
     }
-    const foundUser = usersDB.users.find(person => person.username === user);
+    const foundUser = await User.findOne({ username: user });
     if (!foundUser) 
     {
         return res.redirect('/login?error=' + encodeURIComponent('User not found')); 
@@ -25,12 +19,10 @@ const handleLogin = async (req, res) =>
     const match = await bcrypt.compare(password, foundUser.password); 
     if (match) 
     {
-        const userIndex = usersDB.users.findIndex(person => person.username === user);
-        const isVerified = usersDB.users.at(userIndex).verified;
-        if(!isVerified)
-        {
-            return res.redirect('/login?error=' + encodeURIComponent('User email not verified')); 
-        }
+        if (!foundUser.verified) 
+            {
+            return res.redirect('/login?error=' + encodeURIComponent('User email not verified'));
+          }
         const roles = Object.values(foundUser.roles); 
         const accessToken = jwt.sign(
             {
@@ -52,13 +44,9 @@ const handleLogin = async (req, res) =>
                 expiresIn: '1d' 
             }
         );
-        const otherUsers = usersDB.users.filter(person => person.username !== foundUser.username);
-        const currentUser = { ...foundUser, refreshToken };
-        usersDB.setUsers([...otherUsers, currentUser]);
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+        foundUser.refreshToken = refreshToken;
+        await foundUser.save();
+
         //secure: true          USE THIS WHEN WE GO LIVE(WHEN WE BECOME HTTPS)
         res.cookie('accessToken', accessToken, {
             httpOnly: true,

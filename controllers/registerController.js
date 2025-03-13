@@ -1,10 +1,4 @@
-const usersDB = 
-{
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-}
-const fsPromises = require('fs').promises;
-const path = require('path');
+const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
@@ -50,7 +44,7 @@ const handleNewUser = async (req, res) =>
         {
             return res.redirect('/register?error='+encodeURIComponent('Password must be at least 8 characters with an uppercase letter, a lowercase letter, a digit, and a special character'));
         }
-    const duplicate = usersDB.users.find(person => person.username === user); 
+        const duplicate = await User.findOne({ username: user });
     if (duplicate) 
     {
 
@@ -61,23 +55,15 @@ const handleNewUser = async (req, res) =>
         const generatedCode = generateCode();
         await sendVerificationEmail(user,generatedCode);
         const hashedPassword = await bcrypt.hash(password, 10);  
-        const newUser =                                
-        {
-            "username": user,
-            "password": hashedPassword,
-            "roles":
-            {
-                "User": 2001
-            },
-            "verified": false,
-            "verificationCode":generatedCode,
-            "verificationExpirationPeriod":Date.now() + 15 * 60 * 1000 
-        };
-        usersDB.setUsers([...usersDB.users, newUser]);
-        await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+        const newUser = new User({
+            username: user,
+            password: hashedPassword,
+            roles: { User: 2001 },
+            verified: false,
+            verificationCode: generatedCode,
+            verificationExpirationPeriod: Date.now() + 15 * 60 * 1000,
+          });
+          await newUser.save();
         const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '15m' });
         res.redirect(`/verify?token=${encodeURIComponent(token)}`);
     } 

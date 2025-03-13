@@ -1,14 +1,8 @@
-const fsPromises = require('fs').promises;
-const path = require('path');
+const User = require('../model/User');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
+const sendVerificationEmail = require('../middleware/verifyByMail');
 require('dotenv').config();
-
-const usersDB = 
-{
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-};
 
 const handleVerification = async (req, res) => 
     {
@@ -21,12 +15,11 @@ const handleVerification = async (req, res) =>
     {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
         const email = decodedToken.user;
-        const userIndex = usersDB.users.findIndex(person => person.username === email);
-    if (userIndex === -1) 
-    {
-        return res.status(404).json({ 'message': 'User not found.' });
-    }
-    const user = usersDB.users[userIndex];
+        const user = await User.findOne({ username: email });
+        if (!user) 
+            {
+            return res.status(404).json({ message: 'User not found.' });
+          }
     if (user.verificationCode !== verificationCode) 
     {
         return res.redirect(`/verify?error=${encodeURIComponent('Invalid verification code.')}&token=${encodeURIComponent(token)}`);
@@ -34,15 +27,10 @@ const handleVerification = async (req, res) =>
     if (Date.now() > user.verificationExpirationPeriod) {
         return res.redirect(`/verify?error=${encodeURIComponent('Expired')}&token=${encodeURIComponent(token)}`);
     }
-    const updatedUser = { ...user, verified: true };
-    delete updatedUser.verificationCode;
-    delete updatedUser.verificationExpirationPeriod;
-    usersDB.users[userIndex] = updatedUser;
-    await fsPromises.writeFile
-    (
-        path.join(__dirname, '..', 'model', 'users.json'),
-        JSON.stringify(usersDB.users)
-    ); 
+    user.verified = true;
+    user.verificationCode = undefined;
+    user.verificationExpirationPeriod = undefined;
+    await user.save();
     res.redirect('/login');
     }
     catch (err) 
@@ -69,20 +57,14 @@ const handleResend = async (req,res) =>
     {
         const decodedToken = jwt.verify(token,process.env.JWT_SECRET);
         const email = decodedToken.user;
-        const userIndex = usersDB.users.findIndex(person => person.username === email);
-        if(userIndex === -1)
-        {
+        const user = await User.findOne({ username: email });
+        if (!user) {
             return res.status(404).json({ message: 'User not found.' });
-        }
-        const newVerificationCode= generateCode();
-        const newExpirationDate = Date.now() + 0.5 * 60 * 1000;
-        usersDB.users.at(userIndex).verificationCode = newVerificationCode;
-        usersDB.users.at(userIndex).verificationExpirationPeriod = newExpirationDate;
-        await fsPromises.writeFile
-        (
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+          }
+          const newVerificationCode = generateCode();
+          user.verificationCode = newVerificationCode;
+          user.verificationExpirationPeriod = Date.now() + 0.5 * 60 * 1000;
+          await user.save();
         await sendVerificationEmail(email, newVerificationCode);
         res.redirect(`/verify?message=${encodeURIComponent('A new verification code has been sent.')}&token=${encodeURIComponent(token)}`);
     }

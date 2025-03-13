@@ -156,7 +156,7 @@
             <p class="review-meta">
                 <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}
             </p>
-            <p class="company-name"><strong>Company:</strong> ${review['company-name']}</p>
+            <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
             <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
         </div>
         <div class="review-body">
@@ -199,15 +199,16 @@ function filterReviews() {
 
 
 
-document.getElementById('review-form').addEventListener('submit', function(event) {
+document.getElementById('review-form').addEventListener('submit', async function(event) {
     event.preventDefault();
 
+    // Get form values
     const title = document.getElementById('review-title').value;
     const body = document.getElementById('review-body').value;
     const company = document.getElementById('company-name').value;
     const industry = document.getElementById('industry-select').value;
 
-    // Get selected star rating
+    // Get selected star rating (if you plan to send it)
     let ratingValue = 0;
     document.querySelectorAll('input[name="rating"]').forEach(radio => {
         if (radio.checked) {
@@ -215,58 +216,55 @@ document.getElementById('review-form').addEventListener('submit', function(event
         }
     });
 
+    // Ensure required fields are filled
     if (title && body && company && industry) {
-        // Generate filled stars based on user rating
-        let starsHtml = "";
-        for (let i = 1; i <= 5; i++) {
-            if (i <= ratingValue) {
-                starsHtml += '<i class="fas fa-star"></i>'; // Filled star (yellow)
-            } else {
-                starsHtml += '<i class="far fa-star"></i>'; // Empty star
+        // Construct the payload. Note: if your backend doesn't handle 'rating', you can omit it.
+        const payload = {
+            title: title,
+            review: body, // your backend expects "review" as the field name
+            company: company,
+            industry: industry,
+            rating: ratingValue
+        };
+
+        try {
+            const response = await fetch('/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',  // include cookies for authentication if needed
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                alert('Error posting review.');
+                return;
             }
+
+            // Optionally, you can process the response
+            const result = await response.json();
+            console.log(result.message);
+
+            // Refresh the reviews list by reloading from the backend
+            loadLatestReviews();
+
+            // Reset the form fields
+            document.getElementById('review-title').value = '';
+            document.getElementById('review-body').value = '';
+            document.getElementById('company-name').value = '';
+            document.getElementById('industry-select').value = '';
+            document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
+
+            // Close the modal
+            document.getElementById('review-modal').style.display = 'none';
+        } catch (error) {
+            console.error('Error posting review:', error);
+            alert('Error posting review.');
         }
-
-        // Create a new review element
-        const newReview = document.createElement('div');
-        newReview.classList.add('review');
-        newReview.innerHTML = `
-            <div class="review-header">
-                <h4>${title}</h4>
-                <div class="review-stars">${starsHtml}</div> <!-- Stars under title -->
-                <p class="review-meta">
-                    <i class="fas fa-user"></i> <strong>Posted by:</strong> You | 
-                    <strong>Time:</strong> ${new Date().toLocaleString()}
-                </p>
-                <p class="company-name"><strong>Company:</strong> ${company}</p>
-                <p class="industry-name"><strong>Industry:</strong> ${industry}</p>
-            </div>
-            <div class="review-body">
-                <p>${body}</p>
-            </div>
-        `;
-
-        document.getElementById('reviews-list').prepend(newReview);
-
-        // Reset form fields
-        document.getElementById('review-title').value = '';
-        document.getElementById('review-body').value = '';
-        document.getElementById('company-name').value = '';
-        document.getElementById('industry-select').value = '';
-        document.querySelectorAll('input[name="rating"]').forEach(radio => {
-            radio.checked = false;
-        });
-
-        // Close modal
-        document.getElementById('review-modal').style.display = 'none';
     } else {
         alert('Please fill in all required fields.');
     }
 });
-
-
-
-
-        
+ 
         document.addEventListener('DOMContentLoaded', loadLatestReviews);
 
 

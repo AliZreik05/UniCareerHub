@@ -1,12 +1,6 @@
-const fsPromises = require('fs').promises;
-const path = require('path');
+const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const usersDB = 
-{
-    users: require('../model/users.json'),
-    setUsers: function (data) { this.users = data }
-};
 
 const verifyReset = async (req,res)=>
 {
@@ -18,7 +12,7 @@ const verifyReset = async (req,res)=>
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         const username = decoded.user;
-        const userFound = usersDB.users.find(u => u.username === username);
+        const userFound = await User.findOne({ username });
         if (!userFound) 
         {
             return res.redirect(`/resetPassword/verify?error=${encodeURIComponent('User not found')}&token=${encodeURIComponent(token)}`);
@@ -29,24 +23,17 @@ const verifyReset = async (req,res)=>
         }
         if (Date.now() > userFound.resetVerificationExpirationPeriod) 
         {   
-            delete userFound.resetVerificationCode;
-            delete userFound.resetVerificationExpirationPeriod;
-            delete userFound.pendingPassword;
-            await fsPromises.writeFile(
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users, null, 2)
-      );
+            userFound.resetVerificationCode = undefined;
+            userFound.resetVerificationExpirationPeriod = undefined;
+            userFound.pendingPassword = undefined;
+            await userFound.save();
             return res.redirect(`/resetPassword/verify?error=${encodeURIComponent('Verification code expired')}&token=${encodeURIComponent(token)}`);
         }
         userFound.password = await bcrypt.hash(userFound.pendingPassword, 10);
-        delete userFound.resetVerificationCode;
-        delete userFound.resetVerificationExpirationPeriod;
-        delete userFound.pendingPassword;
-        await fsPromises.writeFile
-        (
-            path.join(__dirname, '..', 'model', 'users.json'),
-            JSON.stringify(usersDB.users)
-        );
+        userFound.resetVerificationCode = undefined;
+        userFound.resetVerificationExpirationPeriod = undefined;
+        userFound.pendingPassword = undefined;
+        await userFound.save();
         return res.redirect('/login?message=' + encodeURIComponent('Password successfully reset'));
     } 
     catch (error) 
