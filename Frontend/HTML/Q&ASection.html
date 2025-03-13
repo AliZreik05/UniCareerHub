@@ -100,7 +100,8 @@
               <div class="question-header">
                 <h4>${q.title}</h4>
                 <p class="question-meta">
-                  <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
+                  <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(review.time).toLocaleString()}
+
                 </p>
               </div>
               <div class="question-body">

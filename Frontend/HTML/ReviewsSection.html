@@ -154,7 +154,8 @@
         <div class="review-header">
             <h4>${review.title}</h4>
             <p class="review-meta">
-                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${review.time}
+                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+
             </p>
             <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
             <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
