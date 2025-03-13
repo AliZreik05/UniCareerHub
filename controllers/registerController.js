@@ -48,7 +48,7 @@ const handleNewUser = async (req, res) =>
         }
         if (!isStrongPassword(password)) 
         {
-            return res.redirect('/register?error='+encodeURIComponent('Password is not strong enough. Your password has to be atleast 8 characters long and has atleast one upper case, one lower case, one digit (0-9) and one special character (!@#$%^&*(),.?":{}|<>)'));
+            return res.redirect('/register?error='+encodeURIComponent('Password must be at least 8 characters with an uppercase letter, a lowercase letter, a digit, and a special character'));
         }
     const duplicate = usersDB.users.find(person => person.username === user); 
     if (duplicate) 

@@ -47,7 +47,6 @@ h1{
     text-align: center;
     backdrop-filter: blur(9px);
     z-index: 1;
-    margin-top: auto;
 }
 
 .container h2{
