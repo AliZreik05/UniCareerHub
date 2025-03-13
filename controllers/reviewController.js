@@ -5,7 +5,7 @@ const { format } = require('date-fns');
 const postReview = async (req, res) => {
   const postId = crypto.randomUUID();
   const user = req.user.username;
-  const { operation, title, review, company, industry, ID } = req.body; // Expect an "ID" for removal
+  const { operation, title, review, company,rating, industry, ID } = req.body; // Expect an "ID" for removal
 
   if (operation === 'remove') {
     try {
@@ -25,6 +25,7 @@ const postReview = async (req, res) => {
         companyName: company, 
         review,
         industry,
+        rating,  
         time: dateTime
       });
       await newReview.save();

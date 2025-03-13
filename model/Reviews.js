@@ -7,6 +7,7 @@ const reviewSchema = new mongoose.Schema({
   companyName: { type: String },
   review: { type: String, required: true },
   industry: { type: String },
+  rating: { type: Number, required: true },
   time: { type: Date, default: Date.now },
 });
 

@@ -137,40 +137,50 @@
         };
 
         async function loadLatestReviews() {
-    try {
-        const response = await fetch('/reviews/latest');
-        if (!response.ok) {
-            console.error('Failed to load reviews');
-            return;
-        }
-        const latestReviews = await response.json();
-        const reviewsList = document.getElementById('reviews-list');
-        reviewsList.innerHTML = "";
+  try {
+    const response = await fetch('/reviews/latest');
+    if (!response.ok) {
+      console.error('Failed to load reviews');
+      return;
+    }
+    const latestReviews = await response.json();
+    const reviewsList = document.getElementById('reviews-list');
+    reviewsList.innerHTML = "";
 
-        latestReviews.forEach(review => {
-    const reviewElem = document.createElement('div');
-    reviewElem.classList.add('review');
-    reviewElem.innerHTML = `
+    latestReviews.forEach(review => {
+      // Generate stars
+      const ratingValue = review.rating || 0;
+      let starsHtml = "";
+      for (let i = 1; i <= 5; i++) {
+        starsHtml += i <= ratingValue
+          ? '<i class="fas fa-star"></i>'
+          : '<i class="far fa-star"></i>';
+      }
+
+      const reviewElem = document.createElement('div');
+      reviewElem.classList.add('review');
+      reviewElem.innerHTML = `
         <div class="review-header">
-            <h4>${review.title}</h4>
-            <p class="review-meta">
-                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
-
-            </p>
-            <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
-            <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+          <h4>${review.title}</h4>
+          <p class="review-meta">
+            <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+          </p>
+          <div class="review-stars">${starsHtml}</div>
+          <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
+          <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
         </div>
         <div class="review-body">
-            <p>${review.review}</p>
+          <p>${review.review}</p>
         </div>
-    `;
-    reviewsList.appendChild(reviewElem);
-});
+      `;
+      reviewsList.appendChild(reviewElem);
+    });
 
-    } catch (error) {
-        console.error('Error loading latest reviews:', error);
-    }
+  } catch (error) {
+    console.error('Error loading latest reviews:', error);
+  }
 }
+
 
 document.getElementById('company-filter').addEventListener('input', filterReviews);
 document.getElementById('industry-filter').addEventListener('change', filterReviews);
