@@ -236,3 +236,45 @@ body {
 .close-btn:hover {
     color: red;
 }
+
+
+/* STAR RATING SYSTEM */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* Hide radio inputs */
+.star-rating input[type="radio"] {
+    display: none;
+}
+
+/* Default star color */
+.star-rating label {
+    color: #ccc;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+/* Change star color on hover */
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #ffcc00;
+}
+
+/* When a star is selected, highlight it */
+.star-rating input[type="radio"]:checked ~ label {
+    color: #ffcc00;
+}
+
+/* Review Footer (Stars in Bottom-Right) */
+.review-footer {
+    text-align: right;
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #ffcc00;
+}
