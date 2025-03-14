@@ -3598,3 +3598,12 @@
 20250313	22:17:53	53ae00fb-9986-4f47-a9a3-b43eacf5fde0	GET	undefined	/reviews/latest
 20250313	22:17:53	8798afe8-a3aa-4b89-a4c5-71bc22ae293d	GET	undefined	/Pics/review-pic.png
 20250313	22:17:53	0192f794-d2a9-4f86-a248-d660f89e6f96	GET	undefined	/reviews/latest
+20250314	21:25:51	aac78dc5-3644-45fa-8091-2e775bbb3ae8	GET	undefined	/
+20250314	21:25:51	37c71e39-543b-4f58-9028-7be239dd0e91	GET	undefined	/css/LandingPageStyles.css
+20250314	21:25:51	0e3a6b0a-6319-4b7d-966a-96edc45cb6ca	GET	undefined	/Pics/pic1.jpg
+20250314	21:25:51	74ae8899-ce73-40c6-8b50-320a45f19fbf	GET	undefined	/Pics/pic2.jpg
+20250314	21:25:51	7562a3cb-a7d8-4ef3-b2cc-09bd943664ff	GET	undefined	/Pics/pic3.png
+20250314	21:25:51	050bb9c4-7e3f-4a3a-b403-31aec6f4c769	GET	undefined	/Pics/pic4.jpg
+20250314	21:25:51	d38563bd-a97f-4dee-83c0-5174410d8bf7	GET	undefined	/Pics/pic5.jpg
+20250314	21:25:51	d1abf830-86a4-472d-883c-d20a54d4649f	GET	undefined	/js/api.js
+20250314	21:25:51	15b1e43b-1ec4-4023-994e-9685e9173f57	GET	undefined	/reviews/latest
