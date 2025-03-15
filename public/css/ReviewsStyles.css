@@ -23,9 +23,7 @@ body {
     align-items: center;
     position: fixed;
     width: 100%;
-    top: 0;
-    left: 0;
-    z-index: 1000;
+    z-index: 10;
     font-weight: bold;
     font-size: 24px;
     box-sizing: border-box;
