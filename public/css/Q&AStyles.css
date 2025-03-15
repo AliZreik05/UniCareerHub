@@ -112,10 +112,10 @@
         position: relative;
         z-index: 1;
         padding-bottom: 60px;
-        animation: fadeSlideUp 1s ease both;
+        animation: fadeSlideUp 2s ease both;
       }
       .hero h2 {
-        font-size: 2.5rem;
+        font-size: 2.3rem;
         margin-bottom: 15px;
         color: var(--primary-text);
         text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
@@ -124,6 +124,7 @@
         font-size: 1.2rem;
         margin-bottom: 25px;
         color: var(--primary-text);
+        font-style :italic;
         text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
       }
       .hero-controls {
@@ -132,6 +133,7 @@
         gap: 10px;
         flex-wrap: wrap;
       }
+
       .search-input {
         padding: 10px 14px;
         border: none;
@@ -189,17 +191,40 @@
       #qa-section {
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start;
         text-align: center;
         margin-top: 20px;
         padding: 0 20px;
       }
       .section-title {
-        text-align: center;
+        text-align: left;
         font-size: 2rem;
         margin-bottom: 20px;
+        margin-left: 20px;
       }
-  
+
+      .floating-btn {
+        position: fixed;
+        font-weight: bold;
+        font-size:  1rem;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--button-bg);
+        color: var(--primary-text);
+        padding: 15px 20px;
+        border: none;
+        border-radius: 50px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: opacity 0.3s ease, background-color 0.3s ease;
+        z-index: 1000;
+      }
+      .floating-btn:hover,
+      .floating-btn:focus {
+        opacity: 0.9;
+        outline: none;
+      }
+      
       /* Button Styling */
       .submit-btn, .reply-btn, .submit-reply {
         background-color: var(--button-bg);
@@ -267,10 +292,10 @@
       /* Question List */
       .questions-list {
         max-width: 600px;
-        margin: auto;
+        margin: 0; /* or margin: 20px 0 0 20px; if you need some spacing */
         display: flex;
         flex-direction: column;
-        align-items: center;
+        align-items: flex-start; /* Aligns items to the left */
         gap: 30px;
         width: 100%;
         padding: 0 20px;
