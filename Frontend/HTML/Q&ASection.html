@@ -44,7 +44,6 @@
           class="search-input" 
           placeholder="Search for questions..." 
         />
-        <button class="search-btn">Search</button>
       </div>
     </div>
     <div class="hero-images">
@@ -98,18 +97,23 @@
     </div>
     <script src="/js/api.js"></script>
     <script>
+      // Global variable to store all questions
+      let allQuestions = [];
+    
+      // Modal functionality for "Add a Question"
       document.getElementById("open-modal").addEventListener("click", function () {
         document.getElementById("review-modal").style.display = "block";
       });
       document.querySelector(".close-btn").addEventListener("click", function () {
         document.getElementById("review-modal").style.display = "none";
       });
-      window.onclick = function (event) {
+      window.addEventListener("click", function (event) {
         if (event.target === document.getElementById("review-modal")) {
           document.getElementById("review-modal").style.display = "none";
         }
-      };
-
+      });
+    
+      // Function to load the latest questions from the server
       async function loadLatestQuestions() {
         try {
           const response = await fetch("/Q&A/latest");
@@ -118,82 +122,153 @@
             return;
           }
           const latestQuestions = await response.json();
-          const questionsList = document.getElementById("questions-list");
-          questionsList.innerHTML = "";
-          latestQuestions.forEach((q) => {
-            const questionElem = document.createElement("div");
-            questionElem.classList.add("question");
-            questionElem.innerHTML = `
-              <div class="question-header">
-                <h4>${q.title}</h4>
-                <p class="question-meta">
-                  <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
-                </p>
-              </div>
-              <div class="question-body">
-                <p>${q.question}</p>
-              </div>
-              <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
-              <div class="replies" style="display:none;">
-                <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-                <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
-              </div>
-              <div class="replies-list"></div>
-            `;
-            const replyBtn = questionElem.querySelector(".reply-btn");
-            const repliesDiv = questionElem.querySelector(".replies");
-            const submitReplyBtn = questionElem.querySelector(".submit-reply");
-            const repliesList = questionElem.querySelector(".replies-list");
-
-            replyBtn.addEventListener("click", function () {
-              repliesDiv.style.display = repliesDiv.style.display === "none" ? "block" : "none";
-            });
-
-            if (q.replies && Array.isArray(q.replies)) {
-              q.replies.forEach((reply) => {
-                const replyDiv = document.createElement("div");
-                replyDiv.classList.add("reply");
-                replyDiv.innerHTML = `<p><strong>${reply.user}</strong>: ${reply.reply}</p>`;
-                repliesList.appendChild(replyDiv);
-              });
-            }
-
-            submitReplyBtn.addEventListener("click", async function (event) {
-              event.preventDefault();
-              const replyText = questionElem.querySelector(".reply-body").value;
-              if (replyText) {
-                try {
-                  const replyResponse = await fetch("/Q&A/reply", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                      reply: replyText,
-                      ID: q.ID,
-                    }),
-                    credentials: "include"
-                  });
-                  if (!replyResponse.ok) {
-                    alert("Error posting reply.");
-                    return;
-                  }
-                  const newReply = document.createElement("div");
-                  newReply.classList.add("reply");
-                  newReply.innerHTML = `<p><strong>You</strong>: ${replyText}</p>`;
-                  repliesList.appendChild(newReply);
-                  questionElem.querySelector(".reply-body").value = "";
-                } catch (error) {
-                  console.error("Error posting reply:", error);
-                  alert("Error posting reply.");
-                }
-              }
-            });
-            questionsList.appendChild(questionElem);
-          });
+          allQuestions = latestQuestions; // Update the global variable
+          renderQuestions(latestQuestions); // Render all questions
         } catch (error) {
           console.error("Error loading latest questions:", error);
         }
       }
-
+    
+      // Function to render questions dynamically
+      function renderQuestions(questions) {
+        const questionsList = document.getElementById("questions-list");
+        questionsList.innerHTML = ""; // Clear previous questions
+    
+        // If no questions, display a "No results found" message shifted left
+        if (questions.length === 0) {
+          questionsList.innerHTML = `<p style="text-align: left; padding: 20px 20px 20px 40px;">No results found</p>`;
+          return;
+        }
+    
+        // Loop through each question and create its HTML structure
+        questions.forEach((q) => {
+          const questionElem = document.createElement("div");
+          questionElem.classList.add("question");
+          questionElem.innerHTML = `
+            <div class="question-header">
+              <h4>${q.title}</h4>
+              <p class="question-meta">
+                <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
+              </p>
+            </div>
+            <div class="question-body">
+              <p>${q.question}</p>
+            </div>
+            <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
+            <div class="replies">
+              <div class="reply-form" style="display: none;">
+                <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+                <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
+                <button class="cancel-reply"><i class="fas fa-times"></i> Cancel</button>
+              </div>
+            </div>
+            <div class="replies-list" style="display: none;"></div>
+            <button class="toggle-replies-btn" style="display: none;">Show Replies</button>
+          `;
+    
+          // Reply functionality
+          const replyBtn = questionElem.querySelector(".reply-btn");
+          const replyForm = questionElem.querySelector(".reply-form");
+          const submitReplyBtn = questionElem.querySelector(".submit-reply");
+          const cancelReplyBtn = questionElem.querySelector(".cancel-reply");
+          const repliesList = questionElem.querySelector(".replies-list");
+          const toggleRepliesBtn = questionElem.querySelector(".toggle-replies-btn");
+    
+          // Show reply form on clicking "Reply"
+          replyBtn.addEventListener("click", function () {
+            replyForm.style.display = "block";
+            replyBtn.style.display = "none";
+          });
+    
+          // Hide reply form and show "Reply" button when "Cancel" is clicked
+          cancelReplyBtn.addEventListener("click", function () {
+            replyForm.style.display = "none";
+            replyBtn.style.display = "inline-block";
+          });
+    
+          // Toggle visibility of replies list on clicking the toggle button
+          toggleRepliesBtn.addEventListener("click", function () {
+            const visible = repliesList.style.display !== "none";
+            repliesList.style.display = visible ? "none" : "block";
+            toggleRepliesBtn.innerText = visible ? "Show Replies" : "Hide Replies";
+          });
+    
+          // If there are replies, add them and show the toggle button
+          if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
+            q.replies.forEach((reply) => {
+              const replyDiv = document.createElement("div");
+              replyDiv.classList.add("reply");
+              replyDiv.innerHTML = `<p><strong>${reply.user}</strong>: ${reply.reply}</p>`;
+              repliesList.appendChild(replyDiv);
+            });
+            toggleRepliesBtn.style.display = "inline-block";
+          }
+    
+          // Handle submitting a reply
+          submitReplyBtn.addEventListener("click", async function (event) {
+            event.preventDefault();
+            const replyText = questionElem.querySelector(".reply-body").value;
+            if (replyText) {
+              try {
+                const replyResponse = await fetch("/Q&A/reply", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ reply: replyText, ID: q.ID }),
+                  credentials: "include"
+                });
+                if (!replyResponse.ok) {
+                  alert("Error posting reply.");
+                  return;
+                }
+                const newReply = document.createElement("div");
+                newReply.classList.add("reply");
+                newReply.innerHTML = `<p><strong>You</strong>: ${replyText}</p>`;
+                repliesList.appendChild(newReply);
+                questionElem.querySelector(".reply-body").value = "";
+                repliesList.style.display = "block";
+                toggleRepliesBtn.innerText = "Hide Replies";
+                toggleRepliesBtn.style.display = "inline-block";
+              } catch (error) {
+                console.error("Error posting reply:", error);
+                alert("Error posting reply.");
+              }
+            }
+          });
+    
+          questionsList.appendChild(questionElem);
+        });
+      }
+    
+      // Live search: update displayed questions as you type
+      const searchInput = document.querySelector(".search-input");
+      searchInput.addEventListener("input", function () {
+        const searchQuery = this.value.toLowerCase();
+        if (searchQuery === "") {
+          renderQuestions(allQuestions);
+        } else {
+          const filtered = allQuestions.filter((q) =>
+            q.title.toLowerCase().includes(searchQuery)
+          );
+          renderQuestions(filtered);
+        }
+      });
+    
+      // Also trigger search on Enter key press
+      searchInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          const searchQuery = this.value.toLowerCase();
+          if (searchQuery === "") {
+            renderQuestions(allQuestions);
+          } else {
+            const filtered = allQuestions.filter((q) =>
+              q.title.toLowerCase().includes(searchQuery)
+            );
+            renderQuestions(filtered);
+          }
+        }
+      });
+    
+      // Handle submitting a new question
       document.getElementById("question-form").addEventListener("submit", async function (event) {
         event.preventDefault();
         const title = document.getElementById("question-title").value;
@@ -203,13 +278,14 @@
             const response = await fetch("/Q&A", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({title: title, question: body }),
-              credentials: 'include'
+              body: JSON.stringify({ title: title, question: body }),
+              credentials: "include"
             });
             if (!response.ok) {
               alert("Error posting question.");
               return;
             }
+            // Clear form and hide modal
             document.getElementById("question-title").value = "";
             document.getElementById("question-body").value = "";
             document.getElementById("review-modal").style.display = "none";
@@ -220,6 +296,13 @@
           }
         }
       });
-
+    
+      // Load questions when the DOM is ready
       document.addEventListener("DOMContentLoaded", loadLatestQuestions);
     </script>
+    
+    
+    
+    
+    
+    

@@ -42,7 +42,6 @@
         padding: 20px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         position: relative;
-        z-index: 1000;
       }
       .header-container {
         width: 100%;
@@ -134,29 +133,24 @@
         flex-wrap: wrap;
       }
 
-      .search-input {
-        padding: 10px 14px;
-        border-color: black;
-        border-radius: 4px;
-        outline: none;
-        font-size: 1rem;
-        width: 220px;
-      }
-      .search-btn {
-        background-color: var(--button-bg);
-        color: var(--primary-text);
-        padding: 10px 16px;
-        border: none;
-        border-radius: 4px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: opacity var(--transition-speed) ease, background-color var(--transition-speed) ease;
-      }
-      .search-btn:hover, .search-btn:focus {
-        opacity: 0.9;
-        outline: none;
-      }
+      /* Container around input and icon */
+        .search-container {
+            position: relative;
+            width: 100%;
+        }
   
+        /* Style the input box */
+        .search-input {
+            width: 100%;
+            padding: 10px 30px 10px 15px; /* Padding to make space for the icon */
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+        }
+  
+ 
+  
+
       @keyframes fadeSlideUp {
         0% {
           opacity: 0;
@@ -171,7 +165,7 @@
          MAIN CONTENT
       -------------------------------- */
       #qa-section {
-        display: flex;
+        display: grid;
         flex-direction: column;
         align-items: flex-start;
         text-align: center;
@@ -208,76 +202,141 @@
       }
       
       /* Button Styling */
-      .submit-btn, .reply-btn, .submit-reply {
-        background-color: var(--button-bg);
-        color: var(--primary-text);
-        padding: 10px 14px; 
-        font-size: 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-      }
-      .submit-btn:hover, .reply-btn:hover, .submit-reply:hover,
-      .submit-btn:focus, .reply-btn:focus, .submit-reply:focus {
-        background-color: #ffcc00;
-        opacity: 0.95;
-        outline: none;
-      }
-      .submit-btn {
-        margin-bottom: 30px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      }
-      .reply-btn {
-        margin-top: 10px;
-        transition: background-color 0.3s;
-      }
-      .reply-btn:focus {
-        outline: none;
-        border: 2px solid #ffcc00;
-      }
+      /* Style for the Cancel button */
+        .cancel-reply {
+            background-color: var(--button-bg); /* Same as other buttons (Gold Accent) */
+            color: var(--primary-text);
+            padding: 10px 14px; 
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+            margin-left: 10px;
+        }
+        
+        .cancel-reply:hover, 
+        .cancel-reply:focus {
+            background-color: #ffcc00; /* Lighter shade for hover */
+            opacity: 0.95;
+            outline: none;
+        }
+        
+        /* Style for the Show/Hide Replies button */
+        .toggle-replies-btn {
+            background-color: var(--button-bg); /* Same as other buttons (Gold Accent) */
+            color: var(--primary-text);
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+            margin-top: 10px;
+        }
+        
+        .toggle-replies-btn:hover, 
+        .toggle-replies-btn:focus {
+            background-color: #ffcc00; /* Lighter shade for hover */
+            opacity: 0.95;
+            outline: none;
+        }
+        
+        /* Optional: If you want a border or additional styling */
+        .toggle-replies-btn:focus {
+            border: 2px solid #ffcc00;
+            outline: none;
+        }
+        
+        /* Optional: For any additional buttons that may require consistency */
+        .reply-btn, .submit-reply {
+            background-color: var(--button-bg);
+            color: var(--primary-text);
+            padding: 10px 14px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+        }
+        
+        .reply-btn:hover, .submit-reply:hover,
+        .reply-btn:focus, .submit-reply:focus {
+            background-color: #ffcc00;
+            opacity: 0.95;
+            outline: none;
+        }
   
-      .ask-question {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        margin-bottom: 40px;
-        width: 100%;
-        max-width: 600px;
-      }
-      .ask-question .form-group {
-        margin-bottom: 20px;
-        text-align: left;
-      }
-      .ask-question label {
-        font-weight: bold;
-        display: block;
-        margin-bottom: 8px;
-      }
-      .ask-question input,
-      .ask-question textarea {
-        width: 100%;
-        padding: 12px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 1em;
-        background-color: #fafafa;
-        transition: border-color 0.3s ease;
-      }
-      .ask-question input:focus,
-      .ask-question textarea:focus {
-        border-color: #ffcc00;
-        outline: none;
-      }
+        .submit-btn, .reply-btn, .submit-reply {
+            background-color: var(--button-bg);
+            color: var(--primary-text);
+            padding: 10px 14px; 
+            font-size: 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+        }
+        .submit-btn:hover, .reply-btn:hover, .submit-reply:hover,
+        .submit-btn:focus, .reply-btn:focus, .submit-reply:focus {
+            background-color: #ffcc00;
+            opacity: 0.95;
+            outline: none;
+        }
+        .submit-btn {
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .reply-btn {
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        .reply-btn:focus {
+            outline: none;
+            border: 2px solid #ffcc00;
+        }
+    
+        .ask-question {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 40px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .ask-question .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .ask-question label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .ask-question input,
+        .ask-question textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+        .ask-question input:focus,
+        .ask-question textarea:focus {
+            border-color: #ffcc00;
+            outline: none;
+        }
   
       /* Question List */
       .questions-list {
         max-width: 600px;
-        margin: 0; /* or margin: 20px 0 0 20px; if you need some spacing */
-        display: flex;
+        margin: 0;
+        display: grid;
         flex-direction: column;
-        align-items: flex-start; /* Aligns items to the left */
+        align-items: flex-start; 
         gap: 30px;
         width: 100%;
         padding: 0 20px;
