@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
+        .container { margin: 20px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab { padding: 10px 20px; background: #2c3e50; color: #fff; border-radius: 4px; cursor: pointer; }
+        .tab.active { background: #34495e; }
+        .section { display: none; }
+        .section.active { display: block; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #ecf0f1; }
+        button { padding: 5px 10px; margin-right: 5px; }
+        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); }
+        .modal-content { background: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; border-radius: 8px; }
+        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close:hover, .close:focus { color: #000; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Content Management</h1>
+        <div class="tabs">
+            <div class="tab active" data-target="reviews">Reviews</div>
+            <div class="tab" data-target="questions">Questions</div>
+            <div class="tab" data-target="reports">Reports</div>
+        </div>
+
+        <!-- Reviews Section -->
+        <div id="reviews" class="section active">
+            <h2>Manage Reviews</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Company</th>
+                        <th>Reviewer</th>
+                        <th>Rating</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ABC Corp</td>
+                        <td>John Doe</td>
+                        <td>4.5</td>
+                        <td>2025-03-10</td>
+                        <td>Great company with excellent work culture.</td>
+                        <td>Pending</td>
+                        <td>
+                            <button onclick="approveReview('ABC Corp', 'John Doe')">Approve</button>
+                            <button onclick="editReview('ABC Corp', 'John Doe')">Edit</button>
+                            <button onclick="removeReview('ABC Corp', 'John Doe')">Remove</button>
+                            <button onclick="flagReview('ABC Corp', 'John Doe')">Flag</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>XYZ Inc</td>
+                        <td>Jane Smith</td>
+                        <td>3.0</td>
+                        <td>2025-03-12</td>
+                        <td>Average experience, but good benefits.</td>
+                        <td>Approved</td>
+                        <td>
+                            <button onclick="editReview('XYZ Inc', 'Jane Smith')">Edit</button>
+                            <button onclick="removeReview('XYZ Inc', 'Jane Smith')">Remove</button>
+                            <button onclick="flagReview('XYZ Inc', 'Jane Smith')">Flag</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Questions Section -->
+        <div id="questions" class="section">
+            <h2>Manage Questions</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Asked By</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>What are the growth opportunities at Widgets Co?</td>
+                        <td>Alice Johnson</td>
+                        <td>2025-03-11</td>
+                        <td>Pending</td>
+                        <td>
+                            <button onclick="approveQuestion('Alice Johnson')">Approve</button>
+                            <button onclick="editQuestion('Alice Johnson')">Edit</button>
+                            <button onclick="removeQuestion('Alice Johnson')">Remove</button>
+                            <button onclick="flagQuestion('Alice Johnson')">Flag</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>How does the interview process at ABC Corp work?</td>
+                        <td>Mark Lee</td>
+                        <td>2025-03-13</td>
+                        <td>Approved</td>
+                        <td>
+                            <button onclick="editQuestion('Mark Lee')">Edit</button>
+                            <button onclick="removeQuestion('Mark Lee')">Remove</button>
+                            <button onclick="flagQuestion('Mark Lee')">Flag</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="section">
+            <h2>Manage Reports</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reported By</th>
+                        <th>Content Type</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>Review</td>
+                        <td>Inappropriate language</td>
+                        <td>2025-03-10</td>
+                        <td>Pending</td>
+                        <td>
+                            <button onclick="viewReport('John Doe', 'Inappropriate language')">View</button>
+                            <button onclick="approveReport('John Doe')">Approve</button>
+                            <button onclick="editReport('John Doe')">Edit</button>
+                            <button onclick="removeReport('John Doe')">Remove</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jane Smith</td>
+                        <td>Question</td>
+                        <td>Spam</td>
+                        <td>2025-03-12</td>
+                        <td>Approved</td>
+                        <td>
+                            <button onclick="viewReport('Jane Smith', 'Spam')">View</button>
+                            <button onclick="editReport('Jane Smith')">Edit</button>
+                            <button onclick="removeReport('Jane Smith')">Remove</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing Reported Content -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeViewModal()">&times;</span>
+            <h2>Reported Content</h2>
+            <p><strong>Reported By:</strong> <span id="reportedBy"></span></p>
+            <p><strong>Reason:</strong> <span id="reason"></span></p>
+            <p><strong>Content:</strong></p>
+            <p id="content"></p>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll(".tab").forEach(tab => {
+            tab.addEventListener("click", function() {
+                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+                this.classList.add("active");
+                document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+                document.getElementById(this.getAttribute("data-target")).classList.add("active");
+            });
+        });
+
+        // Review actions
+        function approveReview(company, reviewer) {
+            alert(`Review by ${reviewer} for ${company} has been approved.`);
+        }
+
+        function editReview(company, reviewer) {
+            alert(`Edit review by ${reviewer} for ${company}.`);
+        }
+
+        function removeReview(company, reviewer) {
+            if (confirm(`Are you sure you want to remove the review by ${reviewer} for ${company}?`)) {
+                alert(`Review by ${reviewer} for ${company} has been removed.`);
+            }
+        }
+
+        function flagReview(company, reviewer) {
+            alert(`Review by ${reviewer} for ${company} has been flagged.`);
+        }
+
+        // Question actions
+        function approveQuestion(askedBy) {
+            alert(`Question by ${askedBy} has been approved.`);
+        }
+
+        function editQuestion(askedBy) {
+            alert(`Edit question by ${askedBy}.`);
+        }
+
+        function removeQuestion(askedBy) {
+            if (confirm(`Are you sure you want to remove the question by ${askedBy}?`)) {
+                alert(`Question by ${askedBy} has been removed.`);
+            }
+        }
+
+        function flagQuestion(askedBy) {
+            alert(`Question by ${askedBy} has been flagged.`);
+        }
+
+        // Report actions
+        function approveReport(reportedBy) {
+            alert(`Report by ${reportedBy} has been approved.`);
+        }
+
+        function editReport(reportedBy) {
+            alert(`Edit report by ${reportedBy}.`);
+        }
+
+        function removeReport(reportedBy) {
+            if (confirm(`Are you sure you want to remove the report by ${reportedBy}?`)) {
+                alert(`Report by ${reportedBy} has been removed.`);
+            }
+        }
+
+        // View reported content
+        function viewReport(reportedBy, reason) {
+            const modal = document.getElementById("viewModal");
+            const content = document.getElementById("content");
+
+            // Mock content for demonstration
+            const reportedContent = reportedBy === "John Doe" 
+                ? "This review contains inappropriate language and should be removed." 
+                : "This question is spam and should be removed.";
+
+            // Populate modal with data
+            document.getElementById("reportedBy").textContent = reportedBy;
+            document.getElementById("reason").textContent = reason;
+            content.textContent = reportedContent;
+
+            // Display the modal
+            modal.style.display = "block";
+        }
+
+        function closeViewModal() {
+            const modal = document.getElementById("viewModal");
+            modal.style.display = "none";
+        }
+    </script>
+</body>
+</html>
