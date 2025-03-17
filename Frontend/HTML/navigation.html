@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Navigation</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+            background: #f4f4f4; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; /* Full viewport height to center vertically */
+        }
+        .container { 
+            text-align: center; /* Center text inside the container */
+        }
+        .nav { 
+            display: flex; 
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 10px; 
+            margin-bottom: 20px; 
+        }
+        .nav a { 
+            padding: 10px 20px; 
+            background: #2c3e50; 
+            color: #fff; 
+            border-radius: 4px; 
+            text-decoration: none; 
+            transition: background 0.3s ease; 
+        }
+        .nav a:hover { 
+            background: #34495e; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="user_management.html">User Management</a>
+            <a href="content.html">Content Moderation</a>
+            
+        </div>
+        <h1>Welcome to the Admin Panel</h1>
+    </div>
+</body>
+</html>
