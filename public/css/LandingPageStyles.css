@@ -24,27 +24,31 @@ section {
 /* Navbar */
 .navbar {
     background-color: #d1ae89;
-    padding: 20px 20px;
+    padding: 20px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     position: fixed;
     width: 100%;
     top: 0;
     left: 0;
     z-index: 1000;
-    box-sizing:border-box;
+    box-sizing: border-box;
 }
 
+/* Logo stays on the left */
 .logo {
     font-weight: bold;
     font-size: 24px;
+    flex: 1;
+    text-align: left;
 }
 
+/* Navigation links are centered */
 .nav-links {
+    flex: 2;
     display: flex;
-    gap: 50px; 
-    margin-left: auto;
+    justify-content: center;
+    gap: 50px;
     white-space: nowrap;
 }
 
@@ -55,25 +59,62 @@ section {
 }
 
 .nav-links a:hover {
-    text-decoration:underline;
+    text-decoration: underline;
 }
 
-.logout-btn {
+/* Nav buttons (login/register) are on the right */
+.nav-btns {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-btns a {
+    text-decoration: none;
+    border: none;
+}
+
+.login-btn, .register-btn, .logout-btn {
     background: none;
     border: 2px solid black; 
     color: black;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s ease;
     padding: 6px 15px;
-    border-radius: 20px; 
+    border-radius: 20px;
+    margin-left: 10px;
+    line-height: 1.2;
 }
 
-.logout-btn:hover {
+.login-btn:hover, .register-btn:hover, .logout-btn:hover  {
     background-color: black;
     color: white; 
 }
+
+.user-info-container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.user-info-container a:first-child {
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.user-icon {
+    font-size: 35px;
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s;
+    vertical-align: middle;
+  }
+  
+  .user-icon:hover {
+    color: #555;
+  }
 
 /* Main Section */
 .hero-text {

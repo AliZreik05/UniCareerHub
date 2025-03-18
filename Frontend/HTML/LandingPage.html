@@ -3,6 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+     rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+    />
     <link rel="stylesheet" href= "css/LandingPageStyles.css">
     <title>UniCareerHub</title>
 </head>
@@ -12,12 +19,19 @@
         <div class="nav-links">
             <a href="#main">Main</a>
             <a href="#about">About</a>
+            <a href="#">Jobs</a>
             <a href="#reviews">Reviews</a>
-            <a href="#qas">Q&As</a>   
-            <a href="/logout">
-                <button class="logout-btn">Logout</button> 
+            <a href="#qas">Q&As</a>
+        </div>  
+        <div class="nav-btns">   
+            <a href="/login"> 
+                <button class="login-btn">Login</button>
+            </a> 
+
+            <a href="/register"> 
+                <button class="register-btn">Register</button>
             </a>
-        </div>    
+        </div>
     </div>
     
     <section id="main">
@@ -71,5 +85,25 @@
         </div>
     </section>
     <script src="/js/api.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          var isLoggedIn = true; 
+          
+          var navBtnsDiv = document.querySelector('.nav-btns');
+          
+          if (isLoggedIn) {
+            navBtnsDiv.innerHTML = `
+              <div class="user-info">
+                <a href="/profile">
+                    <i class="fa-solid fa-circle-user user-icon"></i>
+                </a>
+                <a href="/logout">
+                  <button class="logout-btn">Logout</button>
+                </a>
+              </div>
+            `;
+          }
+        });
+      </script>
 </body>
 </html>
