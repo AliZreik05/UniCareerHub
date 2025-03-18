@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f4f7fc, #eae8e4);
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    width: 60%;
+    margin: 50px auto;
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* 🔸 Profile Header */
+.profile-header {
+    text-align: center;
+    padding: 20px 0;
+    margin-bottom: 10px;
+}
+
+.profile-pic-container {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+/* 🔹 Profile Picture */
+.profile-pic {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #d1ae89;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-pic:hover {
+    transform: scale(1.1);
+}
+
+.upload-btn {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #d1ae89;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+    font-weight: bold;
+}
+
+.upload-btn:hover {
+    background: #c09c76;
+}
+
+/* 🔸 Info */
+.info h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-top: 10px;
+}
+
+.info h3 {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-top: 5px;
+}
+
+/* 🔸 Inputs */
+input, textarea {
+    width: 90%;
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fafafa;
+}
+
+textarea {
+    min-height: 80px;
+    resize: none;
+}
+
+input:focus,
+textarea:focus {
+    border-color: #d1ae89;
+    outline: none;
+    box-shadow: 0 0 5px rgba(209, 174, 137, 0.6);
+}
+
+/* 🔸 Sections */
+.section {
+    margin-top: 20px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.section h2 {
+    font-size: 22px;
+    border-bottom: 3px solid #d1ae89;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    color: #a17754;
+}
+
+.section ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.section ul li {
+    padding: 8px 0;
+    font-size: 16px;
+    color: #2c3e50;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.section ul li:last-child {
+    border-bottom: none;
+}
+
+/* 🔸 Buttons */
+.confirm-btn, .edit-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    background: #ffcc00;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.confirm-btn:hover, .edit-btn:hover {
+    background: #f2b600;
+    transform: scale(1.05);
+}
