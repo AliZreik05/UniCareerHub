@@ -4,105 +4,182 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Profile</title>
-    <link rel="stylesheet" href="css/profile-styles.css">
+    <link rel="stylesheet" href="profile-styles.css">
 </head>
 <body>
-  <div class="container">
-    <div class="profile-header">
-        <div class="profile-pic-container">
-            <img id="profile-pic" src="profile-placeholder.jpg" alt="Profile Picture" class="profile-pic">
-            <input type="file" id="upload-pic" accept="image/*" style="display: none;">
-            <button class="upload-btn" id="change-photo-btn">Change Photo</button>
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img id="profile-pic" src="profile-placeholder.jpg" alt="Profile Picture" class="profile-pic">
+                <input type="file" id="upload-pic" accept="image/*" style="display: none;">
+                <button class="upload-btn" id="change-photo-btn">Change Photo</button>
+            </div>
+            <div class="info">
+                <h1 id="display-name"></h1>
+                <h3 id="display-major-year"></h3>
+            </div>
         </div>
-        <div class="info">
-            <h1 id="display-name">Your Name</h1>
-            <input type="text" id="name" placeholder="Enter Name">
-            
-            <h3 id="display-major-year">Major & Year</h3>
-            <input type="text" id="major-year" placeholder="Enter Major & Year">
-        </div>
-    </div>
-    
-    <div class="section">
-        <h2>Description</h2>
-        <p id="display-description">Tell something about yourself...</p>
-        <textarea id="description" placeholder="Enter Description"></textarea>
-    </div>
-    
-    <div class="section">
-        <h2>Experience</h2>
-        <ul id="display-experience">
-            <li>No experience added yet.</li>
-        </ul>
-        <textarea id="experience" placeholder="Enter Experience (comma separated)"></textarea>
-    </div>
-    
-    <div class="section">
-        <h2>Courses Taken</h2>
-        <ul id="display-courses">
-            <li>No courses added yet.</li>
-        </ul>
-        <textarea id="courses" placeholder="Enter Courses (comma separated)"></textarea>
-    </div>
-    
-    <button class="confirm-btn" onclick="updateProfile()">Confirm</button>
-    <button class="edit-btn" onclick="editProfile()" style="display: none;">Edit</button>
-</div>
 
-    
+        <div class="section">
+            <h2>Description</h2>
+            <p id="display-description"></p>
+        </div>
+
+        <div class="section">
+            <h2>Experience</h2>
+            <ul id="display-experience">
+                <li>No experience added yet.</li>
+            </ul>
+            <button class="edit-btn" onclick="openExperienceForm()">Add Experience</button>
+        </div>
+
+        <div class="section">
+            <h2>Courses Taken</h2>
+            <ul id="display-courses">
+                <li>No courses added yet.</li>
+            </ul>
+        </div>
+
+        <button class="edit-btn" onclick="openProfileForm()">Edit Profile</button>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="profile-form" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProfileForm()">&times;</span>
+            <h2>Edit Profile</h2>
+            <form id="edit-form">
+                <label for="name">Name:</label>
+                <input type="text" id="name" placeholder="Enter Name">
+                
+                <label for="major-year">Major & Year:</label>
+                <input type="text" id="major-year" placeholder="Enter Major & Year">
+                
+                <label for="description">Description:</label>
+                <textarea id="description" placeholder="Tell something about yourself..."></textarea>
+
+                <label for="courses">Courses Taken (comma separated):</label>
+                <textarea id="courses" placeholder="Enter Courses"></textarea>
+
+                <button type="button" class="confirm-btn" onclick="updateProfile()">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Experience Form Modal -->
+    <div id="experience-form" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExperienceForm()">&times;</span>
+            <h2>Add Experience</h2>
+            <form id="add-experience-form">
+                <label for="company">Company Name:</label>
+                <input type="text" id="company" placeholder="Enter Company Name">
+
+                <label for="job-title">Job Title:</label>
+                <input type="text" id="job-title" placeholder="Enter Job Title">
+
+                <label for="period">Period:</label>
+                <input type="text" id="period" placeholder="Enter Period (e.g., 2023-2024)">
+                
+                <button type="button" class="confirm-btn" onclick="addExperience()">Add</button>
+            </form>
+        </div>
+    </div>
+
     <script>
-       function updateProfile() {
-    document.getElementById("display-name").innerText = document.getElementById("name").value || "Your Name";
-    document.getElementById("display-major-year").innerText = document.getElementById("major-year").value || "Major & Year";
-    document.getElementById("display-description").innerText = document.getElementById("description").value || "Tell something about yourself...";
-    
-    let experienceInput = document.getElementById("experience").value;
-    document.getElementById("display-experience").innerHTML = experienceInput
-        ? experienceInput.split(",").map(item => `<li>${item.trim()}</li>`).join("")
-        : "<li>No experience added yet.</li>";
-    
-    let coursesInput = document.getElementById("courses").value;
-    document.getElementById("display-courses").innerHTML = coursesInput
-        ? coursesInput.split(",").map(item => `<li>${item.trim()}</li>`).join("")
-        : "<li>No courses added yet.</li>";
+        function openProfileForm() {
+            document.getElementById("profile-form").style.display = "flex";
+        }
 
-    // Hide inputs & textareas
-    document.querySelectorAll("input, textarea").forEach(el => el.style.display = "none");
+        function closeProfileForm() {
+            document.getElementById("profile-form").style.display = "none";
+        }
 
-    // Hide "Change Photo" option
-    document.getElementById("upload-pic").style.display = "none";
-    document.querySelector(".upload-btn").style.display = "none";
+        function openExperienceForm() {
+            document.getElementById("experience-form").style.display = "flex";
+        }
 
-    // Hide Confirm button, Show Edit button
-    document.querySelector(".confirm-btn").style.display = "none";
-    document.querySelector(".edit-btn").style.display = "inline-block";
-}
+        function closeExperienceForm() {
+            document.getElementById("experience-form").style.display = "none";
+        }
 
-function editProfile() {
-    // Show inputs & textareas
-    document.querySelectorAll("input, textarea").forEach(el => el.style.display = "block");
+        function updateProfile() {
+            document.getElementById("display-name").innerText = document.getElementById("name").value;
+            document.getElementById("display-major-year").innerText = document.getElementById("major-year").value;
+            document.getElementById("display-description").innerText = document.getElementById("description").value;
 
-    // Show "Change Photo" option again
-    document.getElementById("upload-pic").style.display = "block";
-    document.querySelector(".upload-btn").style.display = "inline-block";
+            let coursesInput = document.getElementById("courses").value;
+            document.getElementById("display-courses").innerHTML = coursesInput
+                ? coursesInput.split(",").map(item => `<li>${item.trim()}</li>`).join("")
+                : "<li>No courses added yet.</li>";
+            
+            closeProfileForm();
+        }
 
-    // Show Confirm button, Hide Edit button
-    document.querySelector(".confirm-btn").style.display = "inline-block";
-    document.querySelector(".edit-btn").style.display = "none";
-}
+        function addExperience() {
+    let company = document.getElementById("company").value;
+    let jobTitle = document.getElementById("job-title").value;
+    let period = document.getElementById("period").value;
 
-// Profile picture upload
-document.getElementById("upload-pic").addEventListener("change", function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById("profile-pic").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    if (company && jobTitle && period) {
+        let experienceList = document.getElementById("display-experience");
+
+        // Remove "No experience added yet." message if present
+        if (experienceList.children[0].innerText === "No experience added yet.") {
+            experienceList.innerHTML = "";
+        }
+
+        // Create the experience item
+        let experienceItem = document.createElement("li");
+        experienceItem.classList.add("experience-item");
+        experienceItem.innerHTML = `
+            <span><strong>${jobTitle}</strong> at ${company} (${period})</span>
+            <div class="experience-menu">
+                <span class="dots" onclick="toggleMenu(this)">&#8226;&#8226;&#8226;</span>
+                <div class="dropdown-menu">
+                    <button onclick="deleteExperience(this)">Delete</button>
+                </div>
+            </div>
+        `;
+
+        experienceList.appendChild(experienceItem);
+        closeExperienceForm();
     }
-});
+}
 
+// Toggle the dropdown menu
+function toggleMenu(dotsElement) {
+    let menu = dotsElement.nextElementSibling;
+    menu.classList.toggle("show");
+}
+
+// Delete the experience
+function deleteExperience(buttonElement) {
+    let experienceItem = buttonElement.closest(".experience-item");
+    experienceItem.remove();
+
+    // If no experiences left, show default message
+    let experienceList = document.getElementById("display-experience");
+    if (experienceList.children.length === 0) {
+        experienceList.innerHTML = "<li>No experience added yet.</li>";
+    }
+}
+
+
+        document.getElementById("change-photo-btn").addEventListener("click", function() {
+            document.getElementById("upload-pic").click();
+        });
+
+        document.getElementById("upload-pic").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById("profile-pic").src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 </body>
 </html>
