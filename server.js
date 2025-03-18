@@ -37,6 +37,7 @@ app.use('/refresh', require('./routes/refresh'));
 app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
 app.use('/admin',require('./routes/admin'));
+app.use('/profile',require('./routes/profile'));
 app.use(verifyJWT);
 app.use('/reviews',require('./routes/reviews'));
 app.use('/Q&A',require('./routes/question'));
