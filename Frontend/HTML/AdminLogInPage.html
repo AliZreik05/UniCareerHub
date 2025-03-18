@@ -8,27 +8,35 @@
 </head>
 <body>
     
-<div class="Field-container js-Field-Container">
-    <div class="admin-login-text-container">
-        <p class="js-Admin-Text">Admin Login</p>
-    </div>
-    <div class="Username-Container">
-        <input class="Username-Field js-Username-Field" type="text" placeholder="Username or email">
-    </div>
-    <div class="Password-Container">
-        <input class="Password-Field js-Password-Field" type="password" placeholder="Password">
-    </div>
-    <div class="Login-Button-Container">
-        <button class="Login-Button js-Login-Button">Login</button>
-    </div>
-</div>
+    <form id="loginForm" action="/admin/login" method="POST">
+        <div class="Field-container js-Field-Container">
+          <div class="admin-login-text-container">
+            <h2 class="js-Admin-Text">Admin Login</h2>
+          </div>
+          <div class="error" id="error"></div>
+          <div class="Username-Container input-box">
+            <input class="Username-Field js-Username-Field" type="text" id="email" name="user" placeholder="Username or Email" required>
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="Password-Container input-box">
+            <input class="Password-Field js-Password-Field" type="password" id="password" name="password" placeholder="Password" required>
+            <i class="fas fa-lock"></i>
+          </div>
+          <div class="Login-Button-Container">
+            <button type="submit" class="Login-Button js-Login-Button">Login</button>
+          </div>
+        </div>
+      </form>
+      
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        document.querySelector(".js-Login-Button").addEventListener("click", () => {
-            window.location.href = "/admin/navigation";
-        });
-    });
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get('error')
+    if(error)
+    {
+        document.getElementById('error').textContent = error;
+    }
+   
 </script>
 
 </body>

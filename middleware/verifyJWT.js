@@ -11,9 +11,11 @@
             token = req.cookies.accessToken;
         }
 
-        if (!token) {
+        if (!token) 
+        {
             console.log("No token found");
-            return res.redirect('/login'); 
+            const isAdminRoute = req.originalUrl.startsWith('/admin');
+            return res.redirect(isAdminRoute ? '/admin/login' : '/login'); 
         }
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {

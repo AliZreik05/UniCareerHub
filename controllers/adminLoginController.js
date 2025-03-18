@@ -8,22 +8,23 @@ const handleLogin = async (req, res) =>
     const { user, password } = req.body;
     if (!user || !password) 
     {
-        return res.redirect('/login?error=' + encodeURIComponent('Invalid email or password.')); 
+        return res.redirect('/admin/login?error=' + encodeURIComponent('Invalid email or password.')); 
     }
     const foundUser = await User.findOne({ username: user });
     if (!foundUser) 
     {
-        return res.redirect('/login?error=' + encodeURIComponent('User not found')); 
+        return res.redirect('/admin/login?error=' + encodeURIComponent('User not found')); 
     }
     
     const match = await bcrypt.compare(password, foundUser.password); 
     if (match) 
     {
-        if (!foundUser.verified) 
+            const roles = Array.from(foundUser.roles.values()); 
+            if (foundUser.roles.get('Admin') !== 5150) 
             {
-            return res.redirect('/login?error=' + encodeURIComponent('User email not verified'));
-          }
-        const roles = Array.from(foundUser.roles.values());
+                return res.redirect('/admin/login?error=' + encodeURIComponent('User unauthorized'));
+            }
+            
         const accessToken = jwt.sign(
             {
             "UserInfo":
@@ -62,11 +63,11 @@ const handleLogin = async (req, res) =>
             maxAge: 24 * 60 * 60 * 1000,
             path: '/'
           });
-        res.redirect('/');
+        res.redirect('/admin/navigation');
     } 
     else 
     {
-        return res.redirect('/login?error=' + encodeURIComponent('Incorrect password')); 
+        return res.redirect('/admin/login?error=' + encodeURIComponent('Incorrect password')); 
     }
 }
 

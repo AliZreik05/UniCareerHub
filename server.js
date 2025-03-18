@@ -9,6 +9,7 @@ const verifyJWT = require('./middleware/verifyJWT');
 const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const connectDB = require('./config/database');
+const checkAdmin = require('./middleware/checkAdmin');
 const PORT = process.env.PORT || 3500;
 
 connectDB();
@@ -36,7 +37,8 @@ app.use('/verify',require('./routes/verify'));
 app.use('/refresh', require('./routes/refresh'));
 app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
-app.use('/admin',require('./routes/admin'));
+app.use('/admin/login', require('./routes/adminLogin'));
+app.use('/admin', verifyJWT, checkAdmin, require('./routes/admin'));
 app.use('/profile',require('./routes/profile'));
 app.use(verifyJWT);
 app.use('/reviews',require('./routes/reviews'));

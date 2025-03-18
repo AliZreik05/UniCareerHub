@@ -15,7 +15,7 @@ const handleRefreshToken = async(req, res) =>
         process.env.REFRESH_TOKEN_SECRET,
         (err, decoded) => {
             if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
-            const roles = Object.values(foundUser.roles);
+            const roles = Array.from(foundUser.roles.values()); 
             const accessToken = jwt.sign(
                 {
                     "UserInfo" : 
