@@ -15,7 +15,10 @@ const handleLogin = async (req, res) =>
     {
         return res.redirect('/admin/login?error=' + encodeURIComponent('User not found')); 
     }
-    
+    if(foundUser.suspended)
+    {
+        return res.redirect('/admin/login?error=' + encodeURIComponent('User is suspended'));
+    }
     const match = await bcrypt.compare(password, foundUser.password); 
     if (match) 
     {

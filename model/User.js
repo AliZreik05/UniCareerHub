@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   roles: { type: Map, of: Number, default: { User: 2001 } },
   verified: { type: Boolean, default: false },
+  suspended: { type: Boolean, default: false },
   refreshToken: { type: String },
   verificationCode: { type: String },
   verificationExpirationPeriod: { type: Date },

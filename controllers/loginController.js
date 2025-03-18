@@ -23,6 +23,10 @@ const handleLogin = async (req, res) =>
             {
             return res.redirect('/login?error=' + encodeURIComponent('User email not verified'));
           }
+        if(foundUser.suspended)
+        {
+            return res.redirect('/login?error=' + encodeURIComponent('User is suspended'));
+        }
         const roles = Array.from(foundUser.roles.values());
         const accessToken = jwt.sign(
             {

@@ -19,6 +19,7 @@
     .modal-content { background: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; border-radius: 8px; }
     .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; }
     .close:hover, .close:focus { color: black; text-decoration: none; cursor: pointer; }
+    #editRolesContainer label { margin-right: 10px; display: inline-block; }
   </style>
 </head>
 <body>
@@ -29,7 +30,6 @@
       <select id="roleFilter">
         <option value="">All Roles</option>
         <option value="User">User</option>
-        <option value="Moderator">Moderator</option>
         <option value="Admin">Admin</option>
       </select>
       <select id="statusFilter">
@@ -48,70 +48,32 @@
           <th>Actions</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>john_doe</td>
-          <td>john@example.com</td>
-          <td>User</td>
-          <td>Active</td>
-          <td class="actions">
-            <button onclick="openEditModal('john_doe')">Edit</button>
-            <button onclick="toggleUserStatus('john_doe', 'Active')">Suspend</button>
-            <button onclick="deleteUser('john_doe')">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>jane_smith</td>
-          <td>jane@example.com</td>
-          <td>Moderator</td>
-          <td>Active</td>
-          <td class="actions">
-            <button onclick="openEditModal('jane_smith')">Edit</button>
-            <button onclick="toggleUserStatus('jane_smith', 'Active')">Suspend</button>
-            <button onclick="deleteUser('jane_smith')">Delete</button>
-          </td>
-        </tr>
-        <tr>
-          <td>mark_lee</td>
-          <td>mark@example.com</td>
-          <td>Admin</td>
-          <td>Suspended</td>
-          <td class="actions">
-            <button onclick="openEditModal('mark_lee')">Edit</button>
-            <button onclick="toggleUserStatus('mark_lee', 'Suspended')">Unsuspend</button>
-            <button onclick="deleteUser('mark_lee')">Delete</button>
-          </td>
-        </tr>
-      </tbody>
+      <tbody id="usersTableBody"></tbody>
     </table>
   </div>
-
-  <!-- Edit User Modal -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeEditModal()">&times;</span>
       <h2>Edit User</h2>
-      <form id="editUserForm">
+      <form id="editUserForm" action="/admin/users/edit" method="POST">
         <label for="editUsername">Username</label>
-        <input type="text" id="editUsername" name="editUsername" required>
+        <input type="text" id="editUsername" name="username" readonly>
         <label for="editEmail">Email</label>
-        <input type="email" id="editEmail" name="editEmail" required>
-        <label for="editRole">Role</label>
-        <select id="editRole" name="editRole">
-          <option value="User">User</option>
-          <option value="Moderator">Moderator</option>
-          <option value="Admin">Admin</option>
-        </select>
-        <label for="editStatus">Status</label>
-        <select id="editStatus" name="editStatus">
-          <option value="Active">Active</option>
-          <option value="Suspended">Suspended</option>
+        <input type="email" id="editEmail" name="email">
+        <div id="editRolesContainer">
+          <span>Roles</span>
+          <label><input type="checkbox" name="roles" value="User"> User</label>
+          <label><input type="checkbox" name="roles" value="Admin"> Admin</label>
+        </div>
+        <label for="editVerified">Verified</label>
+        <select id="editVerified" name="verified">
+          <option value="true">Yes</option>
+          <option value="false">No</option>
         </select>
         <button type="submit">Save Changes</button>
       </form>
     </div>
   </div>
-
   <script>
     function searchUsers() {
       const input = document.getElementById("userSearch");
@@ -120,7 +82,7 @@
       const filter = input.value.toLowerCase();
       const table = document.getElementById("usersTable");
       const trs = table.getElementsByTagName("tr");
-      for (let i = 1; i < trs.length; i++) { // Skip header row
+      for (let i = 1; i < trs.length; i++) {
         let visible = false;
         const tds = trs[i].getElementsByTagName("td");
         const role = tds[2].textContent;
@@ -136,40 +98,111 @@
         trs[i].style.display = visible ? "" : "none";
       }
     }
-
-    function openEditModal(username) {
+    function openEditModal(username, email, verified, rolesMap, suspended) {
       const modal = document.getElementById("editModal");
       modal.style.display = "block";
-      // Populate form with user data (mock data for now)
       document.getElementById("editUsername").value = username;
-      document.getElementById("editEmail").value = username + "@example.com";
-      document.getElementById("editRole").value = "User";
-      document.getElementById("editStatus").value = "Active";
-    }
-
-    function closeEditModal() {
-      const modal = document.getElementById("editModal");
-      modal.style.display = "none";
-    }
-
-    function toggleUserStatus(username, currentStatus) {
-      const newStatus = currentStatus === "Active" ? "Suspended" : "Active";
-      alert(`User ${username} status changed to ${newStatus}`);
-      // Implement status change logic here
-    }
-
-    function deleteUser(username) {
-      if (confirm(`Are you sure you want to delete ${username}?`)) {
-        alert(`User ${username} deleted`);
-        // Implement delete logic here
+      document.getElementById("editEmail").value = email || username + "@example.com";
+      document.getElementById("editVerified").value = verified ? "true" : "false";
+      const checkboxes = document.querySelectorAll('input[name="roles"]');
+      checkboxes.forEach(cb => cb.checked = false);
+      if (rolesMap) {
+        const userRoles = Object.keys(Object.fromEntries(rolesMap));
+        checkboxes.forEach(cb => { if (userRoles.includes(cb.value)) { cb.checked = true; } });
       }
     }
-
-    document.getElementById("editUserForm").addEventListener("submit", function(e) {
+    function closeEditModal() {
+      document.getElementById("editModal").style.display = "none";
+    }
+    function toggleUserStatus(username, currentStatus) {
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/admin/users/toggle-status';
+      const usernameInput = document.createElement('input');
+      usernameInput.type = 'hidden';
+      usernameInput.name = 'username';
+      usernameInput.value = username;
+      form.appendChild(usernameInput);
+      const statusInput = document.createElement('input');
+      statusInput.type = 'hidden';
+      statusInput.name = 'currentStatus';
+      statusInput.value = currentStatus;
+      form.appendChild(statusInput);
+      document.body.appendChild(form);
+      form.submit();
+    }
+    async function deleteUser(username) {
+      if (confirm("Are you sure you want to delete " + username + "?")) {
+        try {
+          const response = await fetch('/admin/users/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username })
+          });
+          if (!response.ok) {
+            const errorData = await response.json();
+            alert("Error: " + errorData.message);
+            return;
+          }
+          const result = await response.json();
+          alert(result.message);
+          loadUsers();
+        } catch (error) {
+          alert("Error deleting user");
+        }
+      }
+    }
+    document.getElementById("editUserForm").addEventListener("submit", function (e) {
       e.preventDefault();
-      alert("User details updated");
-      closeEditModal();
+      this.submit();
     });
+    async function loadUsers() {
+      try {
+        const response = await fetch('/admin/users/latest');
+        if (!response.ok) {
+          return;
+        }
+        const users = await response.json();
+        const tbody = document.getElementById("usersTableBody");
+        tbody.innerHTML = "";
+        users.forEach(user => {
+          const tr = document.createElement("tr");
+          const usernameTd = document.createElement("td");
+          usernameTd.textContent = user.username;
+          tr.appendChild(usernameTd);
+          const emailTd = document.createElement("td");
+          emailTd.textContent = user.username + "@example.com";
+          tr.appendChild(emailTd);
+          const roleTd = document.createElement("td");
+          let roles = [];
+          if (user.roles && typeof user.roles === "object") {
+            roles = Object.entries(user.roles);
+          }
+          roleTd.textContent = roles.length ? roles.map(r => r[0]).join(", ") : "User";
+          tr.appendChild(roleTd);
+          const statusTd = document.createElement("td");
+          statusTd.textContent = user.suspended ? "Suspended" : "Active";
+          tr.appendChild(statusTd);
+          const actionsTd = document.createElement("td");
+          actionsTd.className = "actions";
+          const editBtn = document.createElement("button");
+          editBtn.textContent = "Edit";
+          editBtn.onclick = () => openEditModal(user.username, user.email, user.verified, user.roles, user.suspended);
+          actionsTd.appendChild(editBtn);
+          const toggleBtn = document.createElement("button");
+          toggleBtn.textContent = user.suspended ? "Unsuspend" : "Suspend";
+          toggleBtn.onclick = () => toggleUserStatus(user.username, user.suspended ? "Suspended" : "Active");
+          actionsTd.appendChild(toggleBtn);
+          const deleteBtn = document.createElement("button");
+          deleteBtn.textContent = "Delete";
+          deleteBtn.onclick = () => deleteUser(user.username);
+          actionsTd.appendChild(deleteBtn);
+          tr.appendChild(actionsTd);
+          tbody.appendChild(tr);
+        });
+      } catch (error) {}
+    }
+    document.addEventListener("DOMContentLoaded", loadUsers);
   </script>
 </body>
 </html>
