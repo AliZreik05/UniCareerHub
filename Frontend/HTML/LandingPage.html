@@ -1,109 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link
-     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-    />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href= "css/LandingPageStyles.css">
-    <title>UniCareerHub</title>
+  <title>UniCareerHub</title>
 </head>
 <body>
-    <div class="navbar">
-        <div class="logo">UniCareerHub</div>
-        <div class="nav-links">
-            <a href="#main">Main</a>
-            <a href="#about">About</a>
-            <a href="#">Jobs</a>
-            <a href="#reviews">Reviews</a>
-            <a href="#qas">Q&As</a>
-        </div>  
-        <div class="nav-btns">   
-            <a href="/login"> 
-                <button class="login-btn">Login</button>
-            </a> 
-
-            <a href="/register"> 
-                <button class="register-btn">Register</button>
-            </a>
-        </div>
+  <div class="navbar">
+    <div class="logo">UniCareerHub</div>
+    <div class="nav-links">
+      <a href="#main">Main</a>
+      <a href="#about">About</a>
+      <a href="#jobs">Internships</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#qas">Q&As</a>
+    </div>  
+    <div class="nav-btns">   
+      <a href="/login"> 
+        <button class="login-btn">Login</button>
+      </a> 
+      <a href="/register"> 
+        <button class="register-btn">Register</button>
+      </a>
     </div>
-    
-    <section id="main">
-        <div class="hero-text">Honest Reviews, Real Advice,<br>Just for Students</div>
-        <div class = "image-main">
-            <img src="/Pics/pic1.jpg">
-            <img src="/Pics/pic2.jpg"> 
-        </div>
-    </section>
+  </div>
+  
+  <section id="main">
+    <div class="hero-text">
+      Honest Reviews, Real Advice,<br>Just for Students
+    </div>
+    <div class="image-main">
+      <img src="/Pics/pic1.jpg" alt="Pic 1">
+      <img src="/Pics/pic2.jpg" alt="Pic 2">
+    </div>
+  </section>
 
-    <section id="about">
-        <div class="about-container">
-            <div class="about-text">
-                <p>UniCareerHub is a platform designed exclusively for university students seeking insights on companies, internships, and jobs.</p>
-            </div>
-            <div class="image-about">
-                <img src="/Pics/pic3.png">
-            </div>
+  <section id="about">
+    <div class="about-container">
+      <div class="about-text">
+        <p>UniCareerHub is a platform designed exclusively for university students seeking insights on companies, internships, and jobs.</p>
+      </div>
+      <div class="image-about">
+        <img src="/Pics/pic3.png" alt="About Image">
+      </div>
+    </div>
+  </section>
+  
+  <section id="jobs">
+    <div class="internships-container">
+        <div class="image-internships">
+            <img src="/Pics/pic6.png" alt="Internships Image">
         </div>
-    </section>
-    
-    <section id="reviews">
-        <div class="reviews-container">
-            <div class="reviews-text">
-                <p>Discover what other students think about <br>various companies and internships. Get<br> insights, read experiences, and make informed decisions!</p>
-                    <div class="button-container">
-                        <a href="/reviews">
-                            <button>Explore Reviews</button>
-                        </a>
-                    </div>
-            </div>
-            <div class="image-reviews">
-                <img src="/Pics/pic4.jpg">
-            </div>
+      <div class="internships-text">
+        <p>Find the best internship opportunities, explore company programs, and gain hands-on experience to kickstart your career.</p>
+        <div class="button-container">
+          <a href="">
+            <button>Explore Internships</button>
+          </a>
         </div>
-    </section>
-    
-    <section id="qas">
-        <div class="qas-container">
-            <div class="qas-text">
-                <p>Have questions about an internship or company? Ask and get answers from students and professionals.</p>
-                <div class="button-container">
-                    <a href="/Q&A">
-                        <button>Explore Q&As</button>
-                    </a>
-                </div>
-            </div>
-            <div class="image-qas">
-                <img src="/Pics/pic5.jpg">
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="reviews-container">
+      <div class="reviews-text">
+        <p>Discover what other students think about<br>various companies and internships. Get<br>insights, read experiences, and make informed decisions!</p>
+        <div class="button-container">
+          <a href="/reviews">
+            <button>Explore Reviews</button>
+          </a>
         </div>
-    </section>
-    <script src="/js/api.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          var isLoggedIn = true; 
-          
-          var navBtnsDiv = document.querySelector('.nav-btns');
-          
-          if (isLoggedIn) {
-            navBtnsDiv.innerHTML = `
-              <div class="user-info">
-                <a href="/profile">
-                    <i class="fa-solid fa-circle-user user-icon"></i>
-                </a>
-                <a href="/logout">
-                  <button class="logout-btn">Logout</button>
-                </a>
-              </div>
-            `;
-          }
-        });
-      </script>
+      </div>
+      <div class="image-reviews">
+        <img src="/Pics/pic4.jpg" alt="Reviews Image">
+      </div>
+    </div>
+  </section>
+  
+  <section id="qas">
+    <div class="qas-container">
+        <div class="image-qas">
+            <img src="/Pics/pic5.jpg" alt="Q&A Image">
+        </div>
+      <div class="qas-text">
+        <p>Have questions about an internship or company? Ask and get answers from students and professionals.</p>
+        <div class="button-container">
+          <a href="/Q&A">
+            <button>Explore Q&As</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <script src="/js/api.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var isLoggedIn = true;
+      var navBtnsDiv = document.querySelector('.nav-btns');
+      if (isLoggedIn) {
+        navBtnsDiv.innerHTML = `
+          <div class="user-info">
+            <a href="/profile">
+              <i class="fa-solid fa-circle-user user-icon"></i>
+            </a>
+            <a href="/logout">
+              <button class="logout-btn">Logout</button>
+            </a>
+          </div>
+        `;
+      }
+    });
+  </script>
 </body>
 </html>
