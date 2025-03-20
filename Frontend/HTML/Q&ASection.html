@@ -23,9 +23,14 @@
   <div class="header-container">
     <a href="/" class="logo">UniCareerHub</a>
     <div class="nav-title">Questions & Answers</div>
-    <a href="/logout">
-      <button class="logout-btn">Logout</button> 
-    </a> 
+    <div class="user-actions">
+      <a href="/profile" class="user-icon">
+        <i class="fas fa-user-circle"></i>
+      </a>
+      <a href="/logout">
+        <button class="logout-btn">Logout</button>
+      </a>
+    </div>
   </div>
 </header>
 
@@ -136,7 +141,7 @@
     
         // If no questions, display a "No results found" message shifted left
         if (questions.length === 0) {
-          questionsList.innerHTML = `<p style="text-align: left; padding: 20px 20px 20px 40px;">No results found</p>`;
+          questionsList.innerHTML = `<p style="text-align: center; padding: 20px 20px 20px 40px;">No results found</p>`;
           return;
         }
     
@@ -149,6 +154,7 @@
               <h4>${q.title}</h4>
               <p class="question-meta">
                 <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
+                <button class="flag-btn"><i class="fas fa-flag"></i></button> 
               </p>
             </div>
             <div class="question-body">
