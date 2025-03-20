@@ -39,8 +39,8 @@ app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
 app.use('/admin/login', require('./routes/adminLogin'));
 app.use('/admin', verifyJWT, checkAdmin, require('./routes/admin'));
-app.use('/profile',require('./routes/profile'));
 app.use(verifyJWT);
+app.use('/profile',require('./routes/profile'));
 app.use('/reviews',require('./routes/reviews'));
 app.use('/Q&A',require('./routes/question'));
 

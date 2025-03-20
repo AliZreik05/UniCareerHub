@@ -11,7 +11,7 @@ const verifyReset = async (req,res)=>
 
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        const username = decoded.user;
+        const username = decoded.username;
         const userFound = await User.findOne({ username });
         if (!userFound) 
         {

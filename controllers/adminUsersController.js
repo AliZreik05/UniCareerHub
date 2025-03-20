@@ -34,10 +34,6 @@ const toggleUserStatus = async (req, res) => {
       return res.redirect('/admin/users?error=' + encodeURIComponent("Username is required"));
     }
     const newStatus = currentStatus === "Active" ? true : false;
-    if (newStatus) {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
-    }
     const updatedUser = await User.findOneAndUpdate(
       { username },
       { suspended: newStatus },

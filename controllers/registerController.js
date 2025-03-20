@@ -26,13 +26,13 @@ function isStrongPassword(password)
 }
 const handleNewUser = async (req, res) => 
     {
-    const {user,password,confirmPassword} = req.body;
+    const { username, email, password, confirmPassword } = req.body;
     
-    if (!user || !password || !confirmPassword) 
+    if (!username|| !email || !password || !confirmPassword) 
         {
             return res.status(400).json({ 'message': 'Username and password are required.' });
         }
-        if(!user.includes("@mail.aub.edu"))
+        if(!email.includes("@mail.aub.edu"))
         {
             return res.redirect('/register?error='+encodeURIComponent('The email you used is not an AUB email. Please use an AUB email.'))
         }
@@ -44,19 +44,26 @@ const handleNewUser = async (req, res) =>
         {
             return res.redirect('/register?error='+encodeURIComponent('Password must be at least 8 characters with an uppercase letter, a lowercase letter, a digit, and a special character'));
         }
-        const duplicate = await User.findOne({ username: user });
-    if (duplicate) 
+
+        const duplicateEmail = await User.findOne({ email:email});
+        const duplicateUsername = await User.findOne({username:username});
+    if (duplicateEmail) 
     {
 
         return res.redirect('/register?error=' + encodeURIComponent('Email already in use.'));                     
     }
+    else if (duplicateUsername)
+    {
+        return res.redirect('/register?error=' + encodeURIComponent('Username taken.'));      
+    }
     try 
     {
         const generatedCode = generateCode();
-        await sendVerificationEmail(user,generatedCode);
+        await sendVerificationEmail(email,generatedCode);
         const hashedPassword = await bcrypt.hash(password, 10);  
         const newUser = new User({
-            username: user,
+            username: username,
+            email: email,
             password: hashedPassword,
             roles: { User: 2001 },
             verified: false,
@@ -64,7 +71,7 @@ const handleNewUser = async (req, res) =>
             verificationExpirationPeriod: Date.now() + 15 * 60 * 1000,
           });
           await newUser.save();
-        const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: '15m' });
+        const token = jwt.sign({ username }, process.env.JWT_SECRET, { expiresIn: '15m' });
         res.redirect(`/verify?token=${encodeURIComponent(token)}`);
     } 
     catch (error) 

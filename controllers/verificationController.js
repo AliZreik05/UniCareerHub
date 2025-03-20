@@ -9,13 +9,13 @@ const handleVerification = async (req, res) =>
     const {token,verificationCode } = req.body;
     if (!token|| !verificationCode) 
     {
-        return res.status(400).json({ 'message': 'Username and code are required.' });
+        return res.status(400).json({ 'message': 'Token and code are required.' });
     }
     try
     {
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-        const email = decodedToken.user;
-        const user = await User.findOne({ username: email });
+        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+        const username = decodedToken.username;
+        const user = await User.findOne({ username: username });
         if (!user) 
             {
             return res.status(404).json({ message: 'User not found.' });
@@ -56,8 +56,8 @@ const handleResend = async (req,res) =>
     try
     {
         const decodedToken = jwt.verify(token,process.env.JWT_SECRET);
-        const email = decodedToken.user;
-        const user = await User.findOne({ username: email });
+        const username = decodedToken.username; 
+        const user = await User.findOne({ username: username });
         if (!user) {
             return res.status(404).json({ message: 'User not found.' });
           }
@@ -65,7 +65,7 @@ const handleResend = async (req,res) =>
           user.verificationCode = newVerificationCode;
           user.verificationExpirationPeriod = Date.now() + 0.5 * 60 * 1000;
           await user.save();
-        await sendVerificationEmail(email, newVerificationCode);
+        await sendVerificationEmail(user.email, newVerificationCode);
         res.redirect(`/verify?message=${encodeURIComponent('A new verification code has been sent.')}&token=${encodeURIComponent(token)}`);
     }
     catch (err) 

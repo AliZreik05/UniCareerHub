@@ -102,7 +102,7 @@
       const modal = document.getElementById("editModal");
       modal.style.display = "block";
       document.getElementById("editUsername").value = username;
-      document.getElementById("editEmail").value = email || username + "@example.com";
+      document.getElementById("editEmail").value = email;
       document.getElementById("editVerified").value = verified ? "true" : "false";
       const checkboxes = document.querySelectorAll('input[name="roles"]');
       checkboxes.forEach(cb => cb.checked = false);
@@ -171,7 +171,7 @@
           usernameTd.textContent = user.username;
           tr.appendChild(usernameTd);
           const emailTd = document.createElement("td");
-          emailTd.textContent = user.username + "@example.com";
+          emailTd.textContent = user.email;
           tr.appendChild(emailTd);
           const roleTd = document.createElement("td");
           let roles = [];

@@ -5,12 +5,12 @@ require('dotenv').config();
 
 const handleLogin = async (req, res) => 
 {
-    const { user, password } = req.body;
-    if (!user || !password) 
+    const { email, password } = req.body;
+    if (!email || !password) 
     {
         return res.redirect('/admin/login?error=' + encodeURIComponent('Invalid email or password.')); 
     }
-    const foundUser = await User.findOne({ username: user });
+    const foundUser = await User.findOne({ email:email });
     if (!foundUser) 
     {
         return res.redirect('/admin/login?error=' + encodeURIComponent('User not found')); 

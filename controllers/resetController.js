@@ -28,8 +28,9 @@ function isStrongPassword(password)
 
 const handleReset= async(req,res) =>
 {
-    const {user,password,confirmPassword} = req.body;
-    const userFound = await User.findOne({ username: user });
+    const { email, password, confirmPassword } = req.body;
+    const userFound = await User.findOne({ email: email });
+
     if(!userFound)
     {
        return res.redirect('/reset?error='+encodeURIComponent('User does not exist'));
@@ -48,7 +49,7 @@ const handleReset= async(req,res) =>
         userFound.resetVerificationExpirationPeriod = Date.now() + 15 * 60 * 1000;
         userFound.pendingPassword = password;
   
-        await sendVerificationEmail(userFound.username, generatedCode);
+        await sendVerificationEmail(userFound.email, generatedCode);
         await userFound.save();
         const resetToken = jwt.sign({ user: userFound.username }, process.env.JWT_SECRET, { expiresIn: '15m' });
         return res.redirect(`/resetPassword/verify?token=${encodeURIComponent(resetToken)}`);
