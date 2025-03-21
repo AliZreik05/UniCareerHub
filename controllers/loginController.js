@@ -1,10 +1,12 @@
 const User = require('../model/User');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const {logEvents} = require('../middleware/logEvents');
 require('dotenv').config();
 
 const handleLogin = async (req, res) => 
 {
+    try{
     const { email, password } = req.body;
     if (!email || !password) 
     {
@@ -72,6 +74,11 @@ const handleLogin = async (req, res) =>
     {
         return res.redirect('/login?error=' + encodeURIComponent('Incorrect password')); 
     }
+}
+catch (error) {
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    return res.redirect('/login?error=' + encodeURIComponent('An error occurred during login'));
+  }
 }
 
 module.exports = { handleLogin };

@@ -20,6 +20,18 @@ h1, h2, h3 {
   margin-top: 0;
   color: #2c3e50;
 }
+#error-logs {
+  display: block;
+  background: #fff;
+  color: #2c3e50;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin-top: 10px;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.5;
+}
 
 /* Card Styles */
 .card-container {

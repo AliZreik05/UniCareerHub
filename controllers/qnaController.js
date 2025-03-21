@@ -1,5 +1,6 @@
 const Question = require('../model/Questions');
 const crypto = require('crypto');
+const {logEvents} = require('../middleware/logEvents')
 
 const postQuestion = async (req, res) => {
   const postId = crypto.randomUUID();
@@ -22,6 +23,7 @@ const getLatestQuestions = async (req, res) => {
     res.status(200).json(latestQuestions);
   } catch (error) {
     console.error(error);
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
     res.status(500).send("Server error");
   }
 };

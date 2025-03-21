@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const sendVerificationEmail = require('../middleware/verifyByMail');
+const {logEvents} = require('../middleware/logEvents')
 function generateCode() 
 {
     return crypto.randomBytes(3).toString('hex');
@@ -26,6 +27,7 @@ function isStrongPassword(password)
 }
 const handleNewUser = async (req, res) => 
     {
+    
     const { username, email, password, confirmPassword } = req.body;
     
     if (!username|| !email || !password || !confirmPassword) 
@@ -77,6 +79,7 @@ const handleNewUser = async (req, res) =>
     catch (error) 
     {
         res.status(500).json({ 'message': error.message });
+        logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
     }
 }
 

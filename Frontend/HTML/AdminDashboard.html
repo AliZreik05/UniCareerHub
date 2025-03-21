@@ -1,4 +1,3 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,30 +25,24 @@
     <div class="card-container">
       <div class="card">
         <h3>Total Users</h3>
-        <p>1,200</p>
+        <p id="total-users">Loading...</p>
       </div>
       <div class="card">
         <h3>Total Reviews</h3>
-        <p>350</p>
+        <p id="total-reviews">Loading...</p>
       </div>
       <div class="card">
         <h3>Total Questions</h3>
-        <p>120</p>
+        <p id="total-questions">Loading...</p>
       </div>
       <div class="card">
         <h3>Active Users</h3>
-        <p>75</p>
-      </div>
-      <div class="card">
-        <h3>Flagged Posts</h3>
-        <p>8</p>
+        <p id="active-users">Loading...</p>
       </div>
     </div>
-
     <div class="chart-placeholder">
       Analytics Chart Placeholder
     </div>
-
     <h2>Recent Activity</h2>
     <table>
       <thead>
@@ -57,42 +50,64 @@
           <th>Type</th>
           <th>Description</th>
           <th>Date</th>
-          <th>Status</th>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>Review</td>
-          <td>New review for ABC Corp</td>
-          <td>2025-03-10</td>
-          <td>Approved</td>
-        </tr>
-        <tr>
-          <td>Question</td>
-          <td>Career inquiry at XYZ Inc</td>
-          <td>2025-03-12</td>
-          <td>Pending</td>
-        </tr>
-        <tr>
-          <td>Review</td>
-          <td>Flagged review for Widgets Co</td>
-          <td>2025-03-14</td>
-          <td>Flagged</td>
-        </tr>
-      </tbody>
+      <tbody id="recent-activity-body"></tbody>
     </table>
-
     <div class="system-health">
       <h2>System Health</h2>
       <div class="card">
         <h3>Server Status</h3>
-        <p>Online</p>
+        <p id="server-status">Loading...</p>
       </div>
       <div class="card">
         <h3>Error Logs</h3>
-        <p>No recent errors</p>
+        <p id="error-logs">No recent errors</p>
       </div>
     </div>
   </div>
+  <script>
+    function loadDashboardStats() {
+      fetch('/admin/dashboard/stats', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('total-users').innerText = data.totalUsers;
+          document.getElementById('total-reviews').innerText = data.totalReviews;
+          document.getElementById('total-questions').innerText = data.totalQuestions;
+          document.getElementById('active-users').innerText = data.activeUsers;
+          const activityBody = document.getElementById('recent-activity-body');
+          activityBody.innerHTML = '';
+          if (data.recentActivity && data.recentActivity.length > 0) {
+            data.recentActivity.forEach(item => {
+              const row = document.createElement('tr');
+              row.innerHTML = `
+                <td>${item.type}</td>
+                <td>${item.title}</td>
+                <td>${new Date(item.time).toLocaleDateString()}</td>
+              `;
+              activityBody.appendChild(row);
+            });
+          } else {
+            activityBody.innerHTML = '<tr><td colspan="3">No recent activity.</td></tr>';
+          }
+          document.getElementById('server-status').innerText = 'Online';
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('server-status').innerText = 'Error loading status';
+        });
+
+      fetch('/admin/error-logs', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('error-logs').innerText = data.errorLogs || 'No errors logged';
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('error-logs').innerText = 'Error loading error logs';
+        });
+    }
+    document.addEventListener('DOMContentLoaded', loadDashboardStats);
+  </script>
 </body>
 </html>

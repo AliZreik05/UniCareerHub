@@ -1,7 +1,10 @@
 const User = require('../model/User');
+const {logEvents} = require('../middleware/logEvents')
 
 const handleLogout = async (req, res) => 
 {
+  try
+  {
     const cookies = req.cookies;
     if (!cookies?.jwt) return res.sendStatus(204); 
     const refreshToken = cookies.jwt;
@@ -27,6 +30,11 @@ const handleLogout = async (req, res) =>
       });
       
     res.redirect('/login')
+  }
+  catch (error) {
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    return res.redirect('/logout?error=' + encodeURIComponent('An error occurred during logout'));
+  }
 }
 
 module.exports = { handleLogout }

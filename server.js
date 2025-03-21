@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const credentials = require('./middleware/credentials');
 const connectDB = require('./config/database');
 const checkAdmin = require('./middleware/checkAdmin');
+const updateLastActivity = require('./middleware/userActivity');
 const PORT = process.env.PORT || 3500;
 
 connectDB();
@@ -27,7 +28,10 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 app.use('/', express.static(path.join(__dirname, '/public'))); 
-
+app.get('/test-error', (req, res, next) => {
+    next(new Error('Test error'));
+  });
+  
 app.use('/', require('./routes/root'));
 app.use('/register', require('./routes/register'));
 app.use('/login', require('./routes/login'));
@@ -39,7 +43,7 @@ app.use('/forgot',require('./routes/forgot'))
 app.use('/logout', require('./routes/logout'));
 app.use('/admin/login', require('./routes/adminLogin'));
 app.use('/admin', verifyJWT, checkAdmin, require('./routes/admin'));
-app.use(verifyJWT);
+app.use(verifyJWT,updateLastActivity);
 app.use('/profile',require('./routes/profile'));
 app.use('/reviews',require('./routes/reviews'));
 app.use('/Q&A',require('./routes/question'));

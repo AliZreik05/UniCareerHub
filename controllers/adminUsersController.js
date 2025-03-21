@@ -1,4 +1,5 @@
 const User = require('../model/User');
+const {logEvents} = require('../middleware/logEvents')
 
 const getAllUsers = async (req, res) => {
   try {
@@ -22,6 +23,7 @@ const removeUser = async (req, res) => {
     }
     return res.redirect('/admin/users?success=' + encodeURIComponent('User deleted successfully'));
   } catch (error) {
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
     console.error(error);
     return res.redirect('/admin/users?error=' + encodeURIComponent('Error deleting user'));
   }
@@ -44,6 +46,7 @@ const toggleUserStatus = async (req, res) => {
     }
     return res.redirect('/admin/users?success=' + encodeURIComponent(`User status updated to ${newStatus ? "Suspended" : "Active"}`));
   } catch (error) {
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
     console.error(error);
     return res.redirect('/admin/users?error=' + encodeURIComponent("Error updating user status"));
   }
@@ -75,6 +78,7 @@ const updateUser = async (req, res) => {
       }
       return res.redirect('/admin/users?success=' + encodeURIComponent("User updated successfully"));
     } catch (error) {
+      logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
       console.error("Error updating user:", error);
       return res.redirect('/admin/users?error=' + encodeURIComponent("Server error updating user"));
     }

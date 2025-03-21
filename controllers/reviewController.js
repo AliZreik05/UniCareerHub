@@ -1,5 +1,6 @@
 const Review = require('../model/Reviews');
 const crypto = require('crypto');
+const {logEvents} = require('../middleware/logEvents');
 const { format } = require('date-fns');
 
 const postReview = async (req, res) => {
@@ -13,6 +14,7 @@ const postReview = async (req, res) => {
       return res.redirect('/reviews');
     } catch (error) {
       console.error(error);
+      logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
       return res.status(500).json({ message: 'Error removing review' });
     }
   } else {
@@ -32,6 +34,7 @@ const postReview = async (req, res) => {
       return res.status(200).json({ message: 'Review posted successfully' });
     } catch (error) {
       console.error(error);
+      logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
       return res.status(500).json({ message: 'Error posting review' });
     }
   }
