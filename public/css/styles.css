@@ -1,4 +1,6 @@
-/* styles.css */
+/* ======================= */
+/*      MERGED STYLES      */
+/* ======================= */
 
 /* General Styles */
 body {
@@ -20,6 +22,7 @@ h1, h2, h3 {
   margin-top: 0;
   color: #2c3e50;
 }
+
 #error-logs {
   display: block;
   background: #fff;
@@ -104,6 +107,43 @@ button {
   cursor: pointer;
   transition: background 0.3s ease;
 }
+/* ========================= */
+/*   Q&A Reply List Styles   */
+/* ========================= */
+
+.reply-list {
+  list-style: none; /* Remove default bullet points */
+  margin: 0;
+  padding: 0;
+}
+
+.reply-item {
+  margin-bottom: 10px;           /* Spacing between replies */
+  padding: 10px;                 /* Inner spacing */
+  background: #fafafa;           /* Light background for contrast */
+  border-left: 4px solid #ddd;   /* Visual bar on the left */
+  border-radius: 6px;            /* Slightly rounded corners */
+  position: relative;
+}
+
+.reply-item strong {
+  display: inline-block;
+  margin-right: 8px;
+  color: #2c3e50;
+}
+
+.reply-item em {
+  color: #999;
+  margin-left: 8px;
+  font-size: 0.9em;
+}
+
+/* Ensure buttons in replies also have spacing */
+.reply-item button {
+  margin-left: 5px;
+  margin-top: 5px; /* Slight top margin so buttons don’t crowd the text */
+}
+
 
 button:hover {
   background: #34495e;
@@ -259,7 +299,11 @@ textarea {
     width: 90%;
   }
 }
+
+/* ========================= */
 /* Content Management Styles */
+/* ========================= */
+
 .tabs {
   display: flex;
   gap: 10px;
@@ -377,4 +421,36 @@ textarea {
 
 #reviews button.flag:hover, #questions button.flag:hover, #reports button.flag:hover {
   background: #f1c40f;
+}
+
+/* ========================= */
+/*       STAR RATING         */
+/* ========================= */
+/* Add these rules so stars appear horizontally, with hover and checked effects. */
+
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse; /* This reverses the visual order */
+  align-items: center;
+  gap: 4px;
+}
+
+
+
+.star-rating input[type="radio"] {
+  display: none;              /* hide the radio inputs */
+}
+
+.star-rating label {
+  color: #ddd;                /* default color for unfilled star */
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+}
+
+/* Hover or checked star color */
+.star-rating input[type="radio"]:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #f5b301;
 }

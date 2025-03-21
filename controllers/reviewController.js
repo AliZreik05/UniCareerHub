@@ -50,4 +50,97 @@ const getLatestReviews = async (req, res) => {
   }
 };
 
-module.exports = { postReview, getLatestReviews };
+const editReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const { review: newReviewText , rating: newRating} = req.body;
+    const updatedReview = await Review.findOneAndUpdate(
+      { ID: reviewId },
+      { review: newReviewText, rating: newRating},
+      { new: true }
+    );
+    if (!updatedReview) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    res.json({ message: 'Review updated successfully', review: updatedReview });
+  } catch (error) {
+    console.error(error);
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const removeReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const user = req.user.username;
+    const deletion = await Review.deleteOne({ ID: reviewId });
+    if (deletion.deletedCount === 0) {
+      return res.status(404).json({ error: 'Review not found or not authorized' });
+    }
+    res.json({ message: 'Review removed successfully' });
+  } catch (error) {
+    console.error(error);
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+const flagReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const reporter = req.user.username;
+
+    const review = await Review.findOne({ ID: reviewId });
+    if (!review) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    if (!review.flaggedBy.includes(reporter)) {
+      review.flaggedBy.push(reporter);
+      review.flagCount = review.flaggedBy.length;
+      review.flagged = true;
+      await review.save();
+    }
+    res.json({ message: 'Review flagged successfully', review });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const approveReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const updatedReview = await Review.findOneAndUpdate(
+      { ID: reviewId },
+      { flagged: false, flagCount: 0, flaggedBy: [] },
+      { new: true }
+    );
+    if (!updatedReview) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    res.json({ message: 'Review approved (flags reset)', review: updatedReview });
+  } catch (error) {
+    console.error(error);
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+const getReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const review = await Review.findOne({ ID: reviewId });
+    if (!review) {
+      return res.status(404).json({ error: 'Review not found' });
+    }
+    res.json(review);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+
+module.exports = { postReview, getLatestReviews, editReview, removeReview, flagReview ,approveReview,getReview};
+
+

@@ -1,269 +1,676 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="/css/styles.css">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Content Management</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; background: #f4f4f4; }
-        .container { margin: 20px; }
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab { padding: 10px 20px; background: #2c3e50; color: #fff; border-radius: 4px; cursor: pointer; }
-        .tab.active { background: #34495e; }
-        .section { display: none; }
-        .section.active { display: block; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #ecf0f1; }
-        button { padding: 5px 10px; margin-right: 5px; }
-        .modal { display: none; position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.5); }
-        .modal-content { background: #fff; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 50%; border-radius: 8px; }
-        .close { color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer; }
-        .close:hover, .close:focus { color: #000; text-decoration: none; }
-    </style>
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/css/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Management</title>
 </head>
 <body>
-    <div class="container">
-        <h1>Content Management</h1>
-        <div class="tabs">
-            <div class="tab active" data-target="reviews">Reviews</div>
-            <div class="tab" data-target="questions">Questions</div>
-            <div class="tab" data-target="reports">Reports</div>
-        </div>
-
-        <!-- Reviews Section -->
-        <div id="reviews" class="section active">
-            <h2>Manage Reviews</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Company</th>
-                        <th>Reviewer</th>
-                        <th>Rating</th>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>ABC Corp</td>
-                        <td>John Doe</td>
-                        <td>4.5</td>
-                        <td>2025-03-10</td>
-                        <td>Great company with excellent work culture.</td>
-                        <td>Pending</td>
-                        <td>
-                            <button onclick="approveReview('ABC Corp', 'John Doe')">Approve</button>
-                            <button onclick="editReview('ABC Corp', 'John Doe')">Edit</button>
-                            <button onclick="removeReview('ABC Corp', 'John Doe')">Remove</button>
-                            <button onclick="flagReview('ABC Corp', 'John Doe')">Flag</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>XYZ Inc</td>
-                        <td>Jane Smith</td>
-                        <td>3.0</td>
-                        <td>2025-03-12</td>
-                        <td>Average experience, but good benefits.</td>
-                        <td>Approved</td>
-                        <td>
-                            <button onclick="editReview('XYZ Inc', 'Jane Smith')">Edit</button>
-                            <button onclick="removeReview('XYZ Inc', 'Jane Smith')">Remove</button>
-                            <button onclick="flagReview('XYZ Inc', 'Jane Smith')">Flag</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Questions Section -->
-        <div id="questions" class="section">
-            <h2>Manage Questions</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Asked By</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>What are the growth opportunities at Widgets Co?</td>
-                        <td>Alice Johnson</td>
-                        <td>2025-03-11</td>
-                        <td>Pending</td>
-                        <td>
-                            <button onclick="approveQuestion('Alice Johnson')">Approve</button>
-                            <button onclick="editQuestion('Alice Johnson')">Edit</button>
-                            <button onclick="removeQuestion('Alice Johnson')">Remove</button>
-                            <button onclick="flagQuestion('Alice Johnson')">Flag</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>How does the interview process at ABC Corp work?</td>
-                        <td>Mark Lee</td>
-                        <td>2025-03-13</td>
-                        <td>Approved</td>
-                        <td>
-                            <button onclick="editQuestion('Mark Lee')">Edit</button>
-                            <button onclick="removeQuestion('Mark Lee')">Remove</button>
-                            <button onclick="flagQuestion('Mark Lee')">Flag</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Reports Section -->
-        <div id="reports" class="section">
-            <h2>Manage Reports</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Reported By</th>
-                        <th>Content Type</th>
-                        <th>Reason</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>John Doe</td>
-                        <td>Review</td>
-                        <td>Inappropriate language</td>
-                        <td>2025-03-10</td>
-                        <td>Pending</td>
-                        <td>
-                            <button onclick="viewReport('John Doe', 'Inappropriate language')">View</button>
-                            <button onclick="approveReport('John Doe')">Approve</button>
-                            <button onclick="editReport('John Doe')">Edit</button>
-                            <button onclick="removeReport('John Doe')">Remove</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Jane Smith</td>
-                        <td>Question</td>
-                        <td>Spam</td>
-                        <td>2025-03-12</td>
-                        <td>Approved</td>
-                        <td>
-                            <button onclick="viewReport('Jane Smith', 'Spam')">View</button>
-                            <button onclick="editReport('Jane Smith')">Edit</button>
-                            <button onclick="removeReport('Jane Smith')">Remove</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+  <div class="container">
+    <h1>Content Management</h1>
+    <div class="tabs">
+      <div class="tab active" data-target="reviews">Reviews</div>
+      <div class="tab" data-target="questions">Questions</div>
+      <div class="tab" data-target="reports">Reports</div>
     </div>
 
-    <!-- Modal for Viewing Reported Content -->
-    <div id="viewModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeViewModal()">&times;</span>
-            <h2>Reported Content</h2>
-            <p><strong>Reported By:</strong> <span id="reportedBy"></span></p>
-            <p><strong>Reason:</strong> <span id="reason"></span></p>
-            <p><strong>Content:</strong></p>
-            <p id="content"></p>
-        </div>
+    <!-- REVIEWS SECTION -->
+    <div id="reviews" class="section active">
+      <h2>Manage Reviews</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Reviewer</th>
+            <th>Rating</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="reviews-body"></tbody>
+      </table>
     </div>
 
-    <script>
-        // Tab switching functionality
-        document.querySelectorAll(".tab").forEach(tab => {
-            tab.addEventListener("click", function() {
-                document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-                this.classList.add("active");
-                document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
-                document.getElementById(this.getAttribute("data-target")).classList.add("active");
-            });
+    <!-- QUESTIONS SECTION -->
+    <div id="questions" class="section">
+      <h2>Manage Questions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Asked By</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="questions-body"></tbody>
+      </table>
+    </div>
+
+    <!-- REPORTS SECTION -->
+    <div id="reports" class="section">
+      <h2>Manage Reports</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Reported By</th>
+            <th>Content Type</th>
+            <th>Number of Flags</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="reports-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- VIEW ITEM MODAL (used for reviews, questions, and replies) -->
+  <div id="viewItemModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeViewItemModal()">&times;</span>
+      <h2>Item Details</h2>
+      <p><strong>ID:</strong> <span id="viewItemID"></span></p>
+      <p><strong>Content:</strong></p>
+      <p id="viewItemContent"></p>
+    </div>
+  </div>
+
+  <!-- EDIT REVIEW MODAL -->
+  <div id="editReviewModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditReviewModal()">&times;</span>
+      <h2>Edit Review</h2>
+      <div class="input-group">
+        <label for="editReviewRating">Rating:</label>
+        <div class="star-rating" id="editReviewStars">
+          <input type="radio" name="editRating" id="edit-star5" value="5">
+          <label for="edit-star5"><i class="fas fa-star"></i></label>
+          <input type="radio" name="editRating" id="edit-star4" value="4">
+          <label for="edit-star4"><i class="fas fa-star"></i></label>
+          <input type="radio" name="editRating" id="edit-star3" value="3">
+          <label for="edit-star3"><i class="fas fa-star"></i></label>
+          <input type="radio" name="editRating" id="edit-star2" value="2">
+          <label for="edit-star2"><i class="fas fa-star"></i></label>
+          <input type="radio" name="editRating" id="edit-star1" value="1">
+          <label for="edit-star1"><i class="fas fa-star"></i></label>
+        </div>
+        <input type="hidden" id="editReviewRating">
+      </div>
+      <div class="input-group">
+        <label for="editReviewText">Review Text:</label>
+        <textarea id="editReviewText" rows="4"></textarea>
+      </div>
+      <button onclick="saveReviewEdit()">Save</button>
+    </div>
+  </div>
+
+  <!-- EDIT QUESTION MODAL -->
+  <div id="editQuestionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditQuestionModal()">&times;</span>
+      <h2>Edit Question</h2>
+      <div class="input-group">
+        <label for="editQuestionTitle">Title:</label>
+        <input type="text" id="editQuestionTitle">
+      </div>
+      <div class="input-group">
+        <label for="editQuestionBody">Question Text:</label>
+        <textarea id="editQuestionBody" rows="4"></textarea>
+      </div>
+      <button onclick="saveQuestionEdit()">Save</button>
+    </div>
+  </div>
+
+  <!-- EDIT REPLY MODAL -->
+  <div id="editReplyModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeEditReplyModal()">&times;</span>
+      <h2>Edit Reply</h2>
+      <div class="input-group">
+        <label for="editReplyText">Reply Text:</label>
+        <textarea id="editReplyText" rows="4"></textarea>
+      </div>
+      <button onclick="saveReplyEdit()">Save</button>
+    </div>
+  </div>
+
+  <script>
+    let currentReviewId = "";
+    let currentQuestionId = "";
+    let currentReplyId = "";
+
+    // Tab switching logic
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", function() {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        this.classList.add("active");
+        document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+        document.getElementById(this.getAttribute("data-target")).classList.add("active");
+      });
+    });
+
+    // ==================== REVIEWS ====================
+    async function fetchReviews() {
+      try {
+        const res = await fetch('/reviews/latest', { credentials: 'include' });
+        const reviews = await res.json();
+        const reviewsBody = document.getElementById("reviews-body");
+        reviewsBody.innerHTML = "";
+        reviews.forEach(review => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${review.companyName || "N/A"}</td>
+            <td>${review.username}</td>
+            <td>${review.rating}</td>
+            <td>${new Date(review.time).toLocaleDateString()}</td>
+            <td>${review.review}</td>
+            <td>
+              <button onclick="viewReportItem('${review.ID}', 'Review')">View</button>
+              <button onclick="openEditReviewModal('${review.ID}', '${review.review.replace(/'/g, "\\'")}', '${review.rating}')">Edit</button>
+              <button onclick="removeReview('${review.ID}')">Remove</button>
+              <button onclick="flagReview('${review.ID}')">Flag</button>
+            </td>
+          `;
+          reviewsBody.appendChild(row);
         });
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    }
 
-        // Review actions
-        function approveReview(company, reviewer) {
-            alert(`Review by ${reviewer} for ${company} has been approved.`);
+    function openEditReviewModal(reviewId, reviewText, rating) {
+      currentReviewId = reviewId;
+      document.getElementById("editReviewText").value = reviewText;
+      document.getElementById("editReviewRating").value = rating;
+      const radio = document.getElementById("edit-star" + rating);
+      if (radio) {
+        radio.checked = true;
+      } else {
+        document.querySelectorAll('input[name="editRating"]').forEach(r => r.checked = false);
+      }
+      document.getElementById("editReviewModal").style.display = "block";
+    }
+
+    function closeEditReviewModal() {
+      document.getElementById("editReviewModal").style.display = "none";
+    }
+
+    async function saveReviewEdit() {
+      const newReviewText = document.getElementById("editReviewText").value;
+      const newRating = document.getElementById("editReviewRating").value;
+      if (!newReviewText || newRating === "") return;
+      try {
+        const response = await fetch(`/admin/content/review/edit/${currentReviewId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ review: newReviewText, rating: newRating })
+        });
+        if (response.ok) {
+          alert("Review updated successfully.");
+          closeEditReviewModal();
+          fetchReviews();
+        } else {
+          const data = await response.json();
+          alert("Error updating review: " + (data.error || response.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error updating review.");
+      }
+    }
 
-        function editReview(company, reviewer) {
-            alert(`Edit review by ${reviewer} for ${company}.`);
+    async function removeReview(reviewId) {
+      if (!confirm("Remove this review?")) return;
+      try {
+        const res = await fetch(`/admin/content/review/${reviewId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Review removed successfully.");
+          fetchReviews();
+        } else {
+          const data = await res.json();
+          alert("Error removing review: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error removing review.");
+      }
+    }
 
-        function removeReview(company, reviewer) {
-            if (confirm(`Are you sure you want to remove the review by ${reviewer} for ${company}?`)) {
-                alert(`Review by ${reviewer} for ${company} has been removed.`);
-            }
+    async function flagReview(reviewId) {
+      if (!confirm("Flag this review?")) return;
+      try {
+        const res = await fetch(`/admin/content/review/flag/${reviewId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Review flagged successfully.");
+          fetchReviews();
+        } else {
+          const data = await res.json();
+          alert("Error flagging review: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error flagging review.");
+      }
+    }
 
-        function flagReview(company, reviewer) {
-            alert(`Review by ${reviewer} for ${company} has been flagged.`);
+    // ==================== QUESTIONS ====================
+    async function fetchQuestions() {
+      try {
+        const res = await fetch('/Q&A/latest', { credentials: 'include' });
+        const questions = await res.json();
+        const questionsBody = document.getElementById("questions-body");
+        questionsBody.innerHTML = "";
+        questions.forEach(question => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${question.title}</td>
+            <td>${question.username}</td>
+            <td>${new Date(question.time).toLocaleDateString()}</td>
+            <td>
+                <button onclick="viewQuestionItem('${question.ID}')">View</button>
+              <button onclick="toggleReplies('${question.ID}')">View Replies</button>
+              <button onclick="openEditQuestionModal('${question.ID}', '${question.title.replace(/'/g, "\\'")}', '${question.question.replace(/'/g, "\\'")}')">Edit</button>
+              <button onclick="removeQuestion('${question.ID}')">Remove</button>
+              <button onclick="flagQuestion('${question.ID}')">Flag</button>
+            </td>
+          `;
+          questionsBody.appendChild(row);
+          const replyRow = document.createElement("tr");
+          replyRow.id = question.ID + "-replies";
+          replyRow.style.display = "none";
+          const replyCell = document.createElement("td");
+          replyCell.colSpan = 4;
+          replyCell.innerHTML = generateRepliesHTML(question.replies || []);
+          replyRow.appendChild(replyCell);
+          questionsBody.appendChild(replyRow);
+        });
+      } catch (error) {
+        console.error("Error fetching questions:", error);
+      }
+    }
+
+    function toggleReplies(questionId) {
+      const row = document.getElementById(questionId + "-replies");
+      row.style.display = (row.style.display === "none") ? "table-row" : "none";
+    }
+
+    function generateRepliesHTML(replies) {
+      if (!replies.length) return "<p>No replies.</p>";
+      let html = "<ul class='reply-list'>";
+      replies.forEach(reply => {
+        html += `<li class="reply-item">
+                   <strong>${reply.user}:</strong> ${reply.reply}
+                   <em>(${new Date(reply.time).toLocaleDateString()})</em>
+                   <button onclick="openEditReplyModal('${reply._id}')">Edit</button>
+                   <button onclick="removeReply('${reply._id}')">Remove</button>
+                   <button onclick="flagReply('${reply._id}')">Flag</button>
+                 </li>`;
+      });
+      html += "</ul>";
+      return html;
+    }
+
+    function openEditQuestionModal(questionId, title, body) {
+      currentQuestionId = questionId;
+      document.getElementById("editQuestionTitle").value = title;
+      document.getElementById("editQuestionBody").value = body;
+      document.getElementById("editQuestionModal").style.display = "block";
+    }
+
+    function closeEditQuestionModal() {
+      document.getElementById("editQuestionModal").style.display = "none";
+    }
+
+    async function saveQuestionEdit() {
+      const newTitle = document.getElementById("editQuestionTitle").value;
+      const newBody = document.getElementById("editQuestionBody").value;
+      if (!newTitle || !newBody) return;
+      try {
+        const response = await fetch(`/admin/content/question/edit/${currentQuestionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ title: newTitle, question: newBody })
+        });
+        if (response.ok) {
+          alert("Question updated successfully.");
+          closeEditQuestionModal();
+          fetchQuestions();
+        } else {
+          const data = await response.json();
+          alert("Error updating question: " + (data.error || response.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error updating question.");
+      }
+    }
 
-        // Question actions
-        function approveQuestion(askedBy) {
-            alert(`Question by ${askedBy} has been approved.`);
+    async function removeQuestion(questionId) {
+      if (!confirm("Remove this question?")) return;
+      try {
+        const res = await fetch(`/admin/content/question/${questionId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Question removed successfully.");
+          fetchQuestions();
+        } else {
+          const data = await res.json();
+          alert("Error removing question: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error removing question.");
+      }
+    }
 
-        function editQuestion(askedBy) {
-            alert(`Edit question by ${askedBy}.`);
+    async function flagQuestion(questionId) {
+      if (!confirm("Flag this question?")) return;
+      try {
+        const res = await fetch(`/admin/content/question/flag/${questionId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Question flagged successfully.");
+          fetchQuestions();
+        } else {
+          const data = await res.json();
+          alert("Error flagging question: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error flagging question.");
+      }
+    }
 
-        function removeQuestion(askedBy) {
-            if (confirm(`Are you sure you want to remove the question by ${askedBy}?`)) {
-                alert(`Question by ${askedBy} has been removed.`);
-            }
+    // ==================== REPLIES ====================
+    function openEditReplyModal(replyId) {
+      currentReplyId = replyId;
+      fetch(`/admin/content/question/reply/${replyId}`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("editReplyText").value = data.reply;
+          document.getElementById("editReplyModal").style.display = "block";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error fetching reply details.");
+        });
+    }
+
+    function closeEditReplyModal() {
+      document.getElementById("editReplyModal").style.display = "none";
+    }
+
+    async function saveReplyEdit() {
+      const newReplyText = document.getElementById("editReplyText").value;
+      if (!newReplyText) return;
+      try {
+        const response = await fetch(`/admin/content/question/reply/edit/${currentReplyId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ reply: newReplyText })
+        });
+        if (response.ok) {
+          alert("Reply updated successfully.");
+          closeEditReplyModal();
+          fetchQuestions();
+        } else {
+          const data = await response.json();
+          alert("Error updating reply: " + (data.error || response.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error updating reply.");
+      }
+    }
 
-        function flagQuestion(askedBy) {
-            alert(`Question by ${askedBy} has been flagged.`);
+    async function removeReply(replyId) {
+      if (!confirm("Remove this reply?")) return;
+      try {
+        const res = await fetch(`/admin/content/question/reply/${replyId}`, {
+          method: 'DELETE',
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Reply removed successfully.");
+          fetchQuestions();
+        } else {
+          const data = await res.json();
+          alert("Error removing reply: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error removing reply.");
+      }
+    }
 
-        // Report actions
-        function approveReport(reportedBy) {
-            alert(`Report by ${reportedBy} has been approved.`);
+    async function flagReply(replyId) {
+      if (!confirm("Flag this reply?")) return;
+      try {
+        const res = await fetch(`/admin/content/question/reply/flag/${replyId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
+        if (res.ok) {
+          alert("Reply flagged successfully.");
+          fetchQuestions();
+        } else {
+          const data = await res.json();
+          alert("Error flagging reply: " + (data.error || res.statusText));
         }
+      } catch (error) {
+        console.error(error);
+        alert("Error flagging reply.");
+      }
+    }
 
-        function editReport(reportedBy) {
-            alert(`Edit report by ${reportedBy}.`);
-        }
+    // ==================== REPORTS ====================
+    async function fetchReports() {
+      try {
+        const res = await fetch('/admin/content/reports', { credentials: 'include' });
+        const reports = await res.json();
+        const reportsBody = document.getElementById("reports-body");
+        reportsBody.innerHTML = "";
+        reports.forEach(item => {
+          const row = document.createElement("tr");
+          const reportedBy = item.reportedBy || "Unknown";
+          const contentType = item.contentType || "Unknown";
+          const reason = item.reason || "Flagged";
+          const dateStr = new Date(item.date).toLocaleDateString();
+          let actions = "";
+          if (!item.isReply) {
+            actions = `
+              <button onclick="viewReportItem('${item.ID}', '${contentType}')">View</button>
+              <button onclick="approveItem('${item.ID}', '${contentType}')">Approve</button>
+              <button onclick="removeItem('${item.ID}', '${contentType}')">Remove</button>
+            `;
+          } else {
+            actions = `
+              <button onclick="viewReportReply('${item.questionID}', '${item.replyID}')">View</button>
+              <button onclick="approveReply('${item.questionID}', '${item.replyID}')">Approve</button>
+              <button onclick="removeReplyItem('${item.questionID}', '${item.replyID}')">Remove</button>
+            `;
+          }
+          row.innerHTML = `
+            <td>${reportedBy}</td>
+            <td>${contentType}</td>
+            <td>${reason}</td>
+            <td>${dateStr}</td>
+            <td>${actions}</td>
+          `;
+          reportsBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      }
+    }
 
-        function removeReport(reportedBy) {
-            if (confirm(`Are you sure you want to remove the report by ${reportedBy}?`)) {
-                alert(`Report by ${reportedBy} has been removed.`);
-            }
-        }
+    function viewReportItem(itemId, contentType) {
+  if (contentType === 'Question') {
+    viewQuestionItem(itemId);
+  } else { // Review
+    fetch(`/admin/content/review/${itemId}`, { credentials: 'include' })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("viewItemID").textContent = data.ID || "N/A";
+        document.getElementById("viewItemContent").textContent = data.review || "No content";
+        document.getElementById("viewItemModal").style.display = "block";
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error fetching item details.");
+      });
+  }
+}
 
-        // View reported content
-        function viewReport(reportedBy, reason) {
-            const modal = document.getElementById("viewModal");
-            const content = document.getElementById("content");
 
-            // Mock content for demonstration
-            const reportedContent = reportedBy === "John Doe" 
-                ? "This review contains inappropriate language and should be removed." 
-                : "This question is spam and should be removed.";
+function viewQuestionItem(questionId) {
+  fetch(`/admin/content/question/${questionId}`, { credentials: 'include' })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("viewItemID").textContent = data.ID || "N/A";
+      const content = `Title: ${data.title}<br>Question: ${data.question}`;
+      
+      const contentElement = document.getElementById("viewItemContent");
+      contentElement.innerHTML = content;  // <-- use innerHTML instead of textContent
+      
+      document.getElementById("viewItemModal").style.display = "block";
+    })
+    .catch(err => {
+      console.error(err);
+      alert("Error fetching question details.");
+    });
+}
 
-            // Populate modal with data
-            document.getElementById("reportedBy").textContent = reportedBy;
-            document.getElementById("reason").textContent = reason;
-            content.textContent = reportedContent;
 
-            // Display the modal
-            modal.style.display = "block";
-        }
+    function viewReportReply(questionID, replyID) {
+      // For a Reply
+      fetch(`/admin/content/question/reply/${replyID}`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("viewItemID").textContent = data._id || "N/A";
+          const content = `User: ${data.user}\nReply: ${data.reply}`;
+          document.getElementById("viewItemContent").textContent = content;
+          document.getElementById("viewItemModal").style.display = "block";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error fetching reply details.");
+        });
+    }
 
-        function closeViewModal() {
-            const modal = document.getElementById("viewModal");
-            modal.style.display = "none";
-        }
-    </script>
+    function closeViewItemModal() {
+      document.getElementById("viewItemModal").style.display = "none";
+    }
+
+    function approveItem(itemId, contentType) {
+      if (!confirm(`Approve this ${contentType}?`)) return;
+      if (contentType === 'Review') {
+        fetch(`/admin/content/review/approve/${itemId}`, { method: 'PUT', credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            fetchReports();
+          })
+          .catch(err => console.error(err));
+      } else if (contentType === 'Question') {
+        fetch(`/admin/content/question/approve/${itemId}`, { method: 'PUT', credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            fetchReports();
+          })
+          .catch(err => console.error(err));
+      }
+    }
+
+    function removeItem(itemId, contentType) {
+      if (!confirm(`Remove this ${contentType}?`)) return;
+      if (contentType === 'Review') {
+        fetch(`/admin/content/review/${itemId}`, { method: 'DELETE', credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            fetchReports();
+          })
+          .catch(err => console.error(err));
+      } else if (contentType === 'Question') {
+        fetch(`/admin/content/question/${itemId}`, { method: 'DELETE', credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            alert(data.message);
+            fetchReports();
+          })
+          .catch(err => console.error(err));
+      }
+    }
+
+    function approveReply(questionID, replyID) {
+      if (!confirm("Approve this reply?")) return;
+      fetch(`/admin/content/question/reply/approve/${replyID}`, { method: 'PUT', credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          fetchReports();
+        })
+        .catch(err => console.error(err));
+    }
+
+    function removeReplyItem(questionID, replyID) {
+      if (!confirm("Remove this flagged reply?")) return;
+      fetch(`/admin/content/question/reply/${replyID}`, { method: 'DELETE', credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message);
+          fetchReports();
+        })
+        .catch(err => console.error(err));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchReviews();
+      fetchQuestions();
+      fetchReports();
+      document.querySelectorAll('input[name="editRating"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+          document.getElementById('editReviewRating').value = this.value;
+        });
+      });
+    });
+  </script>
+
+  <!-- VIEW ITEM MODAL -->
+  <div id="viewItemModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeViewItemModal()">&times;</span>
+      <h2>Item Details</h2>
+      <p><strong>ID:</strong> <span id="viewItemID"></span></p>
+      <p><strong>Content:</strong></p>
+      <p id="viewItemContent"></p>
+    </div>
+  </div>
 </body>
 </html>
