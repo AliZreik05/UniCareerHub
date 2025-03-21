@@ -143,6 +143,20 @@
   </div>
 
   <script>
+    // Helper functions to safely escape strings for HTML and JS contexts.
+    function escapeHTML(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
+    function jsStringEscape(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '\\"');
+    }
+
     let currentReviewId = "";
     let currentQuestionId = "";
     let currentReplyId = "";
@@ -165,16 +179,23 @@
         const reviewsBody = document.getElementById("reviews-body");
         reviewsBody.innerHTML = "";
         reviews.forEach(review => {
+          // Escape values to avoid XSS
+          const companyName = escapeHTML(review.companyName || "N/A");
+          const username = escapeHTML(review.username);
+          const rating = escapeHTML(String(review.rating));
+          const reviewText = escapeHTML(review.review);
+          const dateStr = new Date(review.time).toLocaleDateString();
+          const escapedReviewTextForJS = jsStringEscape(review.review);
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${review.companyName || "N/A"}</td>
-            <td>${review.username}</td>
-            <td>${review.rating}</td>
-            <td>${new Date(review.time).toLocaleDateString()}</td>
-            <td>${review.review}</td>
+            <td>${companyName}</td>
+            <td>${username}</td>
+            <td>${rating}</td>
+            <td>${dateStr}</td>
+            <td>${reviewText}</td>
             <td>
               <button onclick="viewReportItem('${review.ID}', 'Review')">View</button>
-              <button onclick="openEditReviewModal('${review.ID}', '${review.review.replace(/'/g, "\\'")}', '${review.rating}')">Edit</button>
+              <button onclick="openEditReviewModal('${review.ID}', '${escapedReviewTextForJS}', '${review.rating}')">Edit</button>
               <button onclick="removeReview('${review.ID}')">Remove</button>
               <button onclick="flagReview('${review.ID}')">Flag</button>
             </td>
@@ -277,15 +298,20 @@
         const questionsBody = document.getElementById("questions-body");
         questionsBody.innerHTML = "";
         questions.forEach(question => {
+          const title = escapeHTML(question.title);
+          const username = escapeHTML(question.username);
+          const dateStr = new Date(question.time).toLocaleDateString();
+          const escapedTitleForJS = jsStringEscape(question.title);
+          const escapedQuestionForJS = jsStringEscape(question.question);
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td>${question.title}</td>
-            <td>${question.username}</td>
-            <td>${new Date(question.time).toLocaleDateString()}</td>
+            <td>${title}</td>
+            <td>${username}</td>
+            <td>${dateStr}</td>
             <td>
-                <button onclick="viewQuestionItem('${question.ID}')">View</button>
+              <button onclick="viewQuestionItem('${question.ID}')">View</button>
               <button onclick="toggleReplies('${question.ID}')">View Replies</button>
-              <button onclick="openEditQuestionModal('${question.ID}', '${question.title.replace(/'/g, "\\'")}', '${question.question.replace(/'/g, "\\'")}')">Edit</button>
+              <button onclick="openEditQuestionModal('${question.ID}', '${escapedTitleForJS}', '${escapedQuestionForJS}')">Edit</button>
               <button onclick="removeQuestion('${question.ID}')">Remove</button>
               <button onclick="flagQuestion('${question.ID}')">Flag</button>
             </td>
@@ -315,7 +341,7 @@
       let html = "<ul class='reply-list'>";
       replies.forEach(reply => {
         html += `<li class="reply-item">
-                   <strong>${reply.user}:</strong> ${reply.reply}
+                   <strong>${escapeHTML(reply.user)}:</strong> ${escapeHTML(reply.reply)}
                    <em>(${new Date(reply.time).toLocaleDateString()})</em>
                    <button onclick="openEditReplyModal('${reply._id}')">Edit</button>
                    <button onclick="removeReply('${reply._id}')">Remove</button>
@@ -495,10 +521,9 @@
         const reportsBody = document.getElementById("reports-body");
         reportsBody.innerHTML = "";
         reports.forEach(item => {
-          const row = document.createElement("tr");
-          const reportedBy = item.reportedBy || "Unknown";
-          const contentType = item.contentType || "Unknown";
-          const reason = item.reason || "Flagged";
+          const reportedBy = escapeHTML(item.reportedBy || "Unknown");
+          const contentType = escapeHTML(item.contentType || "Unknown");
+          const reason = escapeHTML(item.reason || "Flagged");
           const dateStr = new Date(item.date).toLocaleDateString();
           let actions = "";
           if (!item.isReply) {
@@ -514,6 +539,7 @@
               <button onclick="removeReplyItem('${item.questionID}', '${item.replyID}')">Remove</button>
             `;
           }
+          const row = document.createElement("tr");
           row.innerHTML = `
             <td>${reportedBy}</td>
             <td>${contentType}</td>
@@ -529,50 +555,44 @@
     }
 
     function viewReportItem(itemId, contentType) {
-  if (contentType === 'Question') {
-    viewQuestionItem(itemId);
-  } else { // Review
-    fetch(`/admin/content/review/${itemId}`, { credentials: 'include' })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("viewItemID").textContent = data.ID || "N/A";
-        document.getElementById("viewItemContent").textContent = data.review || "No content";
-        document.getElementById("viewItemModal").style.display = "block";
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error fetching item details.");
-      });
-  }
-}
+      if (contentType === 'Question') {
+        viewQuestionItem(itemId);
+      } else { // Review
+        fetch(`/admin/content/review/${itemId}`, { credentials: 'include' })
+          .then(res => res.json())
+          .then(data => {
+            document.getElementById("viewItemID").textContent = data.ID || "N/A";
+            document.getElementById("viewItemContent").textContent = data.review || "No content";
+            document.getElementById("viewItemModal").style.display = "block";
+          })
+          .catch(err => {
+            console.error(err);
+            alert("Error fetching item details.");
+          });
+      }
+    }
 
-
-function viewQuestionItem(questionId) {
-  fetch(`/admin/content/question/${questionId}`, { credentials: 'include' })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("viewItemID").textContent = data.ID || "N/A";
-      const content = `Title: ${data.title}<br>Question: ${data.question}`;
-      
-      const contentElement = document.getElementById("viewItemContent");
-      contentElement.innerHTML = content;  // <-- use innerHTML instead of textContent
-      
-      document.getElementById("viewItemModal").style.display = "block";
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Error fetching question details.");
-    });
-}
-
+    function viewQuestionItem(questionId) {
+      fetch(`/admin/content/question/${questionId}`, { credentials: 'include' })
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("viewItemID").textContent = data.ID || "N/A";
+          const contentElement = document.getElementById("viewItemContent");
+          contentElement.innerHTML = "<strong>Title:</strong> " + escapeHTML(data.title) + "<br><strong>Question:</strong> " + escapeHTML(data.question);
+          document.getElementById("viewItemModal").style.display = "block";
+        })
+        .catch(err => {
+          console.error(err);
+          alert("Error fetching question details.");
+        });
+    }
 
     function viewReportReply(questionID, replyID) {
-      // For a Reply
       fetch(`/admin/content/question/reply/${replyID}`, { credentials: 'include' })
         .then(res => res.json())
         .then(data => {
           document.getElementById("viewItemID").textContent = data._id || "N/A";
-          const content = `User: ${data.user}\nReply: ${data.reply}`;
+          const content = "User: " + escapeHTML(data.user) + "\nReply: " + escapeHTML(data.reply);
           document.getElementById("viewItemContent").textContent = content;
           document.getElementById("viewItemModal").style.display = "block";
         })
@@ -661,16 +681,5 @@ function viewQuestionItem(questionId) {
       });
     });
   </script>
-
-  <!-- VIEW ITEM MODAL -->
-  <div id="viewItemModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeViewItemModal()">&times;</span>
-      <h2>Item Details</h2>
-      <p><strong>ID:</strong> <span id="viewItemID"></span></p>
-      <p><strong>Content:</strong></p>
-      <p id="viewItemContent"></p>
-    </div>
-  </div>
 </body>
 </html>
