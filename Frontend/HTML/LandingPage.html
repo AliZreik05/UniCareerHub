@@ -100,8 +100,18 @@
   
   <script src="/js/api.js"></script>
   <script>
+     function getCookie(name) 
+     {
+    const cookieArr = document.cookie.split(";");
+    for (let cookie of cookieArr) 
+    {
+      const [key, value] = cookie.split("=").map(c => c.trim());
+      if (key === name) return value;
+    }
+    return null;
+  }
     document.addEventListener("DOMContentLoaded", function () {
-      var isLoggedIn = true;
+      var isLoggedIn = getCookie("isLoggedIn") === "true";
       var navBtnsDiv = document.querySelector('.nav-btns');
       if (isLoggedIn) {
         navBtnsDiv.innerHTML = `
