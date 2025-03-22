@@ -390,12 +390,14 @@ body {
   
   .dropdown-menu button {
     width: 100%;
-    padding: 8px 12px;
+    padding: 10px 14px;
+    font-size: 16px;
     background: none;
     border: none;
     text-align: left;
     font-size: 14px;
     cursor: pointer;
+    font-weight: bold;
   }
   
   .dropdown-menu button:hover {
@@ -404,5 +406,38 @@ body {
   
   .show {
     display: block;
+  }
+
+
+  .dropdown-menu button.delete-review-btn {
+    color: red;
+  }
+  
+  #report-modal .modal-content {
+    width: 60%; /* slightly larger */
+    max-width: 600px;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: left;
+  }
+  
+  #report-modal h3 {
+    margin-bottom: 15px;
+    color: #a17754;
+  }
+  
+  #report-modal textarea {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical;
+    min-height: 120px;
+    background-color: #f9f9f9;
+  }
+  
+  #report-modal .submit-btn {
+    margin-top: 15px;
   }
   
