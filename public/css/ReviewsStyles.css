@@ -9,7 +9,7 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f4f7fc;
+    background-color: white;
     color: #333;
     line-height: 1.6;
 }
@@ -37,6 +37,22 @@ body {
 
 .logo a:hover {
     text-decoration: underline;
+}
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-icon {
+    font-size: 30px;
+    color: black;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.profile-icon:hover {
+    color: #555;
 }
 
 .logout-btn {
@@ -301,7 +317,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 80px 30px 40px;
+    padding: 120px 30px 40px;
     background-color: #fff;
     text-align: center;
     position: relative;
