@@ -147,6 +147,7 @@ body {
 }
 
 .review {
+    position: relative;
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -155,6 +156,9 @@ body {
     transition: transform 0.3s ease;
 }
 
+.review-header{
+    position: relative;
+}
 .review:hover {
     transform: translateY(-5px);
 }
@@ -353,5 +357,52 @@ body {
       max-width: 150px;
       margin: 10px auto;
     }
+  }
+  
+
+
+
+  /* 3-dot menu styling */
+.review-menu {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .dots {
+    font-size: 18px;
+    cursor: pointer;
+    padding: 5px;
+  }
+  
+  /* Dropdown menu */
+  .dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 25px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    z-index: 10;
+    width: 120px;
+  }
+  
+  .dropdown-menu button {
+    width: 100%;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    text-align: left;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .dropdown-menu button:hover {
+    background: #f8f8f8;
+  }
+  
+  .show {
+    display: block;
   }
   

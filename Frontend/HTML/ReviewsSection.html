@@ -128,7 +128,18 @@
             
         </div>
     </div>
-    
+    <div id="report-modal" class="modal">
+        <div class="modal-content">
+          <span class="close-btn" onclick="closeReportModal()">&times;</span>
+          <h3><i class="fas fa-flag"></i> Report Review</h3>
+          <form id="report-form">
+            <label for="report-reason">Why are you reporting this review?</label>
+            <textarea id="report-reason" placeholder="Enter your reason..." required></textarea>
+            <button type="submit" class="submit-btn">Submit Report</button>
+          </form>
+        </div>
+      </div>
+      
     <script src="/js/api.js"></script>
     <script>
        document.getElementById('open-modal').addEventListener('click', function() {
@@ -175,19 +186,29 @@
       const reviewElem = document.createElement('div');
       reviewElem.classList.add('review');
       reviewElem.innerHTML = `
-        <div class="review-header">
-          <h4>${review.title}</h4>
-          <p class="review-meta">
-            <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
-          </p>
-          <div class="review-stars">${starsHtml}</div>
-          <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
-          <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
-        </div>
-        <div class="review-body">
-          <p>${review.review}</p>
-        </div>
-      `;
+  <div class="review-header">
+    <h4>${review.title}</h4>
+    <p class="review-meta">
+      <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+    </p>
+    <div class="review-stars">${starsHtml}</div>
+    <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
+    <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+
+    <!-- Three Dots Dropdown -->
+    <div class="review-menu">
+      <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
+      <div class="dropdown-menu">
+        <button class="delete-review-btn">Delete</button>
+        <button class="report-review-btn">Report</button>
+      </div>
+    </div>
+  </div>
+  <div class="review-body">
+    <p>${review.review}</p>
+  </div>
+`;
+
       reviewsList.appendChild(reviewElem);
     });
 
@@ -294,6 +315,47 @@ document.getElementById('review-form').addEventListener('submit', async function
         document.addEventListener('DOMContentLoaded', loadLatestReviews);
 
 
+        function toggleReviewMenu(dotsElement) {
+  let menu = dotsElement.nextElementSibling;
+  menu.classList.toggle("show");
+}
+
+function closeReportModal() {
+  document.getElementById("report-modal").style.display = "none";
+  document.getElementById("report-reason").value = "";
+}
+
+document.addEventListener("click", function (e) {
+  // Close any open dropdowns when clicking elsewhere
+  if (!e.target.matches(".dots")) {
+    document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("show"));
+  }
+
+  // Open report modal
+  if (e.target.classList.contains("report-review-btn")) {
+    document.getElementById("report-modal").style.display = "flex";
+  }
+
+  // Handle delete (frontend only)
+  if (e.target.classList.contains("delete-review-btn")) {
+    const review = e.target.closest(".review");
+    review.remove(); // For now, just remove from DOM
+  }
+});
+
+window.addEventListener("click", function (event) {
+  if (event.target === document.getElementById("report-modal")) {
+    closeReportModal();
+  }
+});
+
+// Optional form submission for report
+document.getElementById("report-form").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const reason = document.getElementById("report-reason").value;
+  alert("Report submitted: " + reason); // You can remove this or trigger an actual API call
+  closeReportModal();
+});
 
 
     </script>
