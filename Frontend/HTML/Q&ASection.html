@@ -100,6 +100,18 @@
         </form>
       </div>
     </div>
+
+    <div id="report-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="closeReportModal()">&times;</span>
+        <h3><i class="fas fa-flag"></i> Report Review</h3>
+        <form id="report-form">
+          <label for="report-reason">Why are you reporting this review?</label>
+          <textarea id="report-reason" placeholder="Enter your reason..." required></textarea>
+          <button type="submit" class="submit-btn">Submit Report</button>
+        </form>
+      </div>
+    </div>
     <script src="/js/api.js"></script>
     <script>
       // Global variable to store all questions
@@ -138,13 +150,13 @@
       function renderQuestions(questions) {
         const questionsList = document.getElementById("questions-list");
         questionsList.innerHTML = ""; // Clear previous questions
-    
+
         // If no questions, display a "No results found" message shifted left
         if (questions.length === 0) {
           questionsList.innerHTML = `<p style="text-align: center; padding: 20px 20px 20px 40px;">No results found</p>`;
           return;
         }
-    
+
         // Loop through each question and create its HTML structure
         questions.forEach((q) => {
           const questionElem = document.createElement("div");
@@ -153,9 +165,16 @@
             <div class="question-header">
               <h4>${q.title}</h4>
               <p class="question-meta">
-                <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${q.time}
-                <button class="flag-btn"><i class="fas fa-flag"></i></button> 
+                <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
               </p>
+              <!-- Three Dot Menu -->
+              <div class="three-dot-menu">
+                <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
+                <div class="menu-options">
+                  <button class="delete-btn">Delete</button>
+                  <button class="report-btn">Report</button>
+                </div>
+              </div>
             </div>
             <div class="question-body">
               <p>${q.question}</p>
@@ -171,35 +190,56 @@
             <div class="replies-list" style="display: none;"></div>
             <button class="toggle-replies-btn" style="display: none;">Show Replies</button>
           `;
-    
-          // Reply functionality
+
+          // Add functionality for the three-dot menu
+          const threeDotMenu = questionElem.querySelector(".three-dot-menu");
+          const menuOptions = questionElem.querySelector(".menu-options");
+          const deleteBtn = questionElem.querySelector(".delete-btn");
+          const reportBtn = questionElem.querySelector(".report-btn");
+
+          // Show/hide menu options when clicking on three-dot icon
+          threeDotMenu.addEventListener("click", function () {
+            menuOptions.classList.toggle("show");
+          });
+
+          // Handle delete button click
+          deleteBtn.addEventListener("click", function (e) {
+          const q = e.target.closest(".question");
+          if (q) {
+            q.remove();
+          }
+          });
+
+
+          // Handle report button click
+          reportBtn.addEventListener("click", function () {
+            document.getElementById("report-modal").style.display = "flex";
+          });
+
+          // Reply functionality (unchanged)
           const replyBtn = questionElem.querySelector(".reply-btn");
           const replyForm = questionElem.querySelector(".reply-form");
           const submitReplyBtn = questionElem.querySelector(".submit-reply");
           const cancelReplyBtn = questionElem.querySelector(".cancel-reply");
           const repliesList = questionElem.querySelector(".replies-list");
           const toggleRepliesBtn = questionElem.querySelector(".toggle-replies-btn");
-    
-          // Show reply form on clicking "Reply"
+
           replyBtn.addEventListener("click", function () {
             replyForm.style.display = "block";
             replyBtn.style.display = "none";
           });
-    
-          // Hide reply form and show "Reply" button when "Cancel" is clicked
+
           cancelReplyBtn.addEventListener("click", function () {
             replyForm.style.display = "none";
             replyBtn.style.display = "inline-block";
           });
-    
-          // Toggle visibility of replies list on clicking the toggle button
+
           toggleRepliesBtn.addEventListener("click", function () {
             const visible = repliesList.style.display !== "none";
             repliesList.style.display = visible ? "none" : "block";
             toggleRepliesBtn.innerText = visible ? "Show Replies" : "Hide Replies";
           });
-    
-          // If there are replies, add them and show the toggle button
+
           if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
             q.replies.forEach((reply) => {
               const replyDiv = document.createElement("div");
@@ -209,8 +249,7 @@
             });
             toggleRepliesBtn.style.display = "inline-block";
           }
-    
-          // Handle submitting a reply
+
           submitReplyBtn.addEventListener("click", async function (event) {
             event.preventDefault();
             const replyText = questionElem.querySelector(".reply-body").value;
@@ -240,11 +279,11 @@
               }
             }
           });
-    
+
           questionsList.appendChild(questionElem);
         });
       }
-    
+
       // Live search: update displayed questions as you type
       const searchInput = document.querySelector(".search-input");
       searchInput.addEventListener("input", function () {
@@ -258,7 +297,7 @@
           renderQuestions(filtered);
         }
       });
-    
+
       // Also trigger search on Enter key press
       searchInput.addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
@@ -273,7 +312,7 @@
           }
         }
       });
-    
+
       // Handle submitting a new question
       document.getElementById("question-form").addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -302,13 +341,33 @@
           }
         }
       });
-    
+
+      function closeReportModal() {
+      document.getElementById("report-modal").style.display = "none";
+      document.getElementById("report-reason").value = "";
+      }
+      window.addEventListener("click", function (event) {
+      if (event.target === document.getElementById("report-modal")) {
+        closeReportModal();
+      }
+    });
+
+      // Optional form submission for report
+      document.getElementById("report-form").addEventListener("submit", function (event) {
+        event.preventDefault();
+        const reason = document.getElementById("report-reason").value;
+        alert("Report submitted: " + reason); // You can remove this or trigger an actual API call
+        closeReportModal();
+      });
+
+      document.addEventListener("click", function (e) {
+      if (!e.target.matches(".dots")) {
+        document.querySelectorAll(".menu-options").forEach(menu => menu.classList.remove("show"));
+      }
+      });
+
       // Load questions when the DOM is ready
       document.addEventListener("DOMContentLoaded", loadLatestQuestions);
     </script>
-    
-    
-    
-    
-    
-    
+</body>
+</html>

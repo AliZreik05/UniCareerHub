@@ -1,493 +1,568 @@
- /* --------------------------------
-       COLOR & FONT VARIABLES
+    /* --------------------------------
+         COLOR & FONT VARIABLES
     -------------------------------- */
     :root {
-        --header-bg: #d1ae89;   /* Warm tan/brown for header */ 
-        --primary-text: #222222; /* Darker main text for improved readability */
-        --button-bg: #ffc107;    /* Gold accent */
-        --body-bg: #ffffff;      /* Light background */
-        --card-bg: #ffffff;      /* White for cards */
-        --footer-bg: #333333;    /* Dark footer background */
-        --footer-text: #ffffff;  /* White footer text */
-        --transition-speed: 0.3s;
-        --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-  
-      /* --------------------------------
+      --header-bg: #d1ae89;   /* Warm tan/brown for header */ 
+      --primary-text: #222222; /* Darker main text for improved readability */
+      --button-bg: #ffc107;    /* Gold accent */
+      --body-bg: #ffffff;      /* Light background */
+      --card-bg: #ffffff;      /* White for cards */
+      --footer-bg: #333333;    /* Dark footer background */
+      --footer-text: #ffffff;  /* White footer text */
+      --transition-speed: 0.3s;
+      --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* --------------------------------
          RESET & BASE STYLES
-      -------------------------------- */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: var(--font-family);
-        background-color: var(--body-bg);
-        color: var(--primary-text);
-        line-height: 1.6;
-        overflow-x: hidden;
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
-  
-      /* --------------------------------
+    -------------------------------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: var(--font-family);
+      background-color: var(--body-bg);
+      color: var(--primary-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* --------------------------------
          HEADER
-      -------------------------------- */
-      header {
-        background-color: var(--header-bg);
-        color: var(--primary-text);
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        position: relative;
-      }
-      .header-container {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        position: relative;
-      }
-      .logo {
-        font-size: 1.7rem;
-        font-weight: bold;
-      }
-      .logo:hover {
-        text-decoration: underline;
-      }
-      .nav-title {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: bold;
-        font-size: 1.4rem;
-        text-align: center;
-      }
-      .logout-btn {
-        background-color: var(--header-bg);
-        color: var(--primary-text);
-        padding: 9px 18px;
-        font-size: 1.1rem;
-        border: 2px solid var(--primary-text);
-        border-radius: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-      }
-      .logout-btn:hover, .logout-btn:focus {
-        background-color: var(--primary-text);
-        color: #ffffff;
-        outline: none;
-      }
+    -------------------------------- */
+    header {
+      background-color: var(--header-bg);
+      color: var(--primary-text);
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .header-container {
+      width: 100%;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      position: relative;
+    }
+    .logo {
+      font-size: 1.7rem;
+      font-weight: bold;
+    }
+    .logo:hover {
+      text-decoration: underline;
+    }
+    .nav-title {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-weight: bold;
+      font-size: 1.4rem;
+      text-align: center;
+    }
+    .logout-btn {
+      background-color: var(--header-bg);
+      color: var(--primary-text);
+      padding: 9px 18px;
+      font-size: 1.1rem;
+      border: 2px solid var(--primary-text);
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+    }
+    .logout-btn:hover, .logout-btn:focus {
+      background-color: var(--primary-text);
+      color: #ffffff;
+      outline: none;
+    }
+    .user-icon {
+      font-size: 35px;
+      color: black;
+      cursor: pointer;
+      transition: color 0.3s;
+      vertical-align: middle;
+    }
+    .user-icon:hover {
+      color: #555;
+    }
 
-      .user-icon {
-        font-size: 35px;
-        color: black;
-        cursor: pointer;
-        transition: color 0.3s;
-        vertical-align: middle;
-      }
-      
-      .user-icon:hover {
-        color: #555;
-      }
-  
-      /* --------------------------------
+    /* --------------------------------
          HERO SECTION
-      -------------------------------- */
-      .hero {
-        position: relative;
-        text-align: center;
-        min-height: 45vh;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 80px 20px 0;
-      }
-      .hero::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-      .hero-content {
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-        padding-bottom: 60px;
-        animation: fadeSlideUp 2s ease both;
-      }
-      .hero h2 {
-        font-size: 2.3rem;
-        margin-bottom: 15px;
-        color: var(--primary-text);
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-      }
-      .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 25px;
-        color: var(--primary-text);
-        font-style :italic;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-      }
-      .hero-controls {
-        display: flex;
-        justify-content: center;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      /* Container around input and icon */
-        .search-container {
-            position: relative;
-            width: 100%;
-        }
-  
-        /* Style the input box */
-        .search-input {
-            width: 100%;
-            padding: 10px 30px 10px 15px; /* Padding to make space for the icon */
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-        }
-  
- 
-  
-
-      @keyframes fadeSlideUp {
-        0% {
+    -------------------------------- */
+    .hero {
+      position: relative;
+      text-align: center;
+      min-height: 45vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px 0;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+    .hero-content {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 60px;
+      animation: fadeSlideUp 2s ease both;
+    }
+    .hero h2 {
+      font-size: 2.3rem;
+      margin-bottom: 15px;
+      color: var(--primary-text);
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      color: var(--primary-text);
+      font-style: italic;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+    .hero-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    /* Search input */
+    .search-container {
+      position: relative;
+      width: 100%;
+    }
+    .search-input {
+      width: 100%;
+      padding: 10px 30px 10px 15px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+    }
+    @keyframes fadeSlideUp {
+      0% {
           opacity: 0;
           transform: translateY(15px);
-        }
-        100% {
+      }
+      100% {
           opacity: 1;
           transform: translateY(0);
-        }
       }
-      /* --------------------------------
+    }
+
+    /* --------------------------------
          MAIN CONTENT
-      -------------------------------- */
-      #qa-section {
-        display: grid;
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: center;
-        margin-top: 20px;
-        padding: 0 20px;
-      }
-      .section-title {
-        text-align: left;
-        font-size: 2rem;
-        margin-bottom: 20px;
-        margin-left: 20px;
-      }
-
-      .floating-btn {
-        position: fixed;
-        font-weight: bold;
-        font-size:  1rem;
-        bottom: 20px;
-        right: 20px;
-        background-color: var(--button-bg);
-        color: var(--primary-text);
-        padding: 15px 20px;
-        border: none;
-        border-radius: 50px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        cursor: pointer;
-        transition: opacity 0.3s ease, background-color 0.3s ease;
-        z-index: 1000;
-      }
-      .floating-btn:hover,
-      .floating-btn:focus {
-        opacity: 0.9;
-        outline: none;
-      }
-      
-      /* Button Styling */
-      /* Style for the Cancel button */
-        .cancel-reply {
-            background-color: var(--button-bg); /* Same as other buttons (Gold Accent) */
-            color: var(--primary-text);
-            padding: 10px 14px; 
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-            margin-left: 10px;
-        }
-        
-        .cancel-reply:hover, 
-        .cancel-reply:focus {
-            background-color: #ffcc00; /* Lighter shade for hover */
-            opacity: 0.95;
-            outline: none;
-        }
-        
-        /* Style for the Show/Hide Replies button */
-        .toggle-replies-btn {
-            background-color: var(--button-bg); /* Same as other buttons (Gold Accent) */
-            color: var(--primary-text);
-            padding: 10px 14px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-            margin-top: 10px;
-        }
-        
-        .toggle-replies-btn:hover, 
-        .toggle-replies-btn:focus {
-            background-color: #ffcc00; /* Lighter shade for hover */
-            opacity: 0.95;
-            outline: none;
-        }
-        
-        /* Optional: If you want a border or additional styling */
-        .toggle-replies-btn:focus {
-            border: 2px solid #ffcc00;
-            outline: none;
-        }
-        
-        /* Optional: For any additional buttons that may require consistency */
-        .reply-btn, .submit-reply {
-            background-color: var(--button-bg);
-            color: var(--primary-text);
-            padding: 10px 14px;
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-        }
-        
-        .reply-btn:hover, .submit-reply:hover,
-        .reply-btn:focus, .submit-reply:focus {
-            background-color: #ffcc00;
-            opacity: 0.95;
-            outline: none;
-        }
-  
-        .submit-btn, .reply-btn, .submit-reply {
-            background-color: var(--button-bg);
-            color: var(--primary-text);
-            padding: 10px 14px; 
-            font-size: 1rem;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
-        }
-        .submit-btn:hover, .reply-btn:hover, .submit-reply:hover,
-        .submit-btn:focus, .reply-btn:focus, .submit-reply:focus {
-            background-color: #ffcc00;
-            opacity: 0.95;
-            outline: none;
-        }
-        .submit-btn {
-            margin-bottom: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .reply-btn {
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        .reply-btn:focus {
-            outline: none;
-            border: 2px solid #ffcc00;
-        }
-    
-        .ask-question {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 40px;
-            width: 100%;
-            max-width: 600px;
-        }
-        .ask-question .form-group {
-            margin-bottom: 20px;
-            text-align: left;
-        }
-        .ask-question label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-        }
-        .ask-question input,
-        .ask-question textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1em;
-            background-color: #fafafa;
-            transition: border-color 0.3s ease;
-        }
-        .ask-question input:focus,
-        .ask-question textarea:focus {
-            border-color: #ffcc00;
-            outline: none;
-        }
-  
-      /* Question List */
-      .questions-list {
-        width: 100%; 
-        max-width: 900px; 
-        margin: 20px auto;
-        display: grid;
-        flex-direction: column;
-        align-items: stretch; 
-        gap: 30px;
-        padding: 0 20px;
+    -------------------------------- */
+    #qa-section {
+      display: grid;
+      flex-direction: column;
+      align-items: flex-start;
+      text-align: center;
+      margin-top: 20px;
+      padding: 0 20px;
     }
-    
-    .question {
-        background-color: #fff;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        padding: 20px 30px;
-        width: 100%;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        box-sizing: border-box;
+    .section-title {
+      text-align: left;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      margin-left: 20px;
     }
-      .question:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-      }
-      .question-header h4 {
-        font-size: 1.4em;
-        color: #333;
-        margin-bottom: 10px;
-      }
-      .question-meta {
-        font-size: 0.9em;
-        color: #888;
-      }
-      .question-body {
-        margin: 15px 0;
-        font-size: 1.1em;
-        text-align: left;
-      }
-
-      /* Flag button style */
-    .flag-btn {
-      background: none;
+    .floating-btn {
+      position: fixed;
+      font-weight: bold;
+      font-size: 1rem;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--button-bg);
+      color: var(--primary-text);
+      padding: 15px 20px;
       border: none;
+      border-radius: 50px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
       cursor: pointer;
-      font-size: 16px;
+      transition: opacity 0.3s ease, background-color 0.3s ease;
+      z-index: 1000;
+    }
+    .floating-btn:hover,
+    .floating-btn:focus {
+      opacity: 0.9;
+      outline: none;
+    }
+    .cancel-reply {
+      background-color: var(--button-bg);
+      color: var(--primary-text);
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
       margin-left: 10px;
     }
-  
-      /* Replies Section */
-      .replies {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border-radius: 6px;
-      }
-      .replies textarea {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        font-size: 1em;
-        background-color: #fafafa;
-      }
-      .replies .submit-reply {
-        background-color: #ffcc00;
-        color: #000;
-        padding: 8px 16px;
-        font-size: 1em;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-      .replies .submit-reply:hover {
-        background-color: #ffcc00;
-      }
-      .reply {
-        margin-top: 15px;
-        padding: 10px;
-        background-color: #f1f1f1;
-        border-radius: 6px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .reply p {
-        font-size: 1em;
-      }
+    .cancel-reply:hover, 
+    .cancel-reply:focus {
+      background-color: #ffcc00;
+      opacity: 0.95;
+      outline: none;
+    }
+    .toggle-replies-btn {
+      background-color: var(--button-bg);
+      color: var(--primary-text);
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+      margin-top: 10px;
+    }
+    .toggle-replies-btn:hover, 
+    .toggle-replies-btn:focus {
+      background-color: #ffcc00;
+      opacity: 0.95;
+      outline: none;
+    }
+    .reply-btn, .submit-reply {
+      background-color: var(--button-bg);
+      color: var(--primary-text);
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+    }
+    .reply-btn:hover, .submit-reply:hover,
+    .reply-btn:focus, .submit-reply:focus {
+      background-color: #ffcc00;
+      opacity: 0.95;
+      outline: none;
+    }
+    .submit-btn, .reply-btn, .submit-reply {
+      background-color: var(--button-bg);
+      color: var(--primary-text);
+      padding: 10px 14px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color var(--transition-speed) ease, opacity var(--transition-speed) ease;
+    }
+    .submit-btn:hover, .reply-btn:hover, .submit-reply:hover,
+    .submit-btn:focus, .reply-btn:focus, .submit-reply:focus {
+      background-color: #ffcc00;
+      opacity: 0.95;
+      outline: none;
+    }
+    .submit-btn {
+      margin-bottom: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .reply-btn {
+      margin-top: 10px;
+      transition: background-color 0.3s;
+    }
+    .reply-btn:focus {
+      outline: none;
+      border: 2px solid #ffcc00;
+    }
+    .ask-question {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      margin-bottom: 40px;
+      width: 100%;
+      max-width: 600px;
+    }
+    .ask-question .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .ask-question label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+    .ask-question input,
+    .ask-question textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1em;
+      background-color: #fafafa;
+      transition: border-color 0.3s ease;
+    }
+    .ask-question input:focus,
+    .ask-question textarea:focus {
+      border-color: #ffcc00;
+      outline: none;
+    }
 
-  
-      /* Modal Styling */
-      .modal {
-        display: none;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.4);
-        padding: 20px;
-      }
-      .modal-content {
-        background-color: white;
-        margin: 10% auto;
-        padding: 20px;
-        border-radius: 8px;
-        width: 90%;
-        max-width: 600px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        position: relative;
-      }
-      .close-btn {
-        position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 28px;
-        cursor: pointer;
-        color: #333;
-      }
-      .close-btn:hover,
-      .close-btn:focus {
-        color: red;
-        outline: none;
-      }
-  
-      /* --------------------------------
+    /* --------------------------------
+         QUESTION LIST
+    -------------------------------- */
+    .questions-list {
+      width: 100%; 
+      max-width: 900px; 
+      margin: 20px auto;
+      display: grid;
+      flex-direction: column;
+      align-items: stretch; 
+      gap: 30px;
+      padding: 0 20px;
+    }
+    .question {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px 30px;
+      width: 100%;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-sizing: border-box;
+      position: relative;
+      border: 2px solid rgba(255, 204, 0, 0.4);
+    }
+    .question:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    }
+    .question-header h4 {
+      font-size: 1.4em;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .question-meta {
+      font-size: 0.9em;
+      color: #888;
+    }
+    .question-body {
+      margin: 15px 0;
+      font-size: 1.1em;
+      text-align: left;
+    }
+    .replies {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f9f9f9;
+      border-radius: 6px;
+    }
+    .replies textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 1em;
+      background-color: #fafafa;
+    }
+    .replies .submit-reply {
+      background-color: #ffcc00;
+      color: #000;
+      padding: 8px 16px;
+      font-size: 1em;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .replies .submit-reply:hover {
+      background-color: #ffcc00;
+    }
+    .reply {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #f1f1f1;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .reply p {
+      font-size: 1em;
+    }
+
+    /* --------------------------------
+         THREE-DOT DROPDOWN (Q&A)
+    -------------------------------- */
+    .menu-container {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+    .dots {
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+    }
+    .menu-options {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 25px;
+      background: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+      z-index: 10;
+      width: 120px;
+    }
+    .menu-options.show {
+      display: block;
+    }
+    .menu-options button {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .menu-options button:hover {
+      background: #f8f8f8;
+    }
+    .menu-options button.delete-btn {
+      color: red;
+    }
+
+    /* --------------------------------
+         MODAL STYLING
+    -------------------------------- */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+    }
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #333;
+    }
+    .close-btn:hover,
+    .close-btn:focus {
+      color: red;
+      outline: none;
+    }
+
+    /* --------------------------------
          MEDIA QUERIES
-      -------------------------------- */
-      @media (max-width: 768px) {
-        .header-container {
+    -------------------------------- */
+    @media (max-width: 768px) {
+      .header-container {
           flex-direction: column;
-          gap: 10px;
-        }
-        .hero h2 {
-          font-size: 2rem;
-        }
-        .hero p {
-          font-size: 1rem;
-        }
-        .ask-question, .modal-content {
-          width: 100%;
-          padding: 15px;
-        }
-        .questions-list {
-          gap: 20px;
-        }
+          align-items: flex-start;
       }
+      .hero-content {
+          width: 100%;
+      }
+      .question {
+          padding: 15px 20px;
+      }
+    }
+
+
+    .question-header {
+      position: relative; /* Ensure the menu can be positioned absolutely */
+    }
+    
+    .three-dot-menu {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+    
+    .menu-options {
+      display: none;
+      position: absolute;
+      top: 30px;
+      right: 0;
+      background-color: white;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 5px;
+      z-index: 1000;
+    }
+    
+    .menu-options.show {
+      display: block;
+    }
+    
+    .menu-options button {
+      display: block;
+      padding: 5px 10px;
+      width: 100%;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    
+    .menu-options button:hover {
+      background-color: #f5f5f5;
+    }
+
+    #report-modal .modal-content {
+      width: 60%; /* slightly larger */
+      max-width: 600px;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: left;
+    }
+    
+    #report-modal h3 {
+      margin-bottom: 15px;
+      color: #a17754;
+    }
+    
+    #report-modal textarea {
+      width: 100%;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      resize: vertical;
+      min-height: 120px;
+      background-color: #f9f9f9;
+    }
+    
+    #report-modal .submit-btn {
+      margin-top: 15px;
+    }
+    
