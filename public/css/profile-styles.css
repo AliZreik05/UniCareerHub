@@ -164,17 +164,22 @@ textarea:focus {
 
 /* 🔸 Experience Edit Button */
 .section .edit-btn {
-    background: #3498db;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 6px;
-    margin-top: 15px;
+    background: #ffcc00; /* same as main edit button */
+    color: black;
+    font-weight: bold;
+    padding: 14px;
+    font-size: 18px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease-in-out, transform 0.2s;
 }
 
 .section .edit-btn:hover {
-    background: #2980b9;
+    background: #f2b600;
+    transform: scale(1.05);
 }
+
 
 /* Modal Styles */
 .modal {
@@ -321,4 +326,9 @@ textarea:focus {
 /* Show dropdown when menu is toggled */
 .show {
     display: block;
+}
+.static-profile-icon {
+    font-size: 120px;
+    color: #555;
+    margin-bottom: 10px;
 }

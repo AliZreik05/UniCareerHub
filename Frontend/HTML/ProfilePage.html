@@ -10,10 +10,9 @@
   <div class="container">
     <div class="profile-header">
       <div class="profile-pic-container">
-        <img id="profile-pic" src="profile-placeholder.jpg" alt="Profile Picture" class="profile-pic">
-        <input type="file" id="upload-pic" accept="image/*" style="display: none;">
-        <button class="upload-btn" id="change-photo-btn">Change Photo</button>
+        <i class="fa-solid fa-circle-user static-profile-icon"></i>
       </div>
+      
       <div class="info">
         <h1 id="display-name"></h1>
         <h3 id="display-major-year"></h3>
@@ -183,19 +182,7 @@
       }
       updateProfile();
     }
-    document.getElementById("change-photo-btn").addEventListener("click", function() {
-      document.getElementById("upload-pic").click();
-    });
-    document.getElementById("upload-pic").addEventListener("change", function(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById("profile-pic").src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+    
     document.addEventListener("DOMContentLoaded", loadProfile);
   </script>
 </body>
