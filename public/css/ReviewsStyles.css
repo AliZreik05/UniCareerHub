@@ -166,12 +166,13 @@ body {
     position: relative;
     background-color: #fff;
     border-radius: 8px;
-    border: 2px solid #ffcc00; /* Add this line */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05); /* keep it soft */
+    border: 2px solid rgba(255, 204, 0, 0.4); /* softer yellow with 40% opacity */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     margin-bottom: 30px;
     padding: 20px;
     transition: transform 0.3s ease;
 }
+
 
 
 .review-header{
