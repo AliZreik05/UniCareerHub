@@ -565,4 +565,77 @@
     #report-modal .submit-btn {
       margin-top: 15px;
     }
+
+  
+    .three-dot-menu {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+    }
+    .three-dot-menu .menu-options {
+      display: none;
+      position: absolute;
+      top: 25px;
+      right: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      z-index: 1;
+    }
+    .three-dot-menu .menu-options.show {
+      display: block;
+    }
+    .three-dot-menu .menu-options button {
+      display: block;
+      width: 100%;
+      padding: 5px 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+    }
+    /* REPLY MENU STYLES USING FLEX */
+    .reply {
+      margin-bottom: 10px;
+    }
+    .reply-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .reply-text {
+      flex: 1;
+      margin-right: 630px;
+    }
+    .reply-three-dot-menu {
+      position: relative;
+      cursor: pointer;
+    }
+    .reply-three-dot-menu .menu-options {
+      display: none;
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      z-index: 1;
+    }
+    .reply-three-dot-menu .menu-options.show {
+      display: block;
+    }
+    .reply-three-dot-menu .menu-options button {
+      display: block;
+      width: 100%;
+      padding: 5px 10px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      text-align: left;
+    }
+    /* DELETE BUTTON STYLES */
+    .delete-reply-btn, .delete-btn {
+      color: red;
+    }
     
