@@ -110,6 +110,29 @@
         </form>
       </div>
     </div>
+    <!-- Nested Comment Modal -->
+<div id="comment-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-comment-modal">&times;</span>
+    <h3><i class="fas fa-comments"></i> Reply Comments</h3>
+    <div id="comment-thread" class="comments-thread"></div>
+    <textarea id="comment-input" placeholder="Write a comment..."></textarea>
+    <button id="submit-comment-btn" class="submit-btn">Post Comment</button>
+  </div>
+</div>
+<!-- Sub-Reply Modal -->
+<div id="sub-reply-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn" id="close-sub-reply-modal">&times;</span>
+    <h3><i class="fas fa-reply"></i> Reply to this Comment</h3>
+    <textarea id="sub-reply-input" placeholder="Write your reply..." required></textarea>
+    <div class="modal-actions">
+      <button id="post-sub-reply-btn" class="submit-btn">Post</button>
+      <button id="cancel-sub-reply-btn" class="cancel-btn">Cancel</button>
+    </div>
+  </div>
+</div>
+
   </main>
 
   <script src="/js/api.js"></script>
@@ -131,10 +154,12 @@
       document.getElementById("review-modal").style.display = "block";
     });
     document.querySelectorAll(".close-btn").forEach(btn => {
-      btn.addEventListener("click", function () {
-        document.getElementById("review-modal").style.display = "none";
-      });
-    });
+  btn.addEventListener("click", function () {
+    const modal = this.closest(".modal");
+    if (modal) modal.style.display = "none";
+  });
+});
+
     window.addEventListener("click", function (event) {
       if (event.target === document.getElementById("review-modal")) {
         document.getElementById("review-modal").style.display = "none";
@@ -142,6 +167,15 @@
       if (event.target === document.getElementById("report-modal")) {
         closeReportModal();
       }
+   
+      if (event.target === document.getElementById("comment-modal")) {
+  commentModal.style.display = "none";
+  commentThread.innerHTML = "";
+  commentInput.value = "";
+  activeReply = null;
+}
+
+   
     });
 
     // Function to load the latest questions from the server
@@ -245,39 +279,118 @@
         // Render existing replies, if any
         if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
           q.replies.forEach((reply) => {
-            const replyDiv = document.createElement("div");
-            replyDiv.classList.add("reply");
-            replyDiv.innerHTML = `
-              <div class="reply-content">
-                <div class="reply-text"><p><strong>${reply.user}</strong>: ${reply.reply}</p></div>
-                <div class="reply-three-dot-menu">
-                  <span class="dots">&#8226;&#8226;&#8226;</span>
-                  <div class="menu-options">
-                    <button class="delete-reply-btn">Delete</button>
-                    <button class="report-reply-btn">Report</button>
-                  </div>
-                </div>
-              </div>
-            `;
-            repliesList.appendChild(replyDiv);
+  reply.comments = reply.comments || [];
 
-            const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");
-            const replyMenuOptions = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
-            replyDots.addEventListener("click", function (e) {
-              e.stopPropagation();
-              replyMenuOptions.classList.toggle("show");
-            });
-            const deleteReplyBtn = replyDiv.querySelector(".delete-reply-btn");
-            deleteReplyBtn.addEventListener("click", function () {
-              replyDiv.remove();
-              // Check if there are no more replies; if so, hide the toggle button.
-              updateToggleReplies(repliesList, toggleRepliesBtn);
-            });
-            const reportReplyBtn = replyDiv.querySelector(".report-reply-btn");
-            reportReplyBtn.addEventListener("click", function () {
-              document.getElementById("report-modal").style.display = "flex";
-            });
-          });
+  const replyDiv = document.createElement("div");
+  replyDiv.classList.add("reply");
+  replyDiv.innerHTML = `
+    <div class="reply-content">
+      <div class="reply-text"><p><strong>${reply.user}</strong>: ${reply.reply}</p></div>
+      <div class="reply-three-dot-menu">
+        <span class="dots">&#8226;&#8226;&#8226;</span>
+        <div class="menu-options">
+          <button class="delete-reply-btn">Delete</button>
+          <button class="report-reply-btn">Report</button>
+          <button class="view-comments-btn">💬 View Comments</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  repliesList.appendChild(replyDiv);
+  // Sub-reply (nested comment) logic
+const subReplyContainer = document.createElement("div");
+subReplyContainer.classList.add("sub-reply-container");
+
+const subReplyList = document.createElement("div");
+subReplyList.classList.add("sub-reply-list");
+
+const subReplyForm = document.createElement("div");
+subReplyForm.classList.add("sub-reply-form");
+subReplyForm.style.display = "none";
+
+const subReplyInput = document.createElement("textarea");
+subReplyInput.placeholder = "Write a comment on this reply...";
+subReplyInput.classList.add("sub-reply-input");
+
+const subReplySubmit = document.createElement("button");
+subReplySubmit.textContent = "Post Comment";
+subReplySubmit.classList.add("submit-btn");
+
+const subReplyCancel = document.createElement("button");
+subReplyCancel.textContent = "Cancel";
+subReplyCancel.classList.add("cancel-btn");
+
+subReplyForm.appendChild(subReplyInput);
+subReplyForm.appendChild(subReplySubmit);
+subReplyForm.appendChild(subReplyCancel);
+
+// Append subreply form and list to container
+subReplyContainer.appendChild(subReplyForm);
+subReplyContainer.appendChild(subReplyList);
+replyDiv.appendChild(subReplyContainer);
+
+// Add "Reply to this reply" button
+const replyToReplyBtn = document.createElement("button");
+replyToReplyBtn.textContent = "Reply";
+replyToReplyBtn.classList.add("small-reply-btn");
+replyDiv.appendChild(replyToReplyBtn);
+
+// Show form on click
+replyToReplyBtn.addEventListener("click", () => {
+  subReplyForm.style.display = "block";
+  replyToReplyBtn.style.display = "none";
+});
+
+// Cancel sub-reply
+subReplyCancel.addEventListener("click", () => {
+  subReplyInput.value = "";
+  subReplyForm.style.display = "none";
+  replyToReplyBtn.style.display = "inline-block";
+});
+
+// Submit sub-reply
+subReplySubmit.addEventListener("click", () => {
+  const text = subReplyInput.value.trim();
+  if (text) {
+    const subReply = document.createElement("div");
+    subReply.classList.add("sub-reply");
+    subReply.innerHTML = `<strong>You:</strong> ${text}`;
+    subReplyList.appendChild(subReply);
+    subReplyInput.value = "";
+    subReplyForm.style.display = "none";
+    replyToReplyBtn.style.display = "inline-block";
+  }
+});
+
+  const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");
+  const replyMenuOptions = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
+
+  replyDots.addEventListener("click", function (e) {
+    e.stopPropagation();
+    replyMenuOptions.classList.toggle("show");
+  });
+
+  replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
+    replyDiv.remove();
+    updateToggleReplies(repliesList, toggleRepliesBtn);
+  });
+
+  replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
+    document.getElementById("report-modal").style.display = "flex";
+  });
+
+  replyDiv.querySelector(".view-comments-btn").addEventListener("click", () => openCommentModal(reply));
+  
+
+});
+
+
+
+          
+
+          
+           
           // If there are any replies, show the toggle button.
           toggleRepliesBtn.style.display = "inline-block";
         } else {
@@ -398,6 +511,62 @@
       document.querySelectorAll(".menu-options").forEach(menu => menu.classList.remove("show"));
     });
     document.addEventListener("DOMContentLoaded", loadLatestQuestions);
+
+
+    let activeReply = null; // store the current reply being commented on
+
+// Modal logic
+const commentModal = document.getElementById("comment-modal");
+const closeCommentModalBtn = document.getElementById("close-comment-modal");
+const commentThread = document.getElementById("comment-thread");
+const commentInput = document.getElementById("comment-input");
+const submitCommentBtn = document.getElementById("submit-comment-btn");
+
+closeCommentModalBtn.addEventListener("click", () => {
+  commentModal.style.display = "none";
+  commentThread.innerHTML = "";
+  commentInput.value = "";
+  activeReply = null;
+});
+
+submitCommentBtn.addEventListener("click", () => {
+  const commentText = commentInput.value.trim();
+  if (commentText && activeReply) {
+    activeReply.comments = activeReply.comments || [];
+    activeReply.comments.push({
+      user: "You",
+      text: commentText
+    });
+
+    // Render
+    const commentDiv = document.createElement("div");
+    commentDiv.classList.add("comment");
+    commentDiv.innerHTML = `<strong>You:</strong> ${commentText}`;
+    commentThread.appendChild(commentDiv);
+
+    commentInput.value = "";
+  }
+});
+
+function openCommentModal(replyObj) {
+  activeReply = replyObj;
+  commentModal.style.display = "block";
+  commentThread.innerHTML = "";
+
+  if (replyObj.comments && replyObj.comments.length > 0) {
+    replyObj.comments.forEach(comment => {
+      const commentDiv = document.createElement("div");
+      commentDiv.classList.add("comment");
+      commentDiv.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
+      commentThread.appendChild(commentDiv);
+    });
+  }
+}
+
+
+
+
+
   </script>
 </body>
 </html>
