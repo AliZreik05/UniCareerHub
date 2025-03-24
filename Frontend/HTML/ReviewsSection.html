@@ -180,7 +180,6 @@
     reviewsList.innerHTML = "";
 
     latestReviews.forEach(review => {
-      // Generate stars
       const ratingValue = review.rating || 0;
       let starsHtml = "";
       for (let i = 1; i <= 5; i++) {
@@ -192,28 +191,48 @@
       const reviewElem = document.createElement('div');
       reviewElem.classList.add('review');
       reviewElem.innerHTML = `
-  <div class="review-header">
-    <h4>${review.title}</h4>
-    <p class="review-meta">
-      <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
-    </p>
-    <div class="review-stars">${starsHtml}</div>
-    <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
-    <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+        <div class="review-header">
+          <h4>${review.title}</h4>
+          <p class="review-meta">
+            <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+          </p>
+          <div class="review-stars">${starsHtml}</div>
+          <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
+          <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+          <div class="review-menu">
+            <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
+            <div class="dropdown-menu">
+              <button class="delete-review-btn">Delete</button>
+              <button class="report-review-btn">Report</button>
+            </div>
+          </div>
+        </div>
+        <div class="review-body">
+          <p>${review.review}</p>
+        </div>
+        <div class="review-footer">
+          <div class="like-section">
+            <i class="fas fa-arrow-up upvote-icon"></i>
+            <span class="like-count">0</span>
+          </div>
+        </div>
+      `;
 
-    <!-- Three Dots Dropdown -->
-    <div class="review-menu">
-      <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
-      <div class="dropdown-menu">
-        <button class="delete-review-btn">Delete</button>
-        <button class="report-review-btn">Report</button>
-      </div>
-    </div>
-  </div>
-  <div class="review-body">
-    <p>${review.review}</p>
-  </div>
-`;
+      // ✅ Add upvote click event INSIDE the loop
+      const upvoteIcon = reviewElem.querySelector('.upvote-icon');
+      const likeCountSpan = reviewElem.querySelector('.like-count');
+      upvoteIcon.addEventListener('click', function () {
+        const isActive = upvoteIcon.classList.contains('active');
+        let count = parseInt(likeCountSpan.textContent, 10);
+        if (isActive) {
+          count--;
+          upvoteIcon.classList.remove('active');
+        } else {
+          count++;
+          upvoteIcon.classList.add('active');
+        }
+        likeCountSpan.textContent = count;
+      });
 
       reviewsList.appendChild(reviewElem);
     });
