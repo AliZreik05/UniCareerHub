@@ -332,3 +332,22 @@ textarea:focus {
     color: #555;
     margin-bottom: 10px;
 }
+
+.note-top-left {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 14px;
+    color: #444;
+    background-color: #fff8dc;
+    padding: 8px 12px;
+    border-left: 4px solid #ffcc00;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    max-width: 300px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  

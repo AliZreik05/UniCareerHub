@@ -12,6 +12,10 @@
   
 <body>
   <div class="container">
+    <div class="note-top-left">
+      <i class="fa-solid fa-info-circle"></i> Click "Edit Profile" to add description and courses taken.
+    </div>
+    
     <div class="profile-header">
       <div class="profile-pic-container">
         <i class="fa-solid fa-circle-user static-profile-icon"></i>
@@ -145,7 +149,17 @@
           }
           if (data.profile.experience && data.profile.experience.length > 0) {
             document.getElementById("display-experience").innerHTML =
-              data.profile.experience.map(exp => `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}"><span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span></li>`).join("");
+            data.profile.experience.map(exp =>
+  `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}">
+    <span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span>
+    <div class="experience-menu">
+      <span class="dots" onclick="toggleMenu(this)">&#8226;&#8226;&#8226;</span>
+      <div class="dropdown-menu">
+        <button onclick="deleteExperience(this)">Delete</button>
+      </div>
+    </div>
+  </li>`).join("");
+
           } else {
             document.getElementById("display-experience").innerHTML = "<li>No experience added yet.</li>";
           }
