@@ -46,20 +46,29 @@
         <div class="container">
             <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Submit a Review</button>
             <div class="filter-container">
-                <input type="text" id="company-filter" placeholder="Search by Company Name">
-                <select id="industry-filter">
-                    <option value="">Filter by Industry</option>
-                    <option value="Tech">Technology</option>
-                    <option value="Finance">Finance</option>
-                    <option value="Healthcare">Healthcare</option>
-                    <option value="Education">Education</option>
-                    <option value="Consulting">Consulting</option>
-                    <option value="Engineering">Engineering</option>
-                    <option value="Marketing">Marketing</option>
-                    <option value="Retail">Retail</option>
-                    <option value="Other">Other</option>
-                </select>
-            </div>
+              <input type="text" id="company-filter" placeholder="Search by Company Name">
+              
+              <select id="industry-filter">
+                  <option value="">Filter by Industry</option>
+                  <option value="Tech">Technology</option>
+                  <option value="Finance">Finance</option>
+                  <option value="Healthcare">Healthcare</option>
+                  <option value="Education">Education</option>
+                  <option value="Consulting">Consulting</option>
+                  <option value="Engineering">Engineering</option>
+                  <option value="Marketing">Marketing</option>
+                  <option value="Retail">Retail</option>
+                  <option value="Other">Other</option>
+              </select>
+          
+              <!-- New sort dropdown -->
+              <select id="sort-filter">
+                  <option value="">Sort By</option>
+                  <option value="latest">Latest</option>
+                  <option value="upvotes">Most Upvotes</option>
+              </select>
+          </div>
+          
             
             <div class="questions-list" id="reviews-list"></div>
         </div>
@@ -168,14 +177,21 @@
             }
         };
 
-        async function loadLatestReviews() {
+        async function loadLatestReviews(sortBy = "latest") {
   try {
     const response = await fetch('/reviews/latest');
     if (!response.ok) {
       console.error('Failed to load reviews');
       return;
     }
+    
     const latestReviews = await response.json();
+    if (sortBy === "upvotes") {
+  latestReviews.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+} else {
+  latestReviews.sort((a, b) => new Date(b.time) - new Date(a.time));
+}
+
     const reviewsList = document.getElementById('reviews-list');
     reviewsList.innerHTML = "";
 
@@ -213,7 +229,8 @@
         <div class="review-footer">
           <div class="like-section">
             <i class="fas fa-arrow-up upvote-icon"></i>
-            <span class="like-count">0</span>
+            <span class="like-count">${review.upvotes || 0}</span>
+
           </div>
         </div>
       `;
@@ -268,6 +285,10 @@ function filterReviews() {
     });
 }
 
+document.getElementById('sort-filter').addEventListener('change', function () {
+  const selectedSort = this.value;
+  loadLatestReviews(selectedSort || "latest");
+});
 
 
 
@@ -337,7 +358,11 @@ document.getElementById('review-form').addEventListener('submit', async function
     }
 });
  
-        document.addEventListener('DOMContentLoaded', loadLatestReviews);
+document.addEventListener('DOMContentLoaded', () => {
+  const selectedSort = document.getElementById("sort-filter").value;
+  loadLatestReviews(selectedSort || "latest");
+});
+
 
 
         function toggleReviewMenu(dotsElement) {

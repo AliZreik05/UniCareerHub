@@ -514,3 +514,13 @@ body {
 .upvote-icon.active {
   color: #ffcc00;
 }
+
+
+#sort-filter {
+  padding: 10px;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+  width: 200px;
+}
