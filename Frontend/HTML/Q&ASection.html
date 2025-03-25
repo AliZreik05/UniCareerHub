@@ -120,18 +120,8 @@
     <button id="submit-comment-btn" class="submit-btn">Post Comment</button>
   </div>
 </div>
-<!-- Sub-Reply Modal -->
-<div id="sub-reply-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="close-sub-reply-modal">&times;</span>
-    <h3><i class="fas fa-reply"></i> Reply to this Comment</h3>
-    <textarea id="sub-reply-input" placeholder="Write your reply..." required></textarea>
-    <div class="modal-actions">
-      <button id="post-sub-reply-btn" class="submit-btn">Post</button>
-      <button id="cancel-sub-reply-btn" class="cancel-btn">Cancel</button>
-    </div>
-  </div>
-</div>
+
+
 
   </main>
 
@@ -298,37 +288,7 @@
   `;
 
   repliesList.appendChild(replyDiv);
-  // Sub-reply (nested comment) logic
-const subReplyContainer = document.createElement("div");
-subReplyContainer.classList.add("sub-reply-container");
 
-const subReplyList = document.createElement("div");
-subReplyList.classList.add("sub-reply-list");
-
-const subReplyForm = document.createElement("div");
-subReplyForm.classList.add("sub-reply-form");
-subReplyForm.style.display = "none";
-
-const subReplyInput = document.createElement("textarea");
-subReplyInput.placeholder = "Write a comment on this reply...";
-subReplyInput.classList.add("sub-reply-input");
-
-const subReplySubmit = document.createElement("button");
-subReplySubmit.textContent = "Post Comment";
-subReplySubmit.classList.add("submit-btn");
-
-const subReplyCancel = document.createElement("button");
-subReplyCancel.textContent = "Cancel";
-subReplyCancel.classList.add("cancel-btn");
-
-subReplyForm.appendChild(subReplyInput);
-subReplyForm.appendChild(subReplySubmit);
-subReplyForm.appendChild(subReplyCancel);
-
-// Append subreply form and list to container
-subReplyContainer.appendChild(subReplyForm);
-subReplyContainer.appendChild(subReplyList);
-replyDiv.appendChild(subReplyContainer);
 
 // Add "Reply to this reply" button
 const replyToReplyBtn = document.createElement("button");
@@ -336,32 +296,6 @@ replyToReplyBtn.textContent = "Reply";
 replyToReplyBtn.classList.add("small-reply-btn");
 replyDiv.appendChild(replyToReplyBtn);
 
-// Show form on click
-replyToReplyBtn.addEventListener("click", () => {
-  subReplyForm.style.display = "block";
-  replyToReplyBtn.style.display = "none";
-});
-
-// Cancel sub-reply
-subReplyCancel.addEventListener("click", () => {
-  subReplyInput.value = "";
-  subReplyForm.style.display = "none";
-  replyToReplyBtn.style.display = "inline-block";
-});
-
-// Submit sub-reply
-subReplySubmit.addEventListener("click", () => {
-  const text = subReplyInput.value.trim();
-  if (text) {
-    const subReply = document.createElement("div");
-    subReply.classList.add("sub-reply");
-    subReply.innerHTML = `<strong>You:</strong> ${text}`;
-    subReplyList.appendChild(subReply);
-    subReplyInput.value = "";
-    subReplyForm.style.display = "none";
-    replyToReplyBtn.style.display = "inline-block";
-  }
-});
 
   const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");
   const replyMenuOptions = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
@@ -380,7 +314,7 @@ subReplySubmit.addEventListener("click", () => {
     document.getElementById("report-modal").style.display = "flex";
   });
 
-  replyDiv.querySelector(".view-comments-btn").addEventListener("click", () => openCommentModal(reply));
+
   
 
 });
@@ -547,24 +481,6 @@ submitCommentBtn.addEventListener("click", () => {
     commentInput.value = "";
   }
 });
-
-function openCommentModal(replyObj) {
-  activeReply = replyObj;
-  commentModal.style.display = "block";
-  commentThread.innerHTML = "";
-
-  if (replyObj.comments && replyObj.comments.length > 0) {
-    replyObj.comments.forEach(comment => {
-      const commentDiv = document.createElement("div");
-      commentDiv.classList.add("comment");
-      commentDiv.innerHTML = `<strong>${comment.user}:</strong> ${comment.text}`;
-      commentThread.appendChild(commentDiv);
-    });
-  }
-}
-
-
-
 
 
   </script>
