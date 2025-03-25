@@ -286,7 +286,6 @@
         <div class="menu-options">
           <button class="delete-reply-btn">Delete</button>
           <button class="report-reply-btn">Report</button>
-          <button class="view-comments-btn">💬 View Comments</button>
         </div>
       </div>
     </div>
@@ -295,11 +294,6 @@
   repliesList.appendChild(replyDiv);
 
 
-// Add "Reply to this reply" button
-const replyToReplyBtn = document.createElement("button");
-replyToReplyBtn.textContent = "Reply";
-replyToReplyBtn.classList.add("small-reply-btn");
-replyDiv.appendChild(replyToReplyBtn);
 
 
   const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");

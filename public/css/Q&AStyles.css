@@ -616,8 +616,13 @@
     }
     .reply-text {
       flex: 1;
-      margin-right: 630px;
+      margin-right: 20px; /* consider removing or reducing this */
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      word-break: break-word;
+      min-width: 0; /* VERY important inside flex containers */
     }
+    
     .reply-three-dot-menu {
       position: relative;
       cursor: pointer;
@@ -728,3 +733,10 @@
       margin-bottom: 5px;
     }
     
+    .reply-text p {
+      word-wrap: break-word;     /* older, but still good */
+      overflow-wrap: break-word; /* preferred modern option */
+    }
+    
+    
+   
