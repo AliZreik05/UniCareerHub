@@ -275,7 +275,12 @@
   replyDiv.classList.add("reply");
   replyDiv.innerHTML = `
     <div class="reply-content">
-      <div class="reply-text"><p><strong>${reply.user}</strong>: ${reply.reply}</p></div>
+   <div class="reply-text">
+  <p><strong>${reply.user}</strong></p>
+  <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
+  <p>${reply.reply}</p>
+</div>
+
       <div class="reply-three-dot-menu">
         <span class="dots">&#8226;&#8226;&#8226;</span>
         <div class="menu-options">
