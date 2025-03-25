@@ -739,4 +739,89 @@
     }
     
     
-   
+    .reply-footer {
+      display: flex;
+      justify-content: flex-start; /* 👈 aligns it left */
+      align-items: center;
+      margin-top: 8px;
+      padding-left: 10px;
+    }
+    
+    .reply-like-section {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1.1rem;
+      color: #666;
+      transition: color 0.3s;
+    }
+    
+    .reply-upvote-icon {
+      transition: color 0.3s;
+    }
+    
+    .reply-upvote-icon:hover,
+    .reply-upvote-icon.active {
+      color: #ffcc00;
+    }
+    .reply {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #f1f1f1;
+      border-radius: 6px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      gap: 15px;
+    }
+    
+    .reply-left,
+    .reply-right {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+    
+    .reply-center {
+      flex: 1;
+      text-align: center;
+    }
+    
+    .reply-text p {
+      margin: 4px 0;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .reply-username {
+      font-weight: bold;
+    }
+    
+    .reply-time {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .reply-three-dot-menu {
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .reply-three-dot-menu .menu-options {
+      display: none;
+      position: absolute;
+      top: 25px;
+      right: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      z-index: 10;
+      border-radius: 6px;
+    }
+    
+    .reply-three-dot-menu .menu-options.show {
+      display: block;
+    }
+    

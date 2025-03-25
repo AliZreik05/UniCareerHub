@@ -274,22 +274,36 @@
   const replyDiv = document.createElement("div");
   replyDiv.classList.add("reply");
   replyDiv.innerHTML = `
-    <div class="reply-content">
-   <div class="reply-text">
-  <p><strong>${reply.user}</strong></p>
-  <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
-  <p>${reply.reply}</p>
-</div>
+  <div class="reply-left">
+    <div class="reply-like-section">
+      <i class="fas fa-arrow-up reply-upvote-icon"></i>
+      <span class="reply-like-count">${reply.upvotes || 0}</span>
+    </div>
+  </div>
 
-      <div class="reply-three-dot-menu">
-        <span class="dots">&#8226;&#8226;&#8226;</span>
-        <div class="menu-options">
-          <button class="delete-reply-btn">Delete</button>
-          <button class="report-reply-btn">Report</button>
-        </div>
+  <div class="reply-center">
+    <div class="reply-text">
+      <p class="reply-username">${reply.user}</p>
+      <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
+      <p>${reply.reply}</p>
+    </div>
+  </div>
+
+  <div class="reply-right">
+    <div class="reply-three-dot-menu">
+      <span class="dots">&#8226;&#8226;&#8226;</span>
+      <div class="menu-options">
+        <button class="delete-reply-btn">Delete</button>
+        <button class="report-reply-btn">Report</button>
       </div>
     </div>
-  `;
+  </div>
+`;
+
+
+
+
+
 
   repliesList.appendChild(replyDiv);
 
@@ -312,6 +326,23 @@
   replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
     document.getElementById("report-modal").style.display = "flex";
   });
+  const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
+const replyLikeCount = replyDiv.querySelector(".reply-like-count");
+
+replyUpvoteIcon.addEventListener("click", () => {
+  const isActive = replyUpvoteIcon.classList.contains("active");
+  let count = parseInt(replyLikeCount.textContent, 10);
+
+  if (isActive) {
+    count--;
+    replyUpvoteIcon.classList.remove("active");
+  } else {
+    count++;
+    replyUpvoteIcon.classList.add("active");
+  }
+
+  replyLikeCount.textContent = count;
+});
 
 
   
