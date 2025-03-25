@@ -350,7 +350,7 @@ body {
   
   .hero-images img {
     max-width: auto;
-    max-height: 220px;
+    max-height: 180px;
     animation: fadeSlideUp 1.8s ease both;
   }
   
@@ -366,7 +366,7 @@ body {
     }
   }
   
-  @media (max-width: 768px) {
+  @media (max-width: 700px) {
     .hero {
       flex-direction: column;
       text-align: center;
