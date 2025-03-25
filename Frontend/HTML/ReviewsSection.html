@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/ReviewsStyles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Reviews</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css/ReviewsStyles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" 
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Reviews</title>
 </head>
 <body>
-    <div class="navbar">
-        <div class="logo"><a href="/">UniCareerHub</a></div>
-        <div class="nav-title">Reviews</div>
-        <div class="nav-icons">
-          <a href="/profile" class="profile-icon" title="Profile">
-            <i class="fa-solid fa-circle-user"></i>
-          </a>
-          <a href="/logout">
-            <button class="logout-btn">Logout</button>
-          </a>
-        </div>
-      </div>
-      
-    <!-- HERO SECTION -->
-<section class="hero">
+  <div class="navbar">
+    <div class="logo"><a href="/">UniCareerHub</a></div>
+    <div class="nav-title">Reviews</div>
+    <div class="nav-icons">
+      <a href="/profile" class="profile-icon" title="Profile">
+        <i class="fa-solid fa-circle-user"></i>
+      </a>
+      <a href="/logout">
+        <button class="logout-btn">Logout</button>
+      </a>
+    </div>
+  </div>
+  
+  <!-- HERO SECTION -->
+  <section class="hero">
     <div class="hero-images">
       <img src="/Pics/reviews-pic-5.jpg" alt="Left Image">
     </div>
@@ -35,379 +37,369 @@
     </div>
   </section>
   
-  <!--
-    <div class="intro-text">
-        Have a review? Share your experience!<br>
-        Connect with fellow students and professionals.
-    </div>
--->
-
-    <section id="review-section">
-        <div class="container">
-            <button id="open-modal" class="submit-btn"> <i class="fas fa-plus"></i> Submit a Review</button>
-            <div class="filter-container">
-              <input type="text" id="company-filter" placeholder="Search by Company Name">
-              
-              <select id="industry-filter">
-                  <option value="">Filter by Industry</option>
-                  <option value="Tech">Technology</option>
-                  <option value="Finance">Finance</option>
-                  <option value="Healthcare">Healthcare</option>
-                  <option value="Education">Education</option>
-                  <option value="Consulting">Consulting</option>
-                  <option value="Engineering">Engineering</option>
-                  <option value="Marketing">Marketing</option>
-                  <option value="Retail">Retail</option>
-                  <option value="Other">Other</option>
-              </select>
-          
-              <!-- New sort dropdown -->
-              <select id="sort-filter">
-                  <option value="">Sort By</option>
-                  <option value="latest">Latest</option>
-                  <option value="upvotes">Most Upvotes</option>
-              </select>
-          </div>
-          
-            
-            <div class="questions-list" id="reviews-list"></div>
-        </div>
-    </section>
-    
-    <div id="review-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3><i class="fas fa-pen-nib"></i> Submit a Review</h3>
-            <form id="review-form" class="ask-question">
-                <div class="form-group">
-                    <label for="review-title">Title</label>
-                    <input type="text" id="review-title" name="title" placeholder="Enter review title" required>
-                </div>
-            
-                <!-- New Input for Company Name -->
-                <div class="form-group">
-                    <label for="company-name">Company Name</label>
-                    <input type="text" id="company-name" name="company" placeholder="Enter company name" required>
-                </div>
-            
-                <div class="form-group">
-                    <label for="industry-select">Industry Type</label>
-                    <select id="industry-select" name="industry" required>
-                        <option value="" disabled selected>Select Industry Type</option>
-                        <option value="Tech">Technology</option>
-                        <option value="Finance">Finance</option>
-                        <option value="Healthcare">Healthcare</option>
-                        <option value="Education">Education</option>
-                        <option value="Consulting">Consulting</option>
-                        <option value="Engineering">Engineering</option>
-                        <option value="Marketing">Marketing</option>
-                        <option value="Retail">Retail</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-            
-                <div class="form-group">
-                    <label for="review-body">Details</label>
-                    <textarea id="review-body" name="body" placeholder="Provide details about your review" required></textarea>
-                </div>
-            <!-- NEW: Star Rating Section -->
-
-
-<div class="form-group">
-    <label>Rating:</label>
-    <div class="star-rating">
-        <input type="radio" name="rating" id="star5" value="5">
-        <label for="star5"><i class="fas fa-star"></i></label>
-
-        <input type="radio" name="rating" id="star4" value="4">
-        <label for="star4"><i class="fas fa-star"></i></label>
-
-        <input type="radio" name="rating" id="star3" value="3">
-        <label for="star3"><i class="fas fa-star"></i></label>
-
-        <input type="radio" name="rating" id="star2" value="2">
-        <label for="star2"><i class="fas fa-star"></i></label>
-
-        <input type="radio" name="rating" id="star1" value="1">
-        <label for="star1"><i class="fas fa-star"></i></label>
-    </div>
-</div>
-
-
-
-
-                <button type="submit" class="submit-btn">
-                    <i class="fas fa-paper-plane"></i> Post Review
-                </button>
-            </form>
-            
-        </div>
-    </div>
-    <div id="report-modal" class="modal">
-        <div class="modal-content">
-          <span class="close-btn" onclick="closeReportModal()">&times;</span>
-          <h3><i class="fas fa-flag"></i> Report Review</h3>
-          <form id="report-form">
-            <label for="report-reason">Why are you reporting this review?</label>
-            <textarea id="report-reason" placeholder="Enter your reason..." required></textarea>
-            <button type="submit" class="submit-btn">Submit Report</button>
-          </form>
-        </div>
+  <section id="review-section">
+    <div class="container">
+      <button id="open-modal" class="submit-btn">
+        <i class="fas fa-plus"></i> Submit a Review
+      </button>
+      <div class="filter-container">
+        <input type="text" id="company-filter" placeholder="Search by Company Name">
+        <select id="industry-filter">
+          <option value="">Filter by Industry</option>
+          <option value="Tech">Technology</option>
+          <option value="Finance">Finance</option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Education">Education</option>
+          <option value="Consulting">Consulting</option>
+          <option value="Engineering">Engineering</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Retail">Retail</option>
+          <option value="Other">Other</option>
+        </select>
+        <select id="sort-filter">
+          <option value="">Sort By</option>
+          <option value="latest">Latest</option>
+          <option value="upvotes">Most Upvotes</option>
+        </select>
       </div>
-      
-    <script src="/js/api.js"></script>
-    <script>
-       document.getElementById('open-modal').addEventListener('click', function() {
-    const modal = document.getElementById('review-modal');
-    modal.style.display = 'flex'; // Ensure flexbox is applied
-
-    // Force re-center when opening
-    modal.style.justifyContent = 'center';
-    modal.style.alignItems = 'center';
-});
-
-        
-        document.querySelector('.close-btn').addEventListener('click', function() {
-            document.getElementById('review-modal').style.display = 'none';
-        });
-        
-        window.onclick = function(event) {
-            if (event.target === document.getElementById('review-modal')) {
-                document.getElementById('review-modal').style.display = 'none';
-            }
-        };
-
-        async function loadLatestReviews(sortBy = "latest") {
-  try {
-    const response = await fetch('/reviews/latest');
-    if (!response.ok) {
-      console.error('Failed to load reviews');
-      return;
+      <div class="questions-list" id="reviews-list"></div>
+    </div>
+  </section>
+  
+  <!-- Review Modal -->
+  <div id="review-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <h3><i class="fas fa-pen-nib"></i> Submit a Review</h3>
+      <form id="review-form" class="ask-question">
+        <div class="form-group">
+          <label for="review-title">Title</label>
+          <input type="text" id="review-title" name="title" placeholder="Enter review title" required>
+        </div>
+        <div class="form-group">
+          <label for="company-name">Company Name</label>
+          <input type="text" id="company-name" name="company" placeholder="Enter company name" required>
+        </div>
+        <div class="form-group">
+          <label for="industry-select">Industry Type</label>
+          <select id="industry-select" name="industry" required>
+            <option value="" disabled selected>Select Industry Type</option>
+            <option value="Tech">Technology</option>
+            <option value="Finance">Finance</option>
+            <option value="Healthcare">Healthcare</option>
+            <option value="Education">Education</option>
+            <option value="Consulting">Consulting</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Retail">Retail</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="review-body">Details</label>
+          <textarea id="review-body" name="body" placeholder="Provide details about your review" required></textarea>
+        </div>
+        <!-- Star Rating Section -->
+        <div class="form-group">
+          <label>Rating:</label>
+          <div class="star-rating">
+            <input type="radio" name="rating" id="star5" value="5">
+            <label for="star5"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="star4" value="4">
+            <label for="star4"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="star3" value="3">
+            <label for="star3"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="star2" value="2">
+            <label for="star2"><i class="fas fa-star"></i></label>
+            <input type="radio" name="rating" id="star1" value="1">
+            <label for="star1"><i class="fas fa-star"></i></label>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> Post Review
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Report Modal -->
+  <div id="report-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeReportModal()">&times;</span>
+      <h3><i class="fas fa-flag"></i> Report Review</h3>
+      <form id="report-form">
+        <label for="report-reason">Why are you reporting this review?</label>
+        <textarea id="report-reason" placeholder="Enter your reason..." required></textarea>
+        <button type="submit" class="submit-btn">Submit Report</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="/js/api.js"></script>
+  <script>
+    // Utility: Get cookie by name.
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
     }
+    // Set currentUser from cookie.
+    window.currentUser = getCookie('currentUser');
+    console.log("Current User:", window.currentUser);
+
+    // Open Review Modal
+    document.getElementById('open-modal').addEventListener('click', function() {
+      const modal = document.getElementById('review-modal');
+      modal.style.display = 'flex';
+      modal.style.justifyContent = 'center';
+      modal.style.alignItems = 'center';
+    });
     
-    const latestReviews = await response.json();
-    if (sortBy === "upvotes") {
-  latestReviews.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
-} else {
-  latestReviews.sort((a, b) => new Date(b.time) - new Date(a.time));
-}
-
-    const reviewsList = document.getElementById('reviews-list');
-    reviewsList.innerHTML = "";
-
-    latestReviews.forEach(review => {
-      const ratingValue = review.rating || 0;
-      let starsHtml = "";
-      for (let i = 1; i <= 5; i++) {
-        starsHtml += i <= ratingValue
-          ? '<i class="fas fa-star"></i>'
-          : '<i class="far fa-star"></i>';
+    // Close modal on clicking close button
+    document.querySelector('.close-btn').addEventListener('click', function() {
+      document.getElementById('review-modal').style.display = 'none';
+    });
+    
+    window.onclick = function(event) {
+      const modal = document.getElementById('review-modal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
       }
+      if (event.target === document.getElementById('report-modal')) {
+        closeReportModal();
+      }
+    };
 
-      const reviewElem = document.createElement('div');
-      reviewElem.classList.add('review');
-      reviewElem.innerHTML = `
-        <div class="review-header">
-          <h4>${review.title}</h4>
-          <p class="review-meta">
-            <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
-          </p>
-          <div class="review-stars">${starsHtml}</div>
-          <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
-          <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
-          <div class="review-menu">
-            <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
-            <div class="dropdown-menu">
-              <button class="delete-review-btn">Delete</button>
-              <button class="report-review-btn">Report</button>
-            </div>
-          </div>
-        </div>
-        <div class="review-body">
-          <p>${review.review}</p>
-        </div>
-        <div class="review-footer">
-          <div class="like-section">
-            <i class="fas fa-arrow-up upvote-icon"></i>
-            <span class="like-count">${review.upvotes || 0}</span>
-
-          </div>
-        </div>
-      `;
-
-      // ✅ Add upvote click event INSIDE the loop
-      const upvoteIcon = reviewElem.querySelector('.upvote-icon');
-      const likeCountSpan = reviewElem.querySelector('.like-count');
-      upvoteIcon.addEventListener('click', function () {
-        const isActive = upvoteIcon.classList.contains('active');
-        let count = parseInt(likeCountSpan.textContent, 10);
-        if (isActive) {
-          count--;
-          upvoteIcon.classList.remove('active');
-        } else {
-          count++;
-          upvoteIcon.classList.add('active');
+    // Function to load latest reviews.
+    async function loadLatestReviews(sortBy = "latest") {
+      try {
+        const response = await fetch('/reviews/latest');
+        if (!response.ok) {
+          console.error('Failed to load reviews');
+          return;
         }
-        likeCountSpan.textContent = count;
-      });
+        
+        let latestReviews = await response.json();
+        // Sort reviews based on the selected sort option.
+        if (sortBy === "upvotes") {
+          latestReviews.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
+        } else {
+          latestReviews.sort((a, b) => new Date(b.time) - new Date(a.time));
+        }
 
-      reviewsList.appendChild(reviewElem);
+        const reviewsList = document.getElementById('reviews-list');
+        reviewsList.innerHTML = "";
+        const currentUser = window.currentUser;
+
+        latestReviews.forEach(review => {
+          // Build star rating HTML.
+          const ratingValue = review.rating || 0;
+          let starsHtml = "";
+          for (let i = 1; i <= 5; i++) {
+            starsHtml += i <= ratingValue
+              ? '<i class="fas fa-star"></i>'
+              : '<i class="far fa-star"></i>';
+          }
+          
+          // Conditionally render the delete button only if the review was posted by the current user.
+          let reviewMenuHTML = "";
+          if (review.username && currentUser &&
+              review.username.toLowerCase() === currentUser.toLowerCase()) {
+            reviewMenuHTML += `<button class="delete-review-btn">Delete</button>`;
+          }
+          reviewMenuHTML += `<button class="report-review-btn">Report</button>`;
+          
+          // Create review element.
+          const reviewElem = document.createElement('div');
+          reviewElem.classList.add('review');
+          reviewElem.setAttribute("data-id", review.ID);
+          reviewElem.innerHTML = `
+            <div class="review-header">
+              <h4>${review.title}</h4>
+              <p class="review-meta">
+                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+              </p>
+              <div class="review-stars">${starsHtml}</div>
+              <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
+              <p class="industry-name"><strong>Industry:</strong> ${review.industry}</p>
+              <div class="review-menu">
+                <span class="dots" onclick="toggleReviewMenu(this)">&#8226;&#8226;&#8226;</span>
+                <div class="dropdown-menu">
+                  ${reviewMenuHTML}
+                </div>
+              </div>
+            </div>
+            <div class="review-body">
+              <p>${review.review}</p>
+            </div>
+            <div class="review-footer">
+              <div class="like-section">
+                <i class="fas fa-arrow-up upvote-icon"></i>
+                <span class="like-count">${review.upvotes || 0}</span>
+              </div>
+            </div>
+          `;
+          
+          // Attach upvote event.
+          const upvoteIcon = reviewElem.querySelector('.upvote-icon');
+          const likeCountSpan = reviewElem.querySelector('.like-count');
+          upvoteIcon.addEventListener('click', function () {
+            const isActive = upvoteIcon.classList.contains('active');
+            let count = parseInt(likeCountSpan.textContent, 10);
+            if (isActive) {
+              count--;
+              upvoteIcon.classList.remove('active');
+            } else {
+              count++;
+              upvoteIcon.classList.add('active');
+            }
+            likeCountSpan.textContent = count;
+          });
+          
+          // Attach delete event if delete button exists.
+          const deleteBtn = reviewElem.querySelector('.delete-review-btn');
+          if (deleteBtn) {
+            deleteBtn.addEventListener('click', function () {
+              const reviewId = reviewElem.getAttribute("data-id");
+              fetch(`/reviews/${reviewId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+              })
+              .then(response => response.json())
+              .then(result => {
+                if (result.message) {
+                  reviewElem.remove();
+                } else {
+                  alert("Error removing review.");
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("Error removing review.");
+              });
+            });
+          }
+          
+          // Attach report event.
+          const reportBtn = reviewElem.querySelector('.report-review-btn');
+          reportBtn.addEventListener('click', function () {
+            document.getElementById("report-modal").style.display = "flex";
+          });
+          
+          reviewsList.appendChild(reviewElem);
+        });
+      } catch (error) {
+        console.error('Error loading latest reviews:', error);
+      }
+    }
+
+    // Filter and sort functionality.
+    document.getElementById('company-filter').addEventListener('input', filterReviews);
+    document.getElementById('industry-filter').addEventListener('change', filterReviews);
+    document.getElementById('sort-filter').addEventListener('change', function () {
+      const selectedSort = this.value;
+      loadLatestReviews(selectedSort || "latest");
     });
 
-  } catch (error) {
-    console.error('Error loading latest reviews:', error);
-  }
-}
-
-
-document.getElementById('company-filter').addEventListener('input', filterReviews);
-document.getElementById('industry-filter').addEventListener('change', filterReviews);
-
-function filterReviews() {
-    const companySearch = document.getElementById('company-filter').value.toLowerCase();
-    const industryFilter = document.getElementById('industry-filter').value.toLowerCase();
-    
-    const reviews = document.querySelectorAll('.review');
-
-    reviews.forEach(review => {
+    function filterReviews() {
+      const companySearch = document.getElementById('company-filter').value.toLowerCase();
+      const industryFilter = document.getElementById('industry-filter').value.toLowerCase();
+      const reviews = document.querySelectorAll('.review');
+      reviews.forEach(review => {
         const companyName = review.querySelector('.company-name')?.textContent.toLowerCase() || "";
         const industry = review.querySelector('.industry-name')?.textContent.toLowerCase() || "";
-
-        // Check if review matches filters
         const companyMatch = companyName.includes(companySearch);
         const industryMatch = industryFilter === "" || industry.includes(industryFilter);
-
-        if (companyMatch && industryMatch) {
-            review.style.display = "block";
-        } else {
-            review.style.display = "none";
-        }
-    });
-}
-
-document.getElementById('sort-filter').addEventListener('change', function () {
-  const selectedSort = this.value;
-  loadLatestReviews(selectedSort || "latest");
-});
-
-
-
-document.getElementById('review-form').addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    // Get form values
-    const title = document.getElementById('review-title').value;
-    const body = document.getElementById('review-body').value;
-    const company = document.getElementById('company-name').value;
-    const industry = document.getElementById('industry-select').value;
-
-    // Get selected star rating (if you plan to send it)
-    let ratingValue = 0;
-    document.querySelectorAll('input[name="rating"]').forEach(radio => {
-        if (radio.checked) {
-            ratingValue = parseInt(radio.value, 10);
-        }
-    });
-
-    // Ensure required fields are filled
-    if (title && body && company && industry) {
-        // Construct the payload. Note: if your backend doesn't handle 'rating', you can omit it.
-        const payload = {
-            title: title,
-            review: body, // your backend expects "review" as the field name
-            company: company,
-            industry: industry,
-            rating: ratingValue
-        };
-
-        try {
-            const response = await fetch('/reviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                credentials: 'include',  // include cookies for authentication if needed
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) {
-                alert('Error posting review.');
-                return;
-            }
-
-            // Optionally, you can process the response
-            const result = await response.json();
-            console.log(result.message);
-
-            // Refresh the reviews list by reloading from the backend
-            loadLatestReviews();
-
-            // Reset the form fields
-            document.getElementById('review-title').value = '';
-            document.getElementById('review-body').value = '';
-            document.getElementById('company-name').value = '';
-            document.getElementById('industry-select').value = '';
-            document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
-
-            // Close the modal
-            document.getElementById('review-modal').style.display = 'none';
-        } catch (error) {
-            console.error('Error posting review:', error);
-            alert('Error posting review.');
-        }
-    } else {
-        alert('Please fill in all required fields.');
+        review.style.display = (companyMatch && industryMatch) ? "block" : "none";
+      });
     }
-});
- 
-document.addEventListener('DOMContentLoaded', () => {
-  const selectedSort = document.getElementById("sort-filter").value;
-  loadLatestReviews(selectedSort || "latest");
-});
 
+    // Submit new review.
+    document.getElementById('review-form').addEventListener('submit', async function(event) {
+      event.preventDefault();
+      const title = document.getElementById('review-title').value;
+      const body = document.getElementById('review-body').value;
+      const company = document.getElementById('company-name').value;
+      const industry = document.getElementById('industry-select').value;
+      let ratingValue = 0;
+      document.querySelectorAll('input[name="rating"]').forEach(radio => {
+        if (radio.checked) {
+          ratingValue = parseInt(radio.value, 10);
+        }
+      });
+      if (title && body && company && industry) {
+        const payload = {
+          title: title,
+          review: body,
+          company: company,
+          industry: industry,
+          rating: ratingValue
+        };
+        try {
+          const response = await fetch('/reviews', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+          });
+          if (!response.ok) {
+            alert('Error posting review.');
+            return;
+          }
+          const result = await response.json();
+          console.log(result.message);
+          loadLatestReviews();
+          document.getElementById('review-title').value = '';
+          document.getElementById('review-body').value = '';
+          document.getElementById('company-name').value = '';
+          document.getElementById('industry-select').value = '';
+          document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
+          document.getElementById('review-modal').style.display = 'none';
+        } catch (error) {
+          console.error('Error posting review:', error);
+          alert('Error posting review.');
+        }
+      } else {
+        alert('Please fill in all required fields.');
+      }
+    });
 
+    // Initialize reviews on DOMContentLoaded.
+    document.addEventListener('DOMContentLoaded', () => {
+      const selectedSort = document.getElementById("sort-filter").value;
+      loadLatestReviews(selectedSort || "latest");
+    });
 
-        function toggleReviewMenu(dotsElement) {
-  let menu = dotsElement.nextElementSibling;
-  menu.classList.toggle("show");
-}
+    // Toggle review menu dropdown.
+    function toggleReviewMenu(dotsElement) {
+      let menu = dotsElement.nextElementSibling;
+      menu.classList.toggle("show");
+    }
 
-function closeReportModal() {
-  document.getElementById("report-modal").style.display = "none";
-  document.getElementById("report-reason").value = "";
-}
-
-document.addEventListener("click", function (e) {
-  // Close any open dropdowns when clicking elsewhere
-  if (!e.target.matches(".dots")) {
-    document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("show"));
-  }
-
-  // Open report modal
-  if (e.target.classList.contains("report-review-btn")) {
-    document.getElementById("report-modal").style.display = "flex";
-  }
-
-  // Handle delete (frontend only)
-  if (e.target.classList.contains("delete-review-btn")) {
-    const review = e.target.closest(".review");
-    review.remove(); // For now, just remove from DOM
-  }
-});
-
-window.addEventListener("click", function (event) {
-  if (event.target === document.getElementById("report-modal")) {
-    closeReportModal();
-  }
-});
-
-// Optional form submission for report
-document.getElementById("report-form").addEventListener("submit", function (event) {
-  event.preventDefault();
-  const reason = document.getElementById("report-reason").value;
-  alert("Report submitted: " + reason); // You can remove this or trigger an actual API call
-  closeReportModal();
-});
-
-
-    </script>
+    // Report modal functions.
+    function closeReportModal() {
+      document.getElementById("report-modal").style.display = "none";
+      document.getElementById("report-reason").value = "";
+    }
+    document.addEventListener("click", function (e) {
+      if (!e.target.matches(".dots")) {
+        document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("show"));
+      }
+      if (e.target.classList.contains("report-review-btn")) {
+        document.getElementById("report-modal").style.display = "flex";
+      }
+    });
+    document.getElementById("report-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+      const reason = document.getElementById("report-reason").value;
+      alert("Report submitted: " + reason);
+      closeReportModal();
+    });
+    window.addEventListener("click", function (event) {
+      if (event.target === document.getElementById("report-modal")) {
+        closeReportModal();
+      }
+    });
+  </script>
 </body>
 </html>

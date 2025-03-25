@@ -9,5 +9,7 @@ router.get('/',(req,res)=>
 })
 router.get('/latest',reviewsController.getLatestReviews)
 
+router.delete('/:id', reviewsController.removeReview)
+
 router.post('/',reviewsController.postReview);
 module.exports = router;

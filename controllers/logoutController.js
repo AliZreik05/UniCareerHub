@@ -32,6 +32,11 @@ const handleLogout = async (req, res) =>
         sameSite: 'Lax',
         path: '/'
       });
+      res.clearCookie('currentUser', {
+        sameSite: 'Lax',
+        path: '/'
+      });
+      
       
     res.redirect('/login')
   }

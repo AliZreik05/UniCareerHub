@@ -183,242 +183,105 @@
         console.error("Error loading latest questions:", error);
       }
     }
+    function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    window.currentUser = getCookie('currentUser');
 
     // Function to render questions dynamically
     function renderQuestions(questions) {
-      const questionsList = document.getElementById("questions-list");
-      questionsList.innerHTML = ""; // Clear previous questions
+      
+  const questionsList = document.getElementById("questions-list");
+  questionsList.innerHTML = ""; // Clear previous questions
 
-      if (questions.length === 0) {
-        questionsList.innerHTML = `<p style="text-align: center; padding: 20px;">No results found</p>`;
-        return;
-      }
+  // Assume window.currentUser is set to the logged-in user's username
+  const currentUser = window.currentUser; 
+  console.log("Current User:", currentUser);
 
-      questions.forEach((q) => {
-        const questionElem = document.createElement("div");
-        questionElem.classList.add("question");
-        questionElem.innerHTML = `
-          <div class="question-header">
-            <h4>${q.title}</h4>
-            <p class="question-meta">
-              <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
-            </p>
-            <div class="three-dot-menu">
-              <span class="dots">&#8226;&#8226;&#8226;</span>
-              <div class="menu-options">
-                <button class="delete-btn">Delete</button>
-                <button class="report-btn">Report</button>
-              </div>
-            </div>
-          </div>
-          <div class="question-body">
-            <p>${q.question}</p>
-          </div>
-          <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
-          <div class="replies">
-            <div class="reply-form" style="display: none;">
-              <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
-              <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
-              <button class="cancel-reply"><i class="fas fa-times"></i> Cancel</button>
-            </div>
-          </div>
-          <div class="replies-list" style="display: none;"></div>
-          <button class="toggle-replies-btn" style="display: none;">Show Replies</button>
-        `;
+  questions.forEach((q) => {
+    
+    const questionElem = document.createElement("div");
+    questionElem.classList.add("question");
 
-        // QUESTION MENU EVENTS
-        const threeDotMenu = questionElem.querySelector(".three-dot-menu");
-        const menuOptions = threeDotMenu.querySelector(".menu-options");
-        const deleteBtn = questionElem.querySelector(".delete-btn");
-        const reportBtn = questionElem.querySelector(".report-btn");
-
-        threeDotMenu.addEventListener("click", function (e) {
-          e.stopPropagation();
-          menuOptions.classList.toggle("show");
-        });
-        deleteBtn.addEventListener("click", function (e) {
-          const qElement = e.target.closest(".question");
-          if (qElement) qElement.remove();
-        });
-        reportBtn.addEventListener("click", function () {
-          document.getElementById("report-modal").style.display = "flex";
-        });
-
-        // REPLY FUNCTIONALITY
-        const replyBtn = questionElem.querySelector(".reply-btn");
-        const replyForm = questionElem.querySelector(".reply-form");
-        const submitReplyBtn = questionElem.querySelector(".submit-reply");
-        const cancelReplyBtn = questionElem.querySelector(".cancel-reply");
-        const repliesList = questionElem.querySelector(".replies-list");
-        const toggleRepliesBtn = questionElem.querySelector(".toggle-replies-btn");
-
-        replyBtn.addEventListener("click", function () {
-          replyForm.style.display = "block";
-          replyBtn.style.display = "none";
-        });
-        cancelReplyBtn.addEventListener("click", function () {
-          replyForm.style.display = "none";
-          replyBtn.style.display = "inline-block";
-        });
-        toggleRepliesBtn.addEventListener("click", function () {
-          const visible = repliesList.style.display !== "none";
-          repliesList.style.display = visible ? "none" : "block";
-          toggleRepliesBtn.innerText = visible ? "Show Replies" : "Hide Replies";
-        });
-
-        // Render existing replies, if any
-        if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
-          q.replies.forEach((reply) => {
-  reply.comments = reply.comments || [];
-
-  const replyDiv = document.createElement("div");
-  replyDiv.classList.add("reply");
-  replyDiv.innerHTML = `
-  <div class="reply-left">
-    <div class="reply-like-section">
-      <i class="fas fa-arrow-up reply-upvote-icon"></i>
-      <span class="reply-like-count">${reply.upvotes || 0}</span>
-    </div>
-  </div>
-
-  <div class="reply-center">
-    <div class="reply-text">
-      <p class="reply-username">${reply.user}</p>
-      <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
-      <p>${reply.reply}</p>
-    </div>
-  </div>
-
-  <div class="reply-right">
-    <div class="reply-three-dot-menu">
-      <span class="dots">&#8226;&#8226;&#8226;</span>
-      <div class="menu-options">
-        <button class="delete-reply-btn">Delete</button>
-        <button class="report-reply-btn">Report</button>
-      </div>
-    </div>
-  </div>
-`;
-
-
-
-
-
-
-  repliesList.appendChild(replyDiv);
-
-
-
-
-  const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");
-  const replyMenuOptions = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
-
-  replyDots.addEventListener("click", function (e) {
-    e.stopPropagation();
-    replyMenuOptions.classList.toggle("show");
-  });
-
-  replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-    replyDiv.remove();
-    updateToggleReplies(repliesList, toggleRepliesBtn);
-  });
-
-  replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
-    document.getElementById("report-modal").style.display = "flex";
-  });
-  const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
-const replyLikeCount = replyDiv.querySelector(".reply-like-count");
-
-replyUpvoteIcon.addEventListener("click", () => {
-  const isActive = replyUpvoteIcon.classList.contains("active");
-  let count = parseInt(replyLikeCount.textContent, 10);
-
-  if (isActive) {
-    count--;
-    replyUpvoteIcon.classList.remove("active");
-  } else {
-    count++;
-    replyUpvoteIcon.classList.add("active");
-  }
-
-  replyLikeCount.textContent = count;
-});
-
-
-  
-
-});
-
-
-
-          
-
-          
-           
-          // If there are any replies, show the toggle button.
-          toggleRepliesBtn.style.display = "inline-block";
-        } else {
-          toggleRepliesBtn.style.display = "none";
-        }
-
-        // Post a new reply
-        submitReplyBtn.addEventListener("click", async function (event) {
-          event.preventDefault();
-          const replyText = questionElem.querySelector(".reply-body").value;
-          if (replyText) {
-            try {
-              const replyResponse = await fetch("/Q&A/reply", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ reply: replyText, ID: q.ID }),
-                credentials: "include"
-              });
-              if (!replyResponse.ok) {
-                alert("Error posting reply.");
-                return;
-              }
-              const newReplyDiv = document.createElement("div");
-              newReplyDiv.classList.add("reply");
-              newReplyDiv.innerHTML = `
-                <div class="reply-content">
-                  <div class="reply-text"><p><strong>You</strong>: ${replyText}</p></div>
-                  <div class="reply-three-dot-menu">
-                    <span class="dots">&#8226;&#8226;&#8226;</span>
-                    <div class="menu-options">
-                      <button class="delete-reply-btn">Delete</button>
-                      <button class="report-reply-btn">Report</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-              repliesList.appendChild(newReplyDiv);
-              const newReplyDots = newReplyDiv.querySelector(".reply-three-dot-menu .dots");
-              const newReplyMenuOptions = newReplyDiv.querySelector(".reply-three-dot-menu .menu-options");
-              newReplyDots.addEventListener("click", function (e) {
-                e.stopPropagation();
-                newReplyMenuOptions.classList.toggle("show");
-              });
-              newReplyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-                newReplyDiv.remove();
-                updateToggleReplies(repliesList, toggleRepliesBtn);
-              });
-              newReplyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
-                document.getElementById("report-modal").style.display = "flex";
-              });
-              questionElem.querySelector(".reply-body").value = "";
-              repliesList.style.display = "block";
-              toggleRepliesBtn.innerText = "Hide Replies";
-              updateToggleReplies(repliesList, toggleRepliesBtn);
-            } catch (error) {
-              console.error("Error posting reply:", error);
-              alert("Error posting reply.");
-            }
-          }
-        });
-
-        questionsList.appendChild(questionElem);
-      });
+    // Build the menu options conditionally
+    let deleteButtonHTML = "";
+    if (q.username === currentUser) {
+      deleteButtonHTML = `<button class="delete-btn">Delete</button>`;
     }
+    // Always include the report button
+    deleteButtonHTML += `<button class="report-btn">Report</button>`;
+
+    questionElem.innerHTML = `
+      <div class="question-header">
+        <h4>${q.title}</h4>
+        <p class="question-meta">
+          <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
+        </p>
+        <div class="three-dot-menu">
+          <span class="dots">&#8226;&#8226;&#8226;</span>
+          <div class="menu-options">
+            ${deleteButtonHTML}
+          </div>
+        </div>
+      </div>
+      <div class="question-body">
+        <p>${q.question}</p>
+      </div>
+      <!-- additional HTML for replies etc. -->
+    `;
+
+    // Add event listeners for the menu buttons as needed…
+    const threeDotMenu = questionElem.querySelector(".three-dot-menu");
+    const menuOptions = threeDotMenu.querySelector(".menu-options");
+
+    threeDotMenu.addEventListener("click", function (e) {
+      e.stopPropagation();
+      menuOptions.classList.toggle("show");
+    });
+
+    if (q.username === currentUser) {
+      // Assuming each question object (q) contains a property "ID" and you attach it to a data attribute:
+questionElem.setAttribute("data-id", q.ID);
+
+// Then, in your delete button event listener:
+const deleteBtn = questionElem.querySelector(".delete-btn");
+if (deleteBtn) {
+  deleteBtn.addEventListener("click", function (e) {
+    const questionId = questionElem.getAttribute("data-id");
+    fetch(`/Q&A/${questionId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+      .then(response => response.json())
+      .then(result => {
+        if (result.message) {
+          // Successfully removed on the server, now remove from the DOM.
+          questionElem.remove();
+        } else {
+          alert("Error removing question.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error removing question.");
+      });
+  });
+}
+
+    }
+
+    // Always attach the report button event
+    const reportBtn = questionElem.querySelector(".report-btn");
+    reportBtn.addEventListener("click", function () {
+      document.getElementById("report-modal").style.display = "flex";
+    });
+
+    questionsList.appendChild(questionElem);
+  });
+}
+
 
     // Live search functionality
     const searchInput = document.querySelector(".search-input");

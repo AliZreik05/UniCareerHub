@@ -74,6 +74,11 @@ const handleLogin = async (req, res) =>
             maxAge: 12 * 60 * 60 * 1000,
             path: '/'
           });
+          res.cookie('currentUser', foundUser.username, {
+            sameSite: 'Lax',
+            maxAge: 12 * 60 * 60 * 1000,
+            path: '/'
+          });
         res.redirect('/admin/navigation');
     } 
     else 

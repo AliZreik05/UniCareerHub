@@ -10,5 +10,7 @@ router.get('/',(req,res)=>
 router.get('/latest', qnaController.getLatestQuestions);
 router.post('/reply',qnaController.handleReply);
 
+router.delete('/:id', qnaController.removeQuestion);
+
 router.post('/',qnaController.postQuestion);
 module.exports = router;
