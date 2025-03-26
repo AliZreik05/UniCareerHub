@@ -111,23 +111,30 @@
       </div>
     </div>
     <!-- Nested Comment Modal -->
-<div id="comment-modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" id="close-comment-modal">&times;</span>
-    <h3><i class="fas fa-comments"></i> Reply Comments</h3>
-    <div id="comment-thread" class="comments-thread"></div>
-    <textarea id="comment-input" placeholder="Write a comment..."></textarea>
-    <button id="submit-comment-btn" class="submit-btn">Post Comment</button>
-  </div>
-</div>
-
-
-
+    <div id="comment-modal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="close-comment-modal">&times;</span>
+        <h3><i class="fas fa-comments"></i> Reply Comments</h3>
+        <div id="comment-thread" class="comments-thread"></div>
+        <textarea id="comment-input" placeholder="Write a comment..."></textarea>
+        <button id="submit-comment-btn" class="submit-btn">Post Comment</button>
+      </div>
+    </div>
   </main>
 
   <script src="/js/api.js"></script>
   <script>
-    // Helper function to update the visibility of the toggle replies button.
+    // Utility function: Get cookie value by name.
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    // Set the logged-in user's username.
+    window.currentUser = getCookie('currentUser');
+    console.log("Current User:", window.currentUser);
+
+    // Helper: Update toggle replies button visibility.
     function updateToggleReplies(repliesList, toggleBtn) {
       if (repliesList.childElementCount === 0) {
         toggleBtn.style.display = "none";
@@ -136,7 +143,6 @@
       }
     }
 
-    // Global variable to store all questions
     let allQuestions = [];
 
     // Modal functionality for "Add a Question"
@@ -144,12 +150,11 @@
       document.getElementById("review-modal").style.display = "block";
     });
     document.querySelectorAll(".close-btn").forEach(btn => {
-  btn.addEventListener("click", function () {
-    const modal = this.closest(".modal");
-    if (modal) modal.style.display = "none";
-  });
-});
-
+      btn.addEventListener("click", function () {
+        const modal = this.closest(".modal");
+        if (modal) modal.style.display = "none";
+      });
+    });
     window.addEventListener("click", function (event) {
       if (event.target === document.getElementById("review-modal")) {
         document.getElementById("review-modal").style.display = "none";
@@ -157,18 +162,15 @@
       if (event.target === document.getElementById("report-modal")) {
         closeReportModal();
       }
-   
       if (event.target === document.getElementById("comment-modal")) {
-  commentModal.style.display = "none";
-  commentThread.innerHTML = "";
-  commentInput.value = "";
-  activeReply = null;
-}
-
-   
+        commentModal.style.display = "none";
+        commentThread.innerHTML = "";
+        commentInput.value = "";
+        activeReply = null;
+      }
     });
 
-    // Function to load the latest questions from the server
+    // Load the latest questions from the server.
     async function loadLatestQuestions() {
       try {
         const response = await fetch("/Q&A/latest");
@@ -177,113 +179,263 @@
           return;
         }
         const latestQuestions = await response.json();
-        allQuestions = latestQuestions; // Update the global variable
-        renderQuestions(latestQuestions); // Render all questions
+        allQuestions = latestQuestions;
+        renderQuestions(latestQuestions);
       } catch (error) {
         console.error("Error loading latest questions:", error);
       }
     }
-    function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    window.currentUser = getCookie('currentUser');
 
-    // Function to render questions dynamically
+    // Render questions dynamically (with replies and conditional remove functionality).
     function renderQuestions(questions) {
-      
-  const questionsList = document.getElementById("questions-list");
-  questionsList.innerHTML = ""; // Clear previous questions
+      const questionsList = document.getElementById("questions-list");
+      questionsList.innerHTML = ""; // Clear previous questions
+      const currentUser = window.currentUser;
+      console.log("Current User:", currentUser);
 
-  // Assume window.currentUser is set to the logged-in user's username
-  const currentUser = window.currentUser; 
-  console.log("Current User:", currentUser);
+      if (questions.length === 0) {
+        questionsList.innerHTML = `<p style="text-align: center; padding: 20px;">No results found</p>`;
+        return;
+      }
 
-  questions.forEach((q) => {
-    
-    const questionElem = document.createElement("div");
-    questionElem.classList.add("question");
+      questions.forEach((q) => {
+        const questionElem = document.createElement("div");
+        questionElem.classList.add("question");
+        // Attach question ID as data attribute.
+        questionElem.setAttribute("data-id", q.ID);
 
-    // Build the menu options conditionally
-    let deleteButtonHTML = "";
-    if (q.username === currentUser) {
-      deleteButtonHTML = `<button class="delete-btn">Delete</button>`;
-    }
-    // Always include the report button
-    deleteButtonHTML += `<button class="report-btn">Report</button>`;
-
-    questionElem.innerHTML = `
-      <div class="question-header">
-        <h4>${q.title}</h4>
-        <p class="question-meta">
-          <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
-        </p>
-        <div class="three-dot-menu">
-          <span class="dots">&#8226;&#8226;&#8226;</span>
-          <div class="menu-options">
-            ${deleteButtonHTML}
-          </div>
-        </div>
-      </div>
-      <div class="question-body">
-        <p>${q.question}</p>
-      </div>
-      <!-- additional HTML for replies etc. -->
-    `;
-
-    // Add event listeners for the menu buttons as needed…
-    const threeDotMenu = questionElem.querySelector(".three-dot-menu");
-    const menuOptions = threeDotMenu.querySelector(".menu-options");
-
-    threeDotMenu.addEventListener("click", function (e) {
-      e.stopPropagation();
-      menuOptions.classList.toggle("show");
-    });
-
-    if (q.username === currentUser) {
-      // Assuming each question object (q) contains a property "ID" and you attach it to a data attribute:
-questionElem.setAttribute("data-id", q.ID);
-
-// Then, in your delete button event listener:
-const deleteBtn = questionElem.querySelector(".delete-btn");
-if (deleteBtn) {
-  deleteBtn.addEventListener("click", function (e) {
-    const questionId = questionElem.getAttribute("data-id");
-    fetch(`/Q&A/${questionId}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    })
-      .then(response => response.json())
-      .then(result => {
-        if (result.message) {
-          // Successfully removed on the server, now remove from the DOM.
-          questionElem.remove();
-        } else {
-          alert("Error removing question.");
+        // Build the menu options conditionally.
+        let menuOptionsHTML = "";
+        if (q.username === currentUser) {
+          menuOptionsHTML += `<button class="delete-btn">Delete</button>`;
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Error removing question.");
-      });
-  });
-}
+        menuOptionsHTML += `<button class="report-btn">Report</button>`;
 
+        // Insert the question HTML including reply-related elements.
+        questionElem.innerHTML = `
+          <div class="question-header">
+            <h4>${q.title}</h4>
+            <p class="question-meta">
+              <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
+            </p>
+            <div class="three-dot-menu">
+              <span class="dots">&#8226;&#8226;&#8226;</span>
+              <div class="menu-options">
+                ${menuOptionsHTML}
+              </div>
+            </div>
+          </div>
+          <div class="question-body">
+            <p>${q.question}</p>
+          </div>
+          <button class="reply-btn"><i class="fas fa-reply"></i> Reply</button>
+          <div class="replies">
+            <div class="reply-form" style="display: none;">
+              <textarea class="reply-body" placeholder="Write your reply here..."></textarea>
+              <button class="submit-reply"><i class="fas fa-paper-plane"></i> Post Reply</button>
+              <button class="cancel-reply"><i class="fas fa-times"></i> Cancel</button>
+            </div>
+          </div>
+          <div class="replies-list" style="display: none;"></div>
+          <button class="toggle-replies-btn" style="display: none;">Show Replies</button>
+        `;
+
+        // THREE-DOT MENU EVENTS
+        const threeDotMenu = questionElem.querySelector(".three-dot-menu");
+        const menuOptions = threeDotMenu.querySelector(".menu-options");
+        threeDotMenu.addEventListener("click", function (e) {
+          e.stopPropagation();
+          menuOptions.classList.toggle("show");
+        });
+
+        // DELETE BUTTON (conditional)
+        if (q.username === currentUser) {
+          const deleteBtn = questionElem.querySelector(".delete-btn");
+          if (deleteBtn) {
+            deleteBtn.addEventListener("click", function (e) {
+              const questionId = questionElem.getAttribute("data-id");
+              fetch(`/Q&A/${questionId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+              })
+              .then(response => response.json())
+              .then(result => {
+                if (result.message) {
+                  questionElem.remove();
+                } else {
+                  alert("Error removing question.");
+                }
+              })
+              .catch(err => {
+                console.error(err);
+                alert("Error removing question.");
+              });
+            });
+          }
+        }
+
+        // REPORT BUTTON EVENT
+        const reportBtn = questionElem.querySelector(".report-btn");
+        reportBtn.addEventListener("click", function () {
+          document.getElementById("report-modal").style.display = "flex";
+        });
+
+        // REPLY FUNCTIONALITY
+        const replyBtn = questionElem.querySelector(".reply-btn");
+        const replyForm = questionElem.querySelector(".reply-form");
+        const submitReplyBtn = questionElem.querySelector(".submit-reply");
+        const cancelReplyBtn = questionElem.querySelector(".cancel-reply");
+        const repliesList = questionElem.querySelector(".replies-list");
+        const toggleRepliesBtn = questionElem.querySelector(".toggle-replies-btn");
+
+        replyBtn.addEventListener("click", function () {
+          replyForm.style.display = "block";
+          replyBtn.style.display = "none";
+        });
+        cancelReplyBtn.addEventListener("click", function () {
+          replyForm.style.display = "none";
+          replyBtn.style.display = "inline-block";
+        });
+        toggleRepliesBtn.addEventListener("click", function () {
+          const visible = repliesList.style.display !== "none";
+          repliesList.style.display = visible ? "none" : "block";
+          toggleRepliesBtn.innerText = visible ? "Show Replies" : "Hide Replies";
+        });
+
+        // Render existing replies, if any.
+        if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
+          q.replies.forEach((reply) => {
+            reply.comments = reply.comments || [];
+            const replyDiv = document.createElement("div");
+            replyDiv.classList.add("reply");
+            replyDiv.innerHTML = `
+              <div class="reply-left">
+                <div class="reply-like-section">
+                  <i class="fas fa-arrow-up reply-upvote-icon"></i>
+                  <span class="reply-like-count">${reply.upvotes || 0}</span>
+                </div>
+              </div>
+              <div class="reply-center">
+                <div class="reply-text">
+                  <p class="reply-username">${reply.user}</p>
+                  <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
+                  <p>${reply.reply}</p>
+                </div>
+              </div>
+              <div class="reply-right">
+                <div class="reply-three-dot-menu">
+                  <span class="dots">&#8226;&#8226;&#8226;</span>
+                  <div class="menu-options">
+                    <button class="delete-reply-btn">Delete</button>
+                    <button class="report-reply-btn">Report</button>
+                  </div>
+                </div>
+              </div>
+            `;
+            repliesList.appendChild(replyDiv);
+
+            // Toggle reply three-dot menu.
+            const replyDots = replyDiv.querySelector(".reply-three-dot-menu .dots");
+            const replyMenuOptions = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
+            replyDots.addEventListener("click", function (e) {
+              e.stopPropagation();
+              replyMenuOptions.classList.toggle("show");
+            });
+            // Delete reply event.
+            replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
+              replyDiv.remove();
+              updateToggleReplies(repliesList, toggleRepliesBtn);
+            });
+            // Report reply event.
+            replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
+              document.getElementById("report-modal").style.display = "flex";
+            });
+            // Upvote reply.
+            const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
+            const replyLikeCount = replyDiv.querySelector(".reply-like-count");
+            replyUpvoteIcon.addEventListener("click", () => {
+              const isActive = replyUpvoteIcon.classList.contains("active");
+              let count = parseInt(replyLikeCount.textContent, 10);
+              if (isActive) {
+                count--;
+                replyUpvoteIcon.classList.remove("active");
+              } else {
+                count++;
+                replyUpvoteIcon.classList.add("active");
+              }
+              replyLikeCount.textContent = count;
+            });
+          });
+          // Show the replies list and toggle button.
+          repliesList.style.display = "block";
+          toggleRepliesBtn.style.display = "inline-block";
+          toggleRepliesBtn.innerText = "Hide Replies";
+        } else {
+          repliesList.style.display = "none";
+          toggleRepliesBtn.style.display = "none";
+        }
+
+        // Post a new reply.
+        submitReplyBtn.addEventListener("click", async function (event) {
+          event.preventDefault();
+          const replyText = replyForm.querySelector(".reply-body").value;
+          if (replyText) {
+            try {
+              const replyResponse = await fetch("/Q&A/reply", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reply: replyText, ID: q.ID }),
+                credentials: "include"
+              });
+              if (!replyResponse.ok) {
+                alert("Error posting reply.");
+                return;
+              }
+              const newReplyDiv = document.createElement("div");
+              newReplyDiv.classList.add("reply");
+              newReplyDiv.innerHTML = `
+                <div class="reply-content">
+                  <div class="reply-text"><p><strong>You</strong>: ${replyText}</p></div>
+                  <div class="reply-three-dot-menu">
+                    <span class="dots">&#8226;&#8226;&#8226;</span>
+                    <div class="menu-options">
+                      <button class="delete-reply-btn">Delete</button>
+                      <button class="report-reply-btn">Report</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+              repliesList.appendChild(newReplyDiv);
+              const newReplyDots = newReplyDiv.querySelector(".reply-three-dot-menu .dots");
+              const newReplyMenuOptions = newReplyDiv.querySelector(".reply-three-dot-menu .menu-options");
+              newReplyDots.addEventListener("click", function (e) {
+                e.stopPropagation();
+                newReplyMenuOptions.classList.toggle("show");
+              });
+              newReplyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
+                newReplyDiv.remove();
+                updateToggleReplies(repliesList, toggleRepliesBtn);
+              });
+              newReplyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
+                document.getElementById("report-modal").style.display = "flex";
+              });
+              replyForm.querySelector(".reply-body").value = "";
+              repliesList.style.display = "block";
+              toggleRepliesBtn.style.display = "inline-block";
+              toggleRepliesBtn.innerText = "Hide Replies";
+              updateToggleReplies(repliesList, toggleRepliesBtn);
+            } catch (error) {
+              console.error("Error posting reply:", error);
+              alert("Error posting reply.");
+            }
+          }
+        });
+
+        questionsList.appendChild(questionElem);
+      });
     }
 
-    // Always attach the report button event
-    const reportBtn = questionElem.querySelector(".report-btn");
-    reportBtn.addEventListener("click", function () {
-      document.getElementById("report-modal").style.display = "flex";
-    });
-
-    questionsList.appendChild(questionElem);
-  });
-}
-
-
-    // Live search functionality
+    // Live search functionality.
     const searchInput = document.querySelector(".search-input");
     searchInput.addEventListener("input", function () {
       const searchQuery = this.value.toLowerCase();
@@ -296,7 +448,7 @@ if (deleteBtn) {
       }
     });
 
-    // Submit new question
+    // Submit new question.
     document.getElementById("question-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const title = document.getElementById("question-title").value;
@@ -339,43 +491,37 @@ if (deleteBtn) {
     });
     document.addEventListener("DOMContentLoaded", loadLatestQuestions);
 
-
     let activeReply = null; // store the current reply being commented on
 
-// Modal logic
-const commentModal = document.getElementById("comment-modal");
-const closeCommentModalBtn = document.getElementById("close-comment-modal");
-const commentThread = document.getElementById("comment-thread");
-const commentInput = document.getElementById("comment-input");
-const submitCommentBtn = document.getElementById("submit-comment-btn");
+    // Modal logic for nested comment modal.
+    const commentModal = document.getElementById("comment-modal");
+    const closeCommentModalBtn = document.getElementById("close-comment-modal");
+    const commentThread = document.getElementById("comment-thread");
+    const commentInput = document.getElementById("comment-input");
+    const submitCommentBtn = document.getElementById("submit-comment-btn");
 
-closeCommentModalBtn.addEventListener("click", () => {
-  commentModal.style.display = "none";
-  commentThread.innerHTML = "";
-  commentInput.value = "";
-  activeReply = null;
-});
-
-submitCommentBtn.addEventListener("click", () => {
-  const commentText = commentInput.value.trim();
-  if (commentText && activeReply) {
-    activeReply.comments = activeReply.comments || [];
-    activeReply.comments.push({
-      user: "You",
-      text: commentText
+    closeCommentModalBtn.addEventListener("click", () => {
+      commentModal.style.display = "none";
+      commentThread.innerHTML = "";
+      commentInput.value = "";
+      activeReply = null;
     });
 
-    // Render
-    const commentDiv = document.createElement("div");
-    commentDiv.classList.add("comment");
-    commentDiv.innerHTML = `<strong>You:</strong> ${commentText}`;
-    commentThread.appendChild(commentDiv);
-
-    commentInput.value = "";
-  }
-});
-
-
+    submitCommentBtn.addEventListener("click", () => {
+      const commentText = commentInput.value.trim();
+      if (commentText && activeReply) {
+        activeReply.comments = activeReply.comments || [];
+        activeReply.comments.push({
+          user: "You",
+          text: commentText
+        });
+        const commentDiv = document.createElement("div");
+        commentDiv.classList.add("comment");
+        commentDiv.innerHTML = `<strong>You:</strong> ${commentText}`;
+        commentThread.appendChild(commentDiv);
+        commentInput.value = "";
+      }
+    });
   </script>
 </body>
 </html>
