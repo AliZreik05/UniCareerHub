@@ -147,6 +147,9 @@
     window.currentUser = getCookie('currentUser');
     console.log("Current User:", window.currentUser);
 
+    // Global variable to hold active report target.
+    let activeReport = null; // e.g., { type: "review", id: "..." }
+
     // Open Review Modal
     document.getElementById('open-modal').addEventListener('click', function() {
       const modal = document.getElementById('review-modal');
@@ -207,6 +210,7 @@
               review.username.toLowerCase() === currentUser.toLowerCase()) {
             reviewMenuHTML += `<button class="delete-review-btn">Delete</button>`;
           }
+          // Report button: set activeReport for review.
           reviewMenuHTML += `<button class="report-review-btn">Report</button>`;
           
           // Create review element.
@@ -280,9 +284,10 @@
             });
           }
           
-          // Attach report event.
+          // Attach report event for review.
           const reportBtn = reviewElem.querySelector('.report-review-btn');
           reportBtn.addEventListener('click', function () {
+            activeReport = { type: "review", id: review.ID };
             document.getElementById("report-modal").style.display = "flex";
           });
           
@@ -385,14 +390,41 @@
       if (!e.target.matches(".dots")) {
         document.querySelectorAll(".dropdown-menu").forEach(menu => menu.classList.remove("show"));
       }
-      if (e.target.classList.contains("report-review-btn")) {
-        document.getElementById("report-modal").style.display = "flex";
-      }
+      // (The report-review-btn event is now set on the review element above.)
     });
-    document.getElementById("report-form").addEventListener("submit", function (event) {
+    document.getElementById("report-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const reason = document.getElementById("report-reason").value;
-      alert("Report submitted: " + reason);
+      if (!activeReport) {
+        alert("No item selected for reporting.");
+        return;
+      }
+      let endpoint = "";
+      if (activeReport.type === "review") {
+        endpoint = `/reviews/flag/${activeReport.id}`;
+      } else if (activeReport.type === "question") {
+        endpoint = `/Q&A/flag/${activeReport.id}`;
+      } else if (activeReport.type === "reply") {
+        endpoint = `/Q&A/reply/flag/${activeReport.id}`;
+      }
+      try {
+        const response = await fetch(endpoint, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reason }),
+          credentials: "include"
+        });
+        if (!response.ok) {
+          alert("Error reporting " + activeReport.type);
+        } else {
+          const result = await response.json();
+          alert(result.message || "Reported successfully.");
+        }
+      } catch (error) {
+        console.error("Error reporting:", error);
+        alert("Error reporting " + activeReport.type);
+      }
+      activeReport = null;
       closeReportModal();
     });
     window.addEventListener("click", function (event) {

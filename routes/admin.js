@@ -31,6 +31,8 @@ router.get('/content/question/reply/:id', questionController.getReply);
 
 router.put('/content/review/approve/:id', reviewController.approveReview);
 router.put('/content/question/approve/:id', questionController.approveQuestion);
+router.put('/content/question/reply/approve/:id', questionController.approveReply);
+
 
 
 router.get('/dashboard', (req, res) => {

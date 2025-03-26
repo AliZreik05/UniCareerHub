@@ -134,6 +134,9 @@
     window.currentUser = getCookie('currentUser');
     console.log("Current User:", window.currentUser);
 
+    // Global variable to hold the current report target.
+    let activeReport = null; // { type: "question" or "reply", id: "..." }
+
     // Helper: Update toggle replies button visibility.
     function updateToggleReplies(repliesList, toggleBtn) {
       if (repliesList.childElementCount === 0) {
@@ -186,7 +189,7 @@
       }
     }
 
-    // Render questions dynamically (with replies and conditional remove functionality).
+    // Render questions dynamically (with replies, delete & report functionality).
     function renderQuestions(questions) {
       const questionsList = document.getElementById("questions-list");
       questionsList.innerHTML = ""; // Clear previous questions
@@ -209,6 +212,7 @@
         if (q.username === currentUser) {
           menuOptionsHTML += `<button class="delete-btn">Delete</button>`;
         }
+        // For reporting a question, we set activeReport.
         menuOptionsHTML += `<button class="report-btn">Report</button>`;
 
         // Insert the question HTML including reply-related elements.
@@ -274,9 +278,10 @@
           }
         }
 
-        // REPORT BUTTON EVENT
+        // REPORT BUTTON EVENT for question.
         const reportBtn = questionElem.querySelector(".report-btn");
         reportBtn.addEventListener("click", function () {
+          activeReport = { type: "question", id: q.ID };
           document.getElementById("report-modal").style.display = "flex";
         });
 
@@ -364,8 +369,9 @@
                 alert("Error removing reply.");
               });
             });
-            // REPORT REPLY EVENT.
+            // REPORT REPLY EVENT: Set activeReport for reply.
             replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
+              activeReport = { type: "reply", id: reply._id };
               document.getElementById("report-modal").style.display = "flex";
             });
             // UPVOTE REPLY.
@@ -409,10 +415,10 @@
                 alert("Error posting reply.");
                 return;
               }
-              // Create new reply element (Note: this new reply won't have a server-generated _id unless your backend returns it.)
+              // Create new reply element.
               const newReplyDiv = document.createElement("div");
               newReplyDiv.classList.add("reply");
-              // Optionally, set a temporary data-reply-id or refresh the list after posting.
+              // (Note: The new reply may not have a server-generated _id unless returned.)
               newReplyDiv.innerHTML = `
                 <div class="reply-content">
                   <div class="reply-text"><p><strong>You</strong>: ${replyText}</p></div>
@@ -432,13 +438,15 @@
                 e.stopPropagation();
                 newReplyMenuOptions.classList.toggle("show");
               });
-              // DELETE new reply event.
+              // DELETE event for new reply.
               newReplyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-                // Here you might want to remove it via a DELETE request if your backend returned an _id.
+                // If backend returns an _id, consider sending a DELETE request.
                 newReplyDiv.remove();
                 updateToggleReplies(repliesList, toggleRepliesBtn);
               });
+              // REPORT event for new reply.
               newReplyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
+                activeReport = { type: "reply", id: "temporary" }; // Use proper id if available.
                 document.getElementById("report-modal").style.display = "flex";
               });
               replyForm.querySelector(".reply-body").value = "";
@@ -498,16 +506,45 @@
       }
     });
 
+    // REPORT FORM SUBMISSION: Now sends a request to flag the question or reply.
+    document.getElementById("report-form").addEventListener("submit", async function (event) {
+      event.preventDefault();
+      const reason = document.getElementById("report-reason").value;
+      if (!activeReport) {
+        alert("No item selected for reporting.");
+        return;
+      }
+      let endpoint = "";
+      if (activeReport.type === "question") {
+        endpoint = `/Q&A/flag/${activeReport.id}`;
+      } else if (activeReport.type === "reply") {
+        endpoint = `/Q&A/reply/flag/${activeReport.id}`;
+      }
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reason })
+        });
+        if (!response.ok) {
+          alert("Error reporting " + activeReport.type);
+        } else {
+          const result = await response.json();
+          alert(result.message || "Reported successfully.");
+        }
+      } catch (error) {
+        console.error("Error reporting:", error);
+        alert("Error reporting " + activeReport.type);
+      }
+      activeReport = null;
+      closeReportModal();
+    });
+
     function closeReportModal() {
       document.getElementById("report-modal").style.display = "none";
       document.getElementById("report-reason").value = "";
     }
-    document.getElementById("report-form").addEventListener("submit", function (event) {
-      event.preventDefault();
-      const reason = document.getElementById("report-reason").value;
-      alert("Report submitted: " + reason);
-      closeReportModal();
-    });
+
     document.addEventListener("click", function (e) {
       document.querySelectorAll(".menu-options").forEach(menu => menu.classList.remove("show"));
     });

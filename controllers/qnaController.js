@@ -201,7 +201,23 @@
       res.status(500).json({ error: 'Server error' });
     }
   };
+  const approveReply = async (req, res) => {
+    try {
+      const replyId = req.params.id;
+      const result = await Question.updateOne(
+        { "replies._id": replyId },
+        { $set: { "replies.$.flagged": false } }
+      );
+      if (result.nModified === 0) {
+        return res.status(404).json({ error: 'Reply not found' });
+      }
+      res.json({ message: 'Reply approved (flag reset)' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Server error' });
+    }
+  };
   
 
-  module.exports = {postQuestion,getLatestQuestions,handleReply,editQuestion,removeQuestion,flagQuestion,editReply,removeReply,flagReply,getReply,approveQuestion,getQuestion
+  module.exports = {postQuestion,getLatestQuestions,handleReply,editQuestion,removeQuestion,flagQuestion,editReply,removeReply,flagReply,getReply,approveQuestion,getQuestion,approveReply
   };

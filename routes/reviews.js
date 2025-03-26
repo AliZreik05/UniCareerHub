@@ -11,5 +11,8 @@ router.get('/latest',reviewsController.getLatestReviews)
 
 router.delete('/:id', reviewsController.removeReview)
 
+router.put('/flag/:id', reviewsController.flagReview);
+
+
 router.post('/',reviewsController.postReview);
 module.exports = router;
