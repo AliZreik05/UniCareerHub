@@ -217,7 +217,42 @@
       res.status(500).json({ error: 'Server error' });
     }
   };
+  const toggleUpvoteReply = async (req, res) => {
+    try {
+      const replyId = req.params.id;
+      const username = req.user.username;
+      // Find the question that contains the reply
+      const question = await Question.findOne({ "replies._id": replyId });
+      if (!question) {
+        return res.status(404).json({ error: "Reply not found" });
+      }
+      // Get the reply subdocument using Mongoose's id() method
+      const reply = question.replies.id(replyId);
+      if (!reply) {
+        return res.status(404).json({ error: "Reply not found" });
+      }
+      // If the user already upvoted, remove the upvote; otherwise, add it.
+      if (reply.upvotedBy && reply.upvotedBy.includes(username)) {
+        // Remove user's upvote
+        reply.upvotes = Math.max((reply.upvotes || 0) - 1, 0);
+        reply.upvotedBy = reply.upvotedBy.filter(u => u !== username);
+      } else {
+        // Add user's upvote
+        reply.upvotes = (reply.upvotes || 0) + 1;
+        if (!reply.upvotedBy) {
+          reply.upvotedBy = [];
+        }
+        reply.upvotedBy.push(username);
+      }
+      await question.save();
+      return res.json({ message: "Reply upvote toggled successfully", upvotes: reply.upvotes });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Server error" });
+    }
+  };
+  
   
 
-  module.exports = {postQuestion,getLatestQuestions,handleReply,editQuestion,removeQuestion,flagQuestion,editReply,removeReply,flagReply,getReply,approveQuestion,getQuestion,approveReply
+  module.exports = {postQuestion,getLatestQuestions,handleReply,editQuestion,removeQuestion,flagQuestion,editReply,removeReply,flagReply,getReply,approveQuestion,getQuestion,approveReply,toggleUpvoteReply
   };

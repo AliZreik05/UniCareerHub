@@ -12,7 +12,9 @@ const questionSchema = new mongoose.Schema({
         user: { type: String, required: true },
         reply: { type: String, required: true },
         time: { type: Date, default: Date.now },
-        flagged: { type: Boolean, default: false }
+        flagged: { type: Boolean, default: false },
+        upvotes: { type: Number, default: 0 },
+        upvotedBy: { type: [String], default: [] }
       }
     ], 
     default: [] 

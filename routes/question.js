@@ -16,6 +16,8 @@ router.delete('/reply/:id', qnaController.removeReply);
 router.post('/flag/:id', qnaController.flagQuestion);
 router.post('/reply/flag/:id', qnaController.flagReply);
 
+router.post('/reply/upvote/:id', qnaController.toggleUpvoteReply);
+
 
 router.post('/',qnaController.postQuestion);
 module.exports = router;

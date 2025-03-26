@@ -189,7 +189,7 @@
       }
     }
 
-    // Render questions dynamically (with replies, delete & report functionality).
+    // Render questions dynamically (with replies, delete, report & upvote functionality).
     function renderQuestions(questions) {
       const questionsList = document.getElementById("questions-list");
       questionsList.innerHTML = ""; // Clear previous questions
@@ -212,7 +212,7 @@
         if (q.username === currentUser) {
           menuOptionsHTML += `<button class="delete-btn">Delete</button>`;
         }
-        // For reporting a question, we set activeReport.
+        // For reporting a question, set activeReport.
         menuOptionsHTML += `<button class="report-btn">Report</button>`;
 
         // Insert the question HTML including reply-related elements.
@@ -374,20 +374,33 @@
               activeReport = { type: "reply", id: reply._id };
               document.getElementById("report-modal").style.display = "flex";
             });
-            // UPVOTE REPLY.
+            // UPVOTE REPLY: Toggle upvote via backend.
             const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
             const replyLikeCount = replyDiv.querySelector(".reply-like-count");
-            replyUpvoteIcon.addEventListener("click", () => {
-              const isActive = replyUpvoteIcon.classList.contains("active");
-              let count = parseInt(replyLikeCount.textContent, 10);
-              if (isActive) {
-                count--;
-                replyUpvoteIcon.classList.remove("active");
-              } else {
-                count++;
-                replyUpvoteIcon.classList.add("active");
+            replyUpvoteIcon.addEventListener("click", async () => {
+              try {
+                const replyId = replyDiv.getAttribute("data-reply-id");
+                const res = await fetch(`/Q&A/reply/upvote/${replyId}`, {
+                  method: 'POST',
+                  credentials: 'include'
+                });
+                if (!res.ok) {
+                  const errorData = await res.json();
+                  alert(errorData.error || "Error toggling upvote");
+                } else {
+                  const data = await res.json();
+                  // Toggle active class based on whether user already upvoted.
+                  if (replyUpvoteIcon.classList.contains("active")) {
+                    replyUpvoteIcon.classList.remove("active");
+                  } else {
+                    replyUpvoteIcon.classList.add("active");
+                  }
+                  replyLikeCount.textContent = data.upvotes;
+                }
+              } catch (error) {
+                console.error("Error toggling upvote:", error);
+                alert("Error toggling upvote.");
               }
-              replyLikeCount.textContent = count;
             });
           });
           // Show the replies list and toggle button.
@@ -440,7 +453,6 @@
               });
               // DELETE event for new reply.
               newReplyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-                // If backend returns an _id, consider sending a DELETE request.
                 newReplyDiv.remove();
                 updateToggleReplies(repliesList, toggleRepliesBtn);
               });
@@ -506,7 +518,7 @@
       }
     });
 
-    // REPORT FORM SUBMISSION: Now sends a request to flag the question or reply.
+    // REPORT FORM SUBMISSION: Sends a request to flag the question or reply.
     document.getElementById("report-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const reason = document.getElementById("report-reason").value;
@@ -524,7 +536,8 @@
         const response = await fetch(endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reason })
+          body: JSON.stringify({ reason }),
+          credentials: "include"
         });
         if (!response.ok) {
           alert("Error reporting " + activeReport.type);
