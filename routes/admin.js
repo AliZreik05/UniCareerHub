@@ -7,6 +7,7 @@ const adminErrorLogsController = require('../controllers/adminErrorController');
 const reviewController = require('../controllers/reviewController');
 const questionController = require('../controllers/qnaController');
 const adminReportsController = require('../controllers/adminReportsController');
+const internshipController = require('../controllers/InternshipController');
 
 router.get('/content', (req, res) => {
     res.sendFile(path.join(__dirname, '..','Frontend','HTML', 'AdminContent.html'));
@@ -32,6 +33,15 @@ router.get('/content/question/reply/:id', questionController.getReply);
 router.put('/content/review/approve/:id', reviewController.approveReview);
 router.put('/content/question/approve/:id', questionController.approveQuestion);
 router.put('/content/question/reply/approve/:id', questionController.approveReply);
+
+router.get('/internships',(req,res)=>
+{
+    res.sendFile(path.join(__dirname, '..','Frontend','HTML', 'AdminInternship.html'));
+})
+router.get('/internships/latest', internshipController.getLatestInternships);
+router.post('/internships', internshipController.postInternship);
+router.put('/internships/:id', internshipController.editInternship);
+router.delete('/internships/:id', internshipController.removeInternship);
 
 
 

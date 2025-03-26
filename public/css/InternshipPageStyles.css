@@ -1,166 +1,239 @@
-    /* --------------------------------
+/* --------------------------------
          COLOR & FONT VARIABLES
-    -------------------------------- */
-    :root {
-        --header-bg: #d1ae89;   /* Warm tan/brown for header */ 
-        --primary-text: #222222; /* Darker main text for improved readability */
-        --button-bg: #ffc107;    /* Gold accent */
-        --body-bg: #ffffff;      /* Light background */
-        --card-bg: #ffffff;      /* White for cards */
-        --footer-bg: #333333;    /* Dark footer background */
-        --footer-text: #ffffff;  /* White footer text */
-        --transition-speed: 0.3s;
-        --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      }
-  
-      /* --------------------------------
-           RESET & BASE STYLES
-      -------------------------------- */
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-      body {
-        font-family: var(--font-family);
-        background-color: var(--body-bg);
-        color: var(--primary-text);
-        line-height: 1.6;
-        overflow-x: hidden;
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
-  
-      /* --------------------------------
-           HEADER
-      -------------------------------- */
-      header {
-        background-color: var(--header-bg);
-        color: var(--primary-text);
-        padding: 20px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        position: relative;
-      }
-      .header-container {
-        width: 100%;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0 20px;
-        position: relative;
-      }
-      .logo {
-        font-size: 1.7rem;
-        font-weight: bold;
-      }
-      .logo:hover {
-        text-decoration: underline;
-      }
-      .nav-title {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        font-weight: bold;
-        font-size: 1.4rem;
-        text-align: center;
-      }
-      .logout-btn {
-        background-color: var(--header-bg);
-        color: var(--primary-text);
-        padding: 9px 18px;
-        font-size: 1.1rem;
-        border: 2px solid var(--primary-text);
-        border-radius: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
-      }
-      .logout-btn:hover, .logout-btn:focus {
-        background-color: var(--primary-text);
-        color: #ffffff;
-        outline: none;
-      }
-      .user-icon {
-        font-size: 35px;
-        color: black;
-        cursor: pointer;
-        transition: color 0.3s;
-        vertical-align: middle;
-      }
-      .user-icon:hover {
-        color: #555;
-      }
-  
-      /* --------------------------------
-           HERO SECTION
-      -------------------------------- */
-      .hero {
-        position: relative;
-        text-align: center;
-        min-height: 45vh;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 80px 20px 0;
-      }
-      .hero::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-      }
-      .hero-content {
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-        z-index: 1;
-        padding-bottom: 60px;
-        animation: fadeSlideUp 2s ease both;
-      }
+-------------------------------- */
+:root {
+  --header-bg: #d1ae89;   /* Warm tan/brown for header */
+  --primary-text: #222222; /* Darker main text for improved readability */
+  --button-bg: #ffc107;    /* Gold accent */
+  --body-bg: #ffffff;      /* Light background */
+  --card-bg: #ffffff;      /* White for cards */
+  --footer-bg: #333333;    /* Dark footer background */
+  --footer-text: #ffffff;  /* White footer text */
+  --transition-speed: 0.3s;
+  --font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
 
-      .hero h2 {
-        font-size: 2.3rem;
-        margin-bottom: 15px;
-        color: var(--primary-text);
-        text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
-      }
-      .hero p {
-        font-size: 1.2rem;
-        margin-bottom: 25px;
-        color: var(--primary-text);
-        font-style: italic;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-      }
+/* --------------------------------
+          RESET & BASE STYLES
+-------------------------------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--font-family);
+  background-color: var(--body-bg);
+  color: var(--primary-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
-      .hero-images {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      
-      .hero-images img {
-        max-width: 100%;
-        height: auto;
-        object-fit: cover;
-      }
-      
-      @media (max-width: 768px) {
-        .hero {
-          flex-direction: column;
-          text-align: center;
-        }
-      }
-      
-      .section-title {
-        text-align: left;
-        font-size: 2rem;
-        margin-bottom: 20px;
-        margin-left: 20px;
-      }
+/* --------------------------------
+             HEADER
+-------------------------------- */
+header {
+  background-color: var(--header-bg);
+  color: var(--primary-text);
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative;
+}
+.header-container {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  position: relative;
+}
+.logo {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+.logo:hover {
+  text-decoration: underline;
+}
+.nav-title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  font-size: 1.4rem;
+  text-align: center;
+}
+.logout-btn {
+  background-color: var(--header-bg);
+  color: var(--primary-text);
+  padding: 9px 18px;
+  font-size: 1.1rem;
+  border: 2px solid var(--primary-text);
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+.logout-btn:hover,
+.logout-btn:focus {
+  background-color: var(--primary-text);
+  color: #ffffff;
+  outline: none;
+}
+.user-icon {
+  font-size: 35px;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s;
+  vertical-align: middle;
+}
+.user-icon:hover {
+  color: #555;
+}
+
+/* --------------------------------
+            HERO SECTION
+-------------------------------- */
+.hero {
+  position: relative;
+  text-align: center;
+  min-height: 45vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px 0;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.hero-content {
+  max-width: 600px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  padding-bottom: 60px;
+  animation: fadeSlideUp 2s ease both;
+}
+.hero h2 {
+  font-size: 2.3rem;
+  margin-bottom: 15px;
+  color: var(--primary-text);
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+}
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+  color: var(--primary-text);
+  font-style: italic;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+.hero-images {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.hero-images img {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* --------------------------------
+           SECTION TITLES
+-------------------------------- */
+.section-title {
+  text-align: left;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  margin-left: 20px;
+}
+
+/* --------------------------------
+     INTERNSHIP LISTINGS STYLES
+-------------------------------- */
+.job-list {
+  list-style: none;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.job-item {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.job-item:hover {
+  transform: translateY(-5px);
+}
+
+.job-content strong {
+  font-size: 1.4rem;
+  color: var(--primary-text);
+}
+
+.job-content small {
+  display: block;
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 8px;
+}
+
+.job-description {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 10px 0;
+  color: var(--primary-text);
+}
+
+.apply-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: var(--button-bg);
+  color: #fff;
+  border-radius: 5px;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.apply-link:hover {
+  background-color: #e0a800;
+}
+
+/* --------------------------------
+          ANIMATIONS
+-------------------------------- */
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
