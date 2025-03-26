@@ -13,6 +13,8 @@ router.delete('/:id', reviewsController.removeReview)
 
 router.put('/flag/:id', reviewsController.flagReview);
 
+router.post('/upvote/:id', reviewsController.toggleUpvoteReview);
+
 
 router.post('/',reviewsController.postReview);
 module.exports = router;

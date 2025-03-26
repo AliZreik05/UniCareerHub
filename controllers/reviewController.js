@@ -140,7 +140,30 @@ const getReview = async (req, res) => {
   }
 };
 
-
-module.exports = { postReview, getLatestReviews, editReview, removeReview, flagReview ,approveReview,getReview};
+const toggleUpvoteReview = async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const username = req.user.username;
+    // Find the review by its ID (here we assume ID is unique in the Reviews collection)
+    const review = await Review.findOne({ ID: reviewId });
+    if (!review) {
+      return res.status(404).json({ error: "Review not found" });
+    }
+    // If the user already upvoted, remove the vote; otherwise, add it.
+    if (review.upvotedBy.includes(username)) {
+      review.upvotes = Math.max(review.upvotes - 1, 0);
+      review.upvotedBy = review.upvotedBy.filter(u => u !== username);
+    } else {
+      review.upvotes = review.upvotes + 1;
+      review.upvotedBy.push(username);
+    }
+    await review.save();
+    return res.json({ message: "Review upvote toggled successfully", upvotes: review.upvotes });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Server error" });
+  }
+};
+module.exports = { postReview, getLatestReviews, editReview, removeReview, flagReview ,approveReview,getReview,toggleUpvoteReview};
 
 
