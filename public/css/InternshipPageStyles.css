@@ -172,7 +172,7 @@ header {
   list-style: none;
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: 1fr;
   gap: 20px;
 }
 
