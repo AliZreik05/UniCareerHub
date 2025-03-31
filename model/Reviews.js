@@ -13,7 +13,8 @@ const reviewSchema = new mongoose.Schema({
   flagCount: { type: Number, default: 0 },
   flaggedBy: { type: [String], default: [] },
   upvotes: { type: Number, default: 0 },
-upvotedBy: { type: [String], default: [] }
+upvotedBy: { type: [String], default: [] },
+reportReasons: { type: [String], default: [] }
 
 });
 

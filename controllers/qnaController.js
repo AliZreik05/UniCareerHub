@@ -101,6 +101,7 @@
     try {
       const questionId = req.params.id;
       const reporter = req.user.username;
+      const { reason } = req.body;
       const question = await Question.findOne({ ID: questionId });
       if (!question) {
         return res.status(404).json({ error: 'Question not found' });
@@ -109,6 +110,10 @@
         question.flaggedBy.push(reporter);
         question.flagCount = question.flaggedBy.length;
         question.flagged = true;
+        if (reason) 
+          {
+          question.reportReasons.push(reason);
+        }
         await question.save();
       }
       res.json({ message: 'Question flagged', question });
@@ -158,20 +163,30 @@
   const flagReply = async (req, res) => {
     try {
       const replyId = req.params.id;
-      const result = await Question.updateOne(
-        { "replies._id": replyId },
-        { $set: { "replies.$.flagged": true } }
-      );
-      if (result.nModified === 0) {
+      const { reason } = req.body;  
+      const question = await Question.findOne({ "replies._id": replyId });
+      if (!question) {
         return res.status(404).json({ error: 'Reply not found' });
       }
+      const reply = question.replies.id(replyId);
+      if (!reply) {
+        return res.status(404).json({ error: 'Reply not found' });
+      }
+      reply.flagged = true;
+      if (reason) {
+        if (!reply.reportReasons) {
+          reply.reportReasons = [];
+        }
+        reply.reportReasons.push(reason);
+      }
+      await question.save();
       res.json({ message: 'Reply flagged successfully' });
     } catch (error) {
       console.error(error);
-      logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
       res.status(500).json({ error: 'Server error' });
     }
   };
+  
 
   const getReply = async (req, res) => {
     try {

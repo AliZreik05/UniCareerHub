@@ -14,14 +14,16 @@ const questionSchema = new mongoose.Schema({
         time: { type: Date, default: Date.now },
         flagged: { type: Boolean, default: false },
         upvotes: { type: Number, default: 0 },
-        upvotedBy: { type: [String], default: [] }
+        upvotedBy: { type: [String], default: [] },
+        reportReasons: { type: [String], default: [] }
       }
     ], 
     default: [] 
   },
   flagged: { type: Boolean, default: false },
   flagCount: { type: Number, default: 0 },
-  flaggedBy: { type: [String], default: [] }
+  flaggedBy: { type: [String], default: [] },
+  reportReasons: { type: [String], default: [] }
 });
 
 module.exports = mongoose.model('Question', questionSchema);

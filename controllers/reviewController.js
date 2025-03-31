@@ -89,6 +89,7 @@ const flagReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
     const reporter = req.user.username;
+    const { reason } = req.body;
 
     const review = await Review.findOne({ ID: reviewId });
     if (!review) {
@@ -98,6 +99,9 @@ const flagReview = async (req, res) => {
       review.flaggedBy.push(reporter);
       review.flagCount = review.flaggedBy.length;
       review.flagged = true;
+      if (reason) {
+        review.reportReasons.push(reason);
+      }
       await review.save();
     }
     res.json({ message: 'Review flagged successfully', review });
