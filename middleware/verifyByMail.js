@@ -12,7 +12,8 @@ oAuth2Client.setCredentials({refresh_token:REFRESH_TOKEN})
 async function sendVerificationEmail(userEmail,generatedCode)
 {
     try{
-        const accessToken = await oAuth2Client.getAccessToken()
+        const { credentials } = await oAuth2Client.refreshAccessToken();
+        const accessToken = credentials.access_token;
         const transport = nodemailer.createTransport({
             service:'gmail',
             auth:
