@@ -309,6 +309,7 @@
 
         // Render existing replies, if any.
         if (q.replies && Array.isArray(q.replies) && q.replies.length > 0) {
+          q.replies.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
           q.replies.forEach((reply) => {
             reply.comments = reply.comments || [];
             const replyDiv = document.createElement("div");
@@ -414,64 +415,99 @@
 
         // Post a new reply.
         submitReplyBtn.addEventListener("click", async function (event) {
-          event.preventDefault();
-          const replyText = replyForm.querySelector(".reply-body").value;
-          if (replyText) {
-            try {
-              const replyResponse = await fetch("/Q&A/reply", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ reply: replyText, ID: q.ID }),
-                credentials: "include"
-              });
-              if (!replyResponse.ok) {
-                alert("Error posting reply.");
-                return;
-              }
-              // Create new reply element.
-              const newReplyDiv = document.createElement("div");
-              newReplyDiv.classList.add("reply");
-              // (Note: The new reply may not have a server-generated _id unless returned.)
-              newReplyDiv.innerHTML = `
-                <div class="reply-content">
-                  <div class="reply-text"><p><strong>You</strong>: ${replyText}</p></div>
-                  <div class="reply-three-dot-menu">
-                    <span class="dots">&#8226;&#8226;&#8226;</span>
-                    <div class="menu-options">
-                      <button class="delete-reply-btn">Delete</button>
-                      <button class="report-reply-btn">Report</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-              repliesList.appendChild(newReplyDiv);
-              const newReplyDots = newReplyDiv.querySelector(".reply-three-dot-menu .dots");
-              const newReplyMenuOptions = newReplyDiv.querySelector(".reply-three-dot-menu .menu-options");
-              newReplyDots.addEventListener("click", function (e) {
-                e.stopPropagation();
-                newReplyMenuOptions.classList.toggle("show");
-              });
-              // DELETE event for new reply.
-              newReplyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-                newReplyDiv.remove();
-                updateToggleReplies(repliesList, toggleRepliesBtn);
-              });
-              // REPORT event for new reply.
-              newReplyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
-                activeReport = { type: "reply", id: "temporary" }; // Use proper id if available.
-                document.getElementById("report-modal").style.display = "flex";
-              });
-              replyForm.querySelector(".reply-body").value = "";
-              repliesList.style.display = "block";
-              toggleRepliesBtn.style.display = "inline-block";
-              toggleRepliesBtn.innerText = "Hide Replies";
-              updateToggleReplies(repliesList, toggleRepliesBtn);
-            } catch (error) {
-              console.error("Error posting reply:", error);
-              alert("Error posting reply.");
-            }
-          }
-        });
+  event.preventDefault();
+  const replyText = replyForm.querySelector(".reply-body").value;
+  if (replyText) {
+    try {
+      const replyResponse = await fetch("/Q&A/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reply: replyText, ID: q.ID }),
+        credentials: "include"
+      });
+      if (!replyResponse.ok) {
+        alert("Error posting reply.");
+        return;
+      }
+      const newReply = await replyResponse.json(); // expected to have { user, time, reply, _id (optional) }
+      
+      // If your backend does not return proper _id yet, fallback
+      newReply._id = newReply._id || Math.random().toString(36).substring(2, 15);
+      newReply.upvotes = 0;
+      newReply.comments = [];
+
+      // Create & append new reply element (same structure as others)
+      const replyDiv = document.createElement("div");
+      replyDiv.classList.add("reply");
+      replyDiv.setAttribute("data-reply-id", newReply._id);
+      replyDiv.innerHTML = `
+        <div class="reply-left">
+          <div class="reply-like-section">
+            <i class="fas fa-arrow-up reply-upvote-icon"></i>
+            <span class="reply-like-count">0</span>
+          </div>
+        </div>
+        <div class="reply-center">
+          <div class="reply-text">
+            <p class="reply-username">${newReply.user || currentUser}</p>
+            <p class="reply-time">${new Date().toLocaleString()}</p>
+            <p>${newReply.reply}</p>
+          </div>
+        </div>
+        <div class="reply-right">
+          <div class="reply-three-dot-menu">
+            <span class="dots">&#8226;&#8226;&#8226;</span>
+            <div class="menu-options">
+              <button class="delete-reply-btn">Delete</button>
+              <button class="report-reply-btn">Report</button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Add event listeners like old replies
+      const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
+      const replyLikeCount = replyDiv.querySelector(".reply-like-count");
+      replyUpvoteIcon.addEventListener("click", () => {
+        replyUpvoteIcon.classList.toggle("active");
+        let count = parseInt(replyLikeCount.textContent);
+        replyLikeCount.textContent = replyUpvoteIcon.classList.contains("active") ? count + 1 : count - 1;
+      });
+
+      const deleteBtn = replyDiv.querySelector(".delete-reply-btn");
+      deleteBtn.addEventListener("click", () => {
+        replyDiv.remove();
+        updateToggleReplies(repliesList, toggleRepliesBtn);
+      });
+
+      const reportBtn = replyDiv.querySelector(".report-reply-btn");
+      reportBtn.addEventListener("click", () => {
+        activeReport = { type: "reply", id: newReply._id };
+        document.getElementById("report-modal").style.display = "flex";
+      });
+
+      const dots = replyDiv.querySelector(".reply-three-dot-menu .dots");
+      const menu = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
+      dots.addEventListener("click", function (e) {
+        e.stopPropagation();
+        menu.classList.toggle("show");
+      });
+
+      repliesList.appendChild(replyDiv);
+      repliesList.style.display = "block";
+      toggleRepliesBtn.style.display = "inline-block";
+      toggleRepliesBtn.innerText = "Hide Replies";
+
+      replyForm.querySelector(".reply-body").value = "";
+      updateToggleReplies(repliesList, toggleRepliesBtn);
+
+    } catch (error) {
+      console.error("Error posting reply:", error);
+      alert("Error posting reply.");
+    }
+  }
+});
+
 
         questionsList.appendChild(questionElem);
       });
