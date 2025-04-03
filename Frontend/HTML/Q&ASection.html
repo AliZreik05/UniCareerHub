@@ -426,9 +426,11 @@
         credentials: "include"
       });
       if (!replyResponse.ok) {
-        alert("Error posting reply.");
-        return;
-      }
+      alert("Error posting reply.");
+      return;
+    }
+    window.location.href = '/Q&A';
+
       const newReply = await replyResponse.json(); // expected to have { user, time, reply, _id (optional) }
       
       // If your backend does not return proper _id yet, fallback
@@ -540,9 +542,12 @@
             credentials: "include"
           });
           if (!response.ok) {
-            alert("Error posting question.");
-            return;
-          }
+          alert("Error posting question.");
+          return;
+        }
+        window.location.href = '/Q&A';
+
+
           document.getElementById("question-title").value = "";
           document.getElementById("question-body").value = "";
           document.getElementById("review-modal").style.display = "none";
