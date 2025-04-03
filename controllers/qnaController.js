@@ -14,7 +14,8 @@
       time: new Date(), 
     });
     await newQuestion.save();
-    return res.status(200).json({ message: 'Question posted successfully' });
+    return res.status(200).json(newQuestion);
+
   };
 
   const getLatestQuestions = async (req, res) => {
@@ -41,8 +42,10 @@
       question.replies = [];
     }
     question.replies.push({ user, reply, time: replyTime });
+    const newReply = { user, reply, time: replyTime, _id: question.replies[question.replies.length - 1]._id };
     await question.save();
-    return res.status(200).json({ message: 'Reply posted successfully' });
+    return res.status(200).json(newReply);
+
   };
 
   const editQuestion = async (req, res) => {
