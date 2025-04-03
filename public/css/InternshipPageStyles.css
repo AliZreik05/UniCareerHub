@@ -182,17 +182,19 @@ header {
 }
 
 .job-item {
-  background-color: var(--card-bg);
-  padding: 20px;
-  border: 1px solid #ddd;
+  background-color: #fff;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border: 2px solid rgba(255, 204, 0, 0.4); /* softer yellow */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+  padding: 20px;
   transition: transform 0.3s ease;
 }
 
 .job-item:hover {
   transform: translateY(-5px);
 }
+
 
 .job-content strong {
   font-size: 1.4rem;
@@ -214,20 +216,26 @@ header {
 }
 
 .apply-link {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 8px 12px;
-  background-color: var(--button-bg);
-  color: #fff;
-  border-radius: 5px;
-  text-transform: uppercase;
-  font-size: 0.9rem;
+  background-color: #ffcc00;
+  color: black;
+  font-size: 1.1em;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
   transition: background-color 0.3s ease;
+  display: inline-block;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-transform: none;
 }
 
 .apply-link:hover {
-  background-color: #e0a800;
+  background-color: #f0b900;
+  color: black;
 }
+
 
 /* --------------------------------
           ANIMATIONS
