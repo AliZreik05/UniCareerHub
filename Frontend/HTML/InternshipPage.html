@@ -39,6 +39,14 @@
     <div class="hero-content">
       <h2>Empowering Students & Graduates</h2>
       <p>Explore curated internship opportunities posted by our team and take the next step in your career journey.</p>
+      <div class="hero-controls">
+        <input
+          type="text"
+          id="searchInput"
+          class="search-input"
+          placeholder="Search for internships..."
+        />
+      </div>
     </div>
     <div class="hero-images">
       <img src="/Pics/Intern2.png" alt="Image 2">
@@ -49,34 +57,51 @@
   <ul id="jobList" class="job-list"></ul>
 
   <script>
-    // Fetch and display internships from the public API endpoint
+    let internshipsData = [];
+  
+    function displayInternships(internships) {
+      const jobList = document.getElementById('jobList');
+      jobList.innerHTML = '';
+  
+      internships.forEach(job => {
+        const linkUrl = job.applyLink.startsWith('http') ? job.applyLink : 'http://' + job.applyLink;
+        const li = document.createElement('li');
+        li.className = 'job-item';
+        li.innerHTML = `
+          <div class="job-content">
+            <strong>${job.company}</strong> - ${job.position} <br>
+            <small>Posted: ${new Date(job.datePosted).toLocaleDateString()}</small>
+            <p class="job-description">${job.description}</p>
+            <a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="apply-link">Apply Now</a>
+          </div>
+        `;
+        jobList.appendChild(li);
+      });
+    }
+  
     function loadInternships() {
       fetch('/internships/latest')
         .then(response => response.json())
         .then(internships => {
-          const jobList = document.getElementById('jobList');
-          jobList.innerHTML = '';
-          internships.forEach(job => {
-  // Ensure the link is absolute
-  const linkUrl = job.applyLink.startsWith('http') ? job.applyLink : 'http://' + job.applyLink;
-  const li = document.createElement('li');
-  li.className = 'job-item';
-  li.innerHTML = `
-    <div class="job-content">
-      <strong>${job.company}</strong> - ${job.position} <br>
-      <small>Posted: ${new Date(job.datePosted).toLocaleDateString()}</small>
-      <p class="job-description">${job.description}</p>
-      <a href="${linkUrl}" target="_blank" rel="noopener noreferrer" class="apply-link">Apply Now</a>
-    </div>
-  `;
-  jobList.appendChild(li);
-});
-
+          internshipsData = internships;
+          displayInternships(internships);
         })
         .catch(error => console.error('Error fetching internships:', error));
     }
-    
-    document.addEventListener('DOMContentLoaded', loadInternships);
-  </script>
+  
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = internshipsData.filter(job =>
+        job.position.toLowerCase().includes(query) ||
+        job.company.toLowerCase().includes(query)
+      );
+      displayInternships(filtered);
+    }
+  
+    document.addEventListener('DOMContentLoaded', () => {
+      loadInternships();
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+    });
+  </script>  
 </body>
 </html>

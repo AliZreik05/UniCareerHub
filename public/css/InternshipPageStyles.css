@@ -153,12 +153,35 @@ header {
   height: auto;
   object-fit: cover;
 }
+ /* Search input */
+ .search-container {
+  position: relative;
+  width: 100%;
+}
+.search-input {
+  width: 100%;
+  padding: 10px 30px 10px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+}
+@keyframes fadeSlideUp {
+  0% {
+      opacity: 0;
+      transform: translateY(15px);
+  }
+  100% {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
     text-align: center;
   }
 }
+
 
 /* --------------------------------
            SECTION TITLES
