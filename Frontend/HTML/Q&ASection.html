@@ -21,9 +21,10 @@
       <a href="/" class="logo">UniCareerHub</a>
       <div class="nav-title">Questions & Answers</div>
       <div class="user-actions">
-        <a href="/profile" class="user-icon">
+        <a id="profileLink" href="/profile" class="user-icon">
           <i class="fas fa-user-circle"></i>
         </a>
+        
         <a href="/logout">
           <button class="logout-btn">Logout</button>
         </a>
@@ -74,22 +75,11 @@
         <form id="question-form" class="ask-question">
           <div class="form-group">
             <label for="question-title">Title of Your Question</label>
-            <input
-              type="text"
-              id="question-title"
-              name="title"
-              placeholder="Enter a descriptive question title"
-              required
-            />
+            <input type="text" id="question-title" name="title" placeholder="Enter a descriptive question title" required />
           </div>
           <div class="form-group">
             <label for="question-body">Details</label>
-            <textarea
-              id="question-body"
-              name="body"
-              placeholder="Provide details about your question"
-              required
-            ></textarea>
+            <textarea id="question-body" name="body" placeholder="Provide details about your question" required></textarea>
           </div>
           <button type="submit" class="submit-btn">
             <i class="fas fa-paper-plane"></i> Post Question
@@ -98,7 +88,7 @@
       </div>
     </div>
 
-    <!-- Report Modal (used for both questions & replies) -->
+    <!-- Report Modal (for questions & replies) -->
     <div id="report-modal" class="modal">
       <div class="modal-content">
         <span class="close-btn" onclick="closeReportModal()">&times;</span>
@@ -124,7 +114,7 @@
 
   <script src="/js/api.js"></script>
   <script>
-    // Utility function: Get cookie value by name.
+    // Utility: Get cookie value by name.
     function getCookie(name) {
       const value = `; ${document.cookie}`;
       const parts = value.split(`; ${name}=`);
@@ -189,7 +179,7 @@
       }
     }
 
-    // Render questions dynamically (with replies, delete, report & upvote functionality).
+    // Render questions dynamically.
     function renderQuestions(questions) {
       const questionsList = document.getElementById("questions-list");
       questionsList.innerHTML = ""; // Clear previous questions
@@ -204,7 +194,7 @@
       questions.forEach((q) => {
         const questionElem = document.createElement("div");
         questionElem.classList.add("question");
-        // Attach question ID as data attribute.
+        // Attach question ID as a data attribute.
         questionElem.setAttribute("data-id", q.ID);
 
         // Build the menu options conditionally.
@@ -212,15 +202,15 @@
         if (q.username === currentUser) {
           menuOptionsHTML += `<button class="delete-btn">Delete</button>`;
         }
-        // For reporting a question, set activeReport.
+        // For reporting a question.
         menuOptionsHTML += `<button class="report-btn">Report</button>`;
 
-        // Insert the question HTML including reply-related elements.
+        // Insert the question HTML.
         questionElem.innerHTML = `
           <div class="question-header">
             <h4>${q.title}</h4>
             <p class="question-meta">
-              <i class="fas fa-user"></i> Posted by: ${q.username} | Time: ${new Date(q.time).toLocaleString()}
+              <i class="fas fa-user"></i> Posted by: <a href="/profile/${q.authorId}" class="author-link">${q.username}</a> | Time: ${new Date(q.time).toLocaleString()}
             </p>
             <div class="three-dot-menu">
               <span class="dots">&#8226;&#8226;&#8226;</span>
@@ -256,7 +246,7 @@
         if (q.username === currentUser) {
           const deleteBtn = questionElem.querySelector(".delete-btn");
           if (deleteBtn) {
-            deleteBtn.addEventListener("click", function (e) {
+            deleteBtn.addEventListener("click", function () {
               const questionId = questionElem.getAttribute("data-id");
               fetch(`/Q&A/${questionId}`, {
                 method: 'DELETE',
@@ -278,14 +268,14 @@
           }
         }
 
-        // REPORT BUTTON EVENT for question.
+        // REPORT BUTTON EVENT.
         const reportBtn = questionElem.querySelector(".report-btn");
         reportBtn.addEventListener("click", function () {
           activeReport = { type: "question", id: q.ID };
           document.getElementById("report-modal").style.display = "flex";
         });
 
-        // REPLY FUNCTIONALITY
+        // REPLY FUNCTIONALITY.
         const replyBtn = questionElem.querySelector(".reply-btn");
         const replyForm = questionElem.querySelector(".reply-form");
         const submitReplyBtn = questionElem.querySelector(".submit-reply");
@@ -314,7 +304,7 @@
             reply.comments = reply.comments || [];
             const replyDiv = document.createElement("div");
             replyDiv.classList.add("reply");
-            // Attach the reply's unique id as a data attribute.
+            // Attach the reply's unique id.
             replyDiv.setAttribute("data-reply-id", reply._id);
             replyDiv.innerHTML = `
               <div class="reply-left">
@@ -325,7 +315,7 @@
               </div>
               <div class="reply-center">
                 <div class="reply-text">
-                  <p class="reply-username">${reply.user}</p>
+                  <p class="reply-username"><a href="/profile/${reply.authorId}" class="author-link">${reply.user}</a></p>
                   <p class="reply-time">${new Date(reply.time).toLocaleString()}</p>
                   <p>${reply.reply}</p>
                 </div>
@@ -349,7 +339,7 @@
               e.stopPropagation();
               replyMenuOptions.classList.toggle("show");
             });
-            // DELETE REPLY EVENT: Send DELETE request to remove reply.
+            // DELETE REPLY EVENT.
             replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
               const replyId = replyDiv.getAttribute("data-reply-id");
               fetch(`/Q&A/reply/${replyId}`, {
@@ -370,12 +360,12 @@
                 alert("Error removing reply.");
               });
             });
-            // REPORT REPLY EVENT: Set activeReport for reply.
+            // REPORT REPLY EVENT.
             replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
               activeReport = { type: "reply", id: reply._id };
               document.getElementById("report-modal").style.display = "flex";
             });
-            // UPVOTE REPLY: Toggle upvote via backend.
+            // UPVOTE REPLY.
             const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
             const replyLikeCount = replyDiv.querySelector(".reply-like-count");
             replyUpvoteIcon.addEventListener("click", async () => {
@@ -390,7 +380,6 @@
                   alert(errorData.error || "Error toggling upvote");
                 } else {
                   const data = await res.json();
-                  // Toggle active class based on whether user already upvoted.
                   if (replyUpvoteIcon.classList.contains("active")) {
                     replyUpvoteIcon.classList.remove("active");
                   } else {
@@ -415,101 +404,87 @@
 
         // Post a new reply.
         submitReplyBtn.addEventListener("click", async function (event) {
-  event.preventDefault();
-  const replyText = replyForm.querySelector(".reply-body").value;
-  if (replyText) {
-    try {
-      const replyResponse = await fetch("/Q&A/reply", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reply: replyText, ID: q.ID }),
-        credentials: "include"
-      });
-      if (!replyResponse.ok) {
-      alert("Error posting reply.");
-      return;
-    }
-    window.location.href = '/Q&A';
-
-      const newReply = await replyResponse.json(); // expected to have { user, time, reply, _id (optional) }
-      
-      // If your backend does not return proper _id yet, fallback
-      newReply._id = newReply._id || Math.random().toString(36).substring(2, 15);
-      newReply.upvotes = 0;
-      newReply.comments = [];
-
-      // Create & append new reply element (same structure as others)
-      const replyDiv = document.createElement("div");
-      replyDiv.classList.add("reply");
-      replyDiv.setAttribute("data-reply-id", newReply._id);
-      replyDiv.innerHTML = `
-        <div class="reply-left">
-          <div class="reply-like-section">
-            <i class="fas fa-arrow-up reply-upvote-icon"></i>
-            <span class="reply-like-count">0</span>
-          </div>
-        </div>
-        <div class="reply-center">
-          <div class="reply-text">
-            <p class="reply-username">${newReply.user || currentUser}</p>
-            <p class="reply-time">${new Date().toLocaleString()}</p>
-            <p>${newReply.reply}</p>
-          </div>
-        </div>
-        <div class="reply-right">
-          <div class="reply-three-dot-menu">
-            <span class="dots">&#8226;&#8226;&#8226;</span>
-            <div class="menu-options">
-              <button class="delete-reply-btn">Delete</button>
-              <button class="report-reply-btn">Report</button>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Add event listeners like old replies
-      const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
-      const replyLikeCount = replyDiv.querySelector(".reply-like-count");
-      replyUpvoteIcon.addEventListener("click", () => {
-        replyUpvoteIcon.classList.toggle("active");
-        let count = parseInt(replyLikeCount.textContent);
-        replyLikeCount.textContent = replyUpvoteIcon.classList.contains("active") ? count + 1 : count - 1;
-      });
-
-      const deleteBtn = replyDiv.querySelector(".delete-reply-btn");
-      deleteBtn.addEventListener("click", () => {
-        replyDiv.remove();
-        updateToggleReplies(repliesList, toggleRepliesBtn);
-      });
-
-      const reportBtn = replyDiv.querySelector(".report-reply-btn");
-      reportBtn.addEventListener("click", () => {
-        activeReport = { type: "reply", id: newReply._id };
-        document.getElementById("report-modal").style.display = "flex";
-      });
-
-      const dots = replyDiv.querySelector(".reply-three-dot-menu .dots");
-      const menu = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
-      dots.addEventListener("click", function (e) {
-        e.stopPropagation();
-        menu.classList.toggle("show");
-      });
-
-      repliesList.appendChild(replyDiv);
-      repliesList.style.display = "block";
-      toggleRepliesBtn.style.display = "inline-block";
-      toggleRepliesBtn.innerText = "Hide Replies";
-
-      replyForm.querySelector(".reply-body").value = "";
-      updateToggleReplies(repliesList, toggleRepliesBtn);
-
-    } catch (error) {
-      console.error("Error posting reply:", error);
-      alert("Error posting reply.");
-    }
-  }
-});
-
+          event.preventDefault();
+          const replyText = replyForm.querySelector(".reply-body").value;
+          if (replyText) {
+            try {
+              const replyResponse = await fetch("/Q&A/reply", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reply: replyText, ID: q.ID }),
+                credentials: "include"
+              });
+              if (!replyResponse.ok) {
+                alert("Error posting reply.");
+                return;
+              }
+              window.location.href = '/Q&A';
+              const newReply = await replyResponse.json();
+              newReply._id = newReply._id || Math.random().toString(36).substring(2, 15);
+              newReply.upvotes = 0;
+              newReply.comments = [];
+              const replyDiv = document.createElement("div");
+              replyDiv.classList.add("reply");
+              replyDiv.setAttribute("data-reply-id", newReply._id);
+              replyDiv.innerHTML = `
+                <div class="reply-left">
+                  <div class="reply-like-section">
+                    <i class="fas fa-arrow-up reply-upvote-icon"></i>
+                    <span class="reply-like-count">0</span>
+                  </div>
+                </div>
+                <div class="reply-center">
+                  <div class="reply-text">
+                    <p class="reply-username"><a href="/profile/${newReply.authorId}" class="author-link">${newReply.user || currentUser}</a></p>
+                    <p class="reply-time">${new Date().toLocaleString()}</p>
+                    <p>${newReply.reply}</p>
+                  </div>
+                </div>
+                <div class="reply-right">
+                  <div class="reply-three-dot-menu">
+                    <span class="dots">&#8226;&#8226;&#8226;</span>
+                    <div class="menu-options">
+                      <button class="delete-reply-btn">Delete</button>
+                      <button class="report-reply-btn">Report</button>
+                    </div>
+                  </div>
+                </div>
+              `;
+              const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
+              const replyLikeCount = replyDiv.querySelector(".reply-like-count");
+              replyUpvoteIcon.addEventListener("click", () => {
+                replyUpvoteIcon.classList.toggle("active");
+                let count = parseInt(replyLikeCount.textContent);
+                replyLikeCount.textContent = replyUpvoteIcon.classList.contains("active") ? count + 1 : count - 1;
+              });
+              const deleteBtn = replyDiv.querySelector(".delete-reply-btn");
+              deleteBtn.addEventListener("click", () => {
+                replyDiv.remove();
+                updateToggleReplies(repliesList, toggleRepliesBtn);
+              });
+              const reportBtn = replyDiv.querySelector(".report-reply-btn");
+              reportBtn.addEventListener("click", () => {
+                activeReport = { type: "reply", id: newReply._id };
+                document.getElementById("report-modal").style.display = "flex";
+              });
+              const dots = replyDiv.querySelector(".reply-three-dot-menu .dots");
+              const menu = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
+              dots.addEventListener("click", function (e) {
+                e.stopPropagation();
+                menu.classList.toggle("show");
+              });
+              repliesList.appendChild(replyDiv);
+              repliesList.style.display = "block";
+              toggleRepliesBtn.style.display = "inline-block";
+              toggleRepliesBtn.innerText = "Hide Replies";
+              replyForm.querySelector(".reply-body").value = "";
+              updateToggleReplies(repliesList, toggleRepliesBtn);
+            } catch (error) {
+              console.error("Error posting reply:", error);
+              alert("Error posting reply.");
+            }
+          }
+        });
 
         questionsList.appendChild(questionElem);
       });
@@ -542,12 +517,10 @@
             credentials: "include"
           });
           if (!response.ok) {
-          alert("Error posting question.");
-          return;
-        }
-        window.location.href = '/Q&A';
-
-
+            alert("Error posting question.");
+            return;
+          }
+          window.location.href = '/Q&A';
           document.getElementById("question-title").value = "";
           document.getElementById("question-body").value = "";
           document.getElementById("review-modal").style.display = "none";
@@ -559,7 +532,7 @@
       }
     });
 
-    // REPORT FORM SUBMISSION: Sends a request to flag the question or reply.
+    // REPORT FORM SUBMISSION.
     document.getElementById("report-form").addEventListener("submit", async function (event) {
       event.preventDefault();
       const reason = document.getElementById("report-reason").value;
@@ -636,5 +609,20 @@
       }
     });
   </script>
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    // Update the profile link with the user's ID from the cookie
+    const profileLink = document.getElementById('profileLink');
+    const currentUserId = getCookie('currentUserId');
+    if (currentUserId) {
+      profileLink.href = `/profile/${currentUserId}`;
+    }
+  </script>
+  
 </body>
 </html>

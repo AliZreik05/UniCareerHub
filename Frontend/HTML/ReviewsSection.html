@@ -14,9 +14,10 @@
     <div class="logo"><a href="/">UniCareerHub</a></div>
     <div class="nav-title">Reviews</div>
     <div class="nav-icons">
-      <a href="/profile" class="profile-icon" title="Profile">
-        <i class="fa-solid fa-circle-user"></i>
+      <a id="profileLink" href="/profile" class="user-icon">
+        <i class="fas fa-user-circle"></i>
       </a>
+      
       <a href="/logout">
         <button class="logout-btn">Logout</button>
       </a>
@@ -158,7 +159,7 @@
       modal.style.alignItems = 'center';
     });
     
-    // Close modal on clicking close button
+    // Close modal on clicking close button.
     document.querySelector('.close-btn').addEventListener('click', function() {
       document.getElementById('review-modal').style.display = 'none';
     });
@@ -183,7 +184,7 @@
         }
         
         let latestReviews = await response.json();
-        // Sort reviews based on the selected sort option.
+        // Sort reviews.
         if (sortBy === "upvotes") {
           latestReviews.sort((a, b) => (b.upvotes || 0) - (a.upvotes || 0));
         } else {
@@ -204,13 +205,13 @@
               : '<i class="far fa-star"></i>';
           }
           
-          // Conditionally render the delete button only if the review was posted by the current user.
+          // Conditionally render the delete button.
           let reviewMenuHTML = "";
           if (review.username && currentUser &&
               review.username.toLowerCase() === currentUser.toLowerCase()) {
             reviewMenuHTML += `<button class="delete-review-btn">Delete</button>`;
           }
-          // Report button: set activeReport for review.
+          // Report button.
           reviewMenuHTML += `<button class="report-review-btn">Report</button>`;
           
           // Create review element.
@@ -221,7 +222,7 @@
             <div class="review-header">
               <h4>${review.title}</h4>
               <p class="review-meta">
-                <i class="fas fa-user"></i> Posted by: ${review.username} | Time: ${new Date(review.time).toLocaleString()}
+                <i class="fas fa-user"></i> Posted by: <a href="/profile/${review.authorId}" class="author-link">${review.username}</a> | Time: ${new Date(review.time).toLocaleString()}
               </p>
               <div class="review-stars">${starsHtml}</div>
               <p class="company-name"><strong>Company:</strong> ${review.companyName}</p>
@@ -244,7 +245,7 @@
             </div>
           `;
           
-          // Attach upvote event for review.
+          // Attach upvote event.
           const upvoteIcon = reviewElem.querySelector('.upvote-icon');
           const likeCountSpan = reviewElem.querySelector('.like-count');
           upvoteIcon.addEventListener('click', async function () {
@@ -259,7 +260,6 @@
                 alert(errorData.error || "Error toggling upvote");
               } else {
                 const data = await res.json();
-                // Toggle active class: if already active, remove it; if not, add it.
                 if (upvoteIcon.classList.contains("active")) {
                   upvoteIcon.classList.remove("active");
                 } else {
@@ -273,7 +273,7 @@
             }
           });
           
-          // Attach delete event if delete button exists.
+          // Attach delete event.
           const deleteBtn = reviewElem.querySelector('.delete-review-btn');
           if (deleteBtn) {
             deleteBtn.addEventListener('click', function () {
@@ -297,7 +297,7 @@
             });
           }
           
-          // Attach report event for review.
+          // Attach report event.
           const reportBtn = reviewElem.querySelector('.report-review-btn');
           reportBtn.addEventListener('click', function () {
             activeReport = { type: "review", id: review.ID };
@@ -443,5 +443,20 @@
       }
     });
   </script>
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    // Update the profile link with the user's ID from the cookie
+    const profileLink = document.getElementById('profileLink');
+    const currentUserId = getCookie('currentUserId');
+    if (currentUserId) {
+      profileLink.href = `/profile/${currentUserId}`;
+    }
+  </script>
+  
 </body>
 </html>

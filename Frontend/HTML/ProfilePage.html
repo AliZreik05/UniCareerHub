@@ -91,32 +91,51 @@
       document.getElementById("experience-form").style.display = "none";
     }
     function loadProfile() {
-      fetch('/profile/data', { credentials: 'include' })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Profile not found');
-          }
-          return response.json();
-        })
-        .then(profile => {
-          document.getElementById("display-name").innerText = profile.username;
-          document.getElementById("display-major-year").innerText = profile.majorYear;
-          document.getElementById("display-description").innerText = profile.description;
-          if (profile.courses && profile.courses.length > 0) {
-            document.getElementById("display-courses").innerHTML =
-              profile.courses.map(course => `<li>${course}</li>`).join("");
-          }
-          if (profile.experience && profile.experience.length > 0) {
-            document.getElementById("display-experience").innerHTML =
-              profile.experience.map(exp => `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}"><span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span></li>`).join("");
-          }
-          document.getElementById("name").value = profile.username;
-          document.getElementById("major-year").value = profile.majorYear;
-          document.getElementById("description").value = profile.description;
-          document.getElementById("courses").value = profile.courses.join(", ");
-        })
-        .catch(error => console.error(error));
-    }
+  // Extract the profile id from the URL, e.g. "/profile/605c72f1e0b4f531dcdf1234"
+  const parts = window.location.pathname.split('/');
+  const profileId = parts[parts.length - 1];
+
+  // Fetch the profile data using the id
+  fetch(`/profile/${profileId}/data`, { credentials: 'include' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Profile not found');
+      }
+      return response.json();
+    })
+    .then(profile => {
+      document.getElementById("display-name").innerText = profile.username;
+      document.getElementById("display-major-year").innerText = profile.majorYear;
+      document.getElementById("display-description").innerText = profile.description;
+      if (profile.courses && profile.courses.length > 0) {
+        document.getElementById("display-courses").innerHTML =
+          profile.courses.map(course => `<li>${course}</li>`).join("");
+      }
+      if (profile.experience && profile.experience.length > 0) {
+        document.getElementById("display-experience").innerHTML =
+          profile.experience.map(exp =>
+            `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}">
+              <span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span>
+            </li>`).join("");
+      }
+
+      // Get the current user's id from cookie
+      const currentUserId = getCookie('currentUserId');
+
+      // If the profile id does not match the current user's id, hide the edit buttons
+      if (profile._id !== currentUserId) {
+        // Hide edit buttons and any editing functionality
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.style.display = 'none';
+        });
+      }
+    })
+    .catch(error => console.error(error));
+}
+
+
+document.addEventListener("DOMContentLoaded", loadProfile);
+
     function updateProfile() {
       const username = document.getElementById("name").value;
       const majorYear = document.getElementById("major-year").value;
@@ -202,6 +221,13 @@
     }
     
     document.addEventListener("DOMContentLoaded", loadProfile);
+    function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+  return null;
+}
+
   </script>
 </body>
 </html>

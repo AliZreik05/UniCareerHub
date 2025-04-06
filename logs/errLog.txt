@@ -5,3 +5,8 @@
 20250321	10:12:03	d2ae2aa0-c8d3-4462-85e2-e45b2564d143	Error: Test error
 20250326	19:59:48	b42228d5-100d-44b6-82ba-6c111c0459bf	Error: ENOENT: no such file or directory, stat '/Users/user/Desktop/UniCareerHub/Frontend/HTML/AdminInternships.html'
 20250326	20:43:50	e5b619ed-11cb-4ab3-b643-5b4051ae69db	Error: read ETIMEDOUT
+20250406	14:41:20	0a271016-89c3-4aff-9b50-2e928e6ebb63	MongoServerError: E11000 duplicate key error collection: test.users index: username_1 dup key: { username: "UniCareerHubAdmin" }
+20250406	15:32:55	cfec5fcf-feda-4bed-89fd-f417272267a4	ReferenceError: User is not defined
+20250406	15:32:56	0f48d13c-c280-4e50-90bb-330b80860e4c	ReferenceError: User is not defined
+20250406	15:33:07	e4981479-63dc-4cc8-a422-74843da5e745	ReferenceError: User is not defined
+20250406	15:40:44	7c5f46ab-c138-4c5f-8c18-1147dd1e3a21	CastError: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "User"

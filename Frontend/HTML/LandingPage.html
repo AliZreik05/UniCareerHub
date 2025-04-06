@@ -100,23 +100,26 @@
   
   <script src="/js/api.js"></script>
   <script>
-     function getCookie(name) 
-     {
-    const cookieArr = document.cookie.split(";");
-    for (let cookie of cookieArr) 
-    {
-      const [key, value] = cookie.split("=").map(c => c.trim());
-      if (key === name) return value;
+     function getCookie(name) {
+      const cookieArr = document.cookie.split(";");
+      for (let cookie of cookieArr) {
+        const [key, value] = cookie.split("=").map(c => c.trim());
+        if (key === name) return value;
+      }
+      return null;
     }
-    return null;
-  }
+    
+    // When the DOM is loaded, check if the user is logged in
     document.addEventListener("DOMContentLoaded", function () {
       var isLoggedIn = getCookie("isLoggedIn") === "true";
       var navBtnsDiv = document.querySelector('.nav-btns');
       if (isLoggedIn) {
+        // Get the user ID from cookie
+        var currentUserId = getCookie("currentUserId");
+        // Update the navigation buttons to show the profile link and logout button
         navBtnsDiv.innerHTML = `
           <div class="user-info">
-            <a href="/profile">
+            <a id="profileLink" href="/profile/${currentUserId}">
               <i class="fa-solid fa-circle-user user-icon"></i>
             </a>
             <a href="/logout">

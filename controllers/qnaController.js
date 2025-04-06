@@ -6,8 +6,10 @@
     const postId = crypto.randomUUID();
     const { title, question } = req.body;
     const user = req.user.username;
+    const authorId = req.user._id;
     const newQuestion = new Question({
       username: user,
+      authorId,
       ID: postId,
       title,
       question,

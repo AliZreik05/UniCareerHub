@@ -34,6 +34,7 @@ const handleLogin = async (req, res) =>
             {
             "UserInfo":
                 {
+                    "_id": foundUser._id,
                     "username": foundUser.username,
                     "roles": roles
                 }
@@ -78,6 +79,11 @@ const handleLogin = async (req, res) =>
             maxAge: 12 * 60 * 60 * 1000,
             path: '/'
           });
+          res.cookie('currentUserId', foundUser._id.toString(), { 
+            sameSite: 'Lax', 
+            maxAge: 12 * 60 * 60 * 1000, 
+            path: '/' });
+
         res.redirect('/');
     } 
     else 
