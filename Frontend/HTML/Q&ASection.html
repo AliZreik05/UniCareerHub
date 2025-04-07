@@ -24,7 +24,6 @@
         <a id="profileLink" href="/profile" class="user-icon">
           <i class="fas fa-user-circle"></i>
         </a>
-        
         <a href="/logout">
           <button class="logout-btn">Logout</button>
         </a>
@@ -120,9 +119,11 @@
       const parts = value.split(`; ${name}=`);
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
-    // Set the logged-in user's username.
+    // Set the logged-in user's username and user id.
     window.currentUser = getCookie('currentUser');
+    const currentUserId = getCookie('currentUserId');
     console.log("Current User:", window.currentUser);
+    console.log("Current User ID:", currentUserId);
 
     // Global variable to hold the current report target.
     let activeReport = null; // { type: "question" or "reply", id: "..." }
@@ -183,8 +184,6 @@
     function renderQuestions(questions) {
       const questionsList = document.getElementById("questions-list");
       questionsList.innerHTML = ""; // Clear previous questions
-      const currentUser = window.currentUser;
-      console.log("Current User:", currentUser);
 
       if (questions.length === 0) {
         questionsList.innerHTML = `<p style="text-align: center; padding: 20px;">No results found</p>`;
@@ -197,9 +196,9 @@
         // Attach question ID as a data attribute.
         questionElem.setAttribute("data-id", q.ID);
 
-        // Build the menu options conditionally.
+        // Build the menu options conditionally using authorId.
         let menuOptionsHTML = "";
-        if (q.username === currentUser) {
+        if (q.authorId === currentUserId) {
           menuOptionsHTML += `<button class="delete-btn">Delete</button>`;
         }
         // For reporting a question.
@@ -242,8 +241,8 @@
           menuOptions.classList.toggle("show");
         });
 
-        // DELETE BUTTON (conditional)
-        if (q.username === currentUser) {
+        // DELETE BUTTON (conditional using authorId)
+        if (q.authorId === currentUserId) {
           const deleteBtn = questionElem.querySelector(".delete-btn");
           if (deleteBtn) {
             deleteBtn.addEventListener("click", function () {
@@ -306,6 +305,14 @@
             replyDiv.classList.add("reply");
             // Attach the reply's unique id.
             replyDiv.setAttribute("data-reply-id", reply._id);
+            
+            // Build reply menu using authorId check.
+            let replyMenuHTML = "";
+            if (reply.authorId === currentUserId) {
+              replyMenuHTML += `<button class="delete-reply-btn">Delete</button>`;
+            }
+            replyMenuHTML += `<button class="report-reply-btn">Report</button>`;
+            
             replyDiv.innerHTML = `
               <div class="reply-left">
                 <div class="reply-like-section">
@@ -324,8 +331,7 @@
                 <div class="reply-three-dot-menu">
                   <span class="dots">&#8226;&#8226;&#8226;</span>
                   <div class="menu-options">
-                    <button class="delete-reply-btn">Delete</button>
-                    <button class="report-reply-btn">Report</button>
+                    ${replyMenuHTML}
                   </div>
                 </div>
               </div>
@@ -339,27 +345,29 @@
               e.stopPropagation();
               replyMenuOptions.classList.toggle("show");
             });
-            // DELETE REPLY EVENT.
-            replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
-              const replyId = replyDiv.getAttribute("data-reply-id");
-              fetch(`/Q&A/reply/${replyId}`, {
-                method: 'DELETE',
-                credentials: 'include'
-              })
-              .then(response => response.json())
-              .then(result => {
-                if (result.message) {
-                  replyDiv.remove();
-                  updateToggleReplies(repliesList, toggleRepliesBtn);
-                } else {
+            // DELETE REPLY EVENT only if authorId matches.
+            if (reply.authorId === currentUserId) {
+              replyDiv.querySelector(".delete-reply-btn").addEventListener("click", function () {
+                const replyId = replyDiv.getAttribute("data-reply-id");
+                fetch(`/Q&A/reply/${replyId}`, {
+                  method: 'DELETE',
+                  credentials: 'include'
+                })
+                .then(response => response.json())
+                .then(result => {
+                  if (result.message) {
+                    replyDiv.remove();
+                    updateToggleReplies(repliesList, toggleRepliesBtn);
+                  } else {
+                    alert("Error removing reply.");
+                  }
+                })
+                .catch(err => {
+                  console.error(err);
                   alert("Error removing reply.");
-                }
-              })
-              .catch(err => {
-                console.error(err);
-                alert("Error removing reply.");
+                });
               });
-            });
+            }
             // REPORT REPLY EVENT.
             replyDiv.querySelector(".report-reply-btn").addEventListener("click", function () {
               activeReport = { type: "reply", id: reply._id };
@@ -419,66 +427,6 @@
                 return;
               }
               window.location.href = '/Q&A';
-              const newReply = await replyResponse.json();
-              newReply._id = newReply._id || Math.random().toString(36).substring(2, 15);
-              newReply.upvotes = 0;
-              newReply.comments = [];
-              const replyDiv = document.createElement("div");
-              replyDiv.classList.add("reply");
-              replyDiv.setAttribute("data-reply-id", newReply._id);
-              replyDiv.innerHTML = `
-                <div class="reply-left">
-                  <div class="reply-like-section">
-                    <i class="fas fa-arrow-up reply-upvote-icon"></i>
-                    <span class="reply-like-count">0</span>
-                  </div>
-                </div>
-                <div class="reply-center">
-                  <div class="reply-text">
-                    <p class="reply-username"><a href="/profile/${newReply.authorId}" class="author-link">${newReply.user || currentUser}</a></p>
-                    <p class="reply-time">${new Date().toLocaleString()}</p>
-                    <p>${newReply.reply}</p>
-                  </div>
-                </div>
-                <div class="reply-right">
-                  <div class="reply-three-dot-menu">
-                    <span class="dots">&#8226;&#8226;&#8226;</span>
-                    <div class="menu-options">
-                      <button class="delete-reply-btn">Delete</button>
-                      <button class="report-reply-btn">Report</button>
-                    </div>
-                  </div>
-                </div>
-              `;
-              const replyUpvoteIcon = replyDiv.querySelector(".reply-upvote-icon");
-              const replyLikeCount = replyDiv.querySelector(".reply-like-count");
-              replyUpvoteIcon.addEventListener("click", () => {
-                replyUpvoteIcon.classList.toggle("active");
-                let count = parseInt(replyLikeCount.textContent);
-                replyLikeCount.textContent = replyUpvoteIcon.classList.contains("active") ? count + 1 : count - 1;
-              });
-              const deleteBtn = replyDiv.querySelector(".delete-reply-btn");
-              deleteBtn.addEventListener("click", () => {
-                replyDiv.remove();
-                updateToggleReplies(repliesList, toggleRepliesBtn);
-              });
-              const reportBtn = replyDiv.querySelector(".report-reply-btn");
-              reportBtn.addEventListener("click", () => {
-                activeReport = { type: "reply", id: newReply._id };
-                document.getElementById("report-modal").style.display = "flex";
-              });
-              const dots = replyDiv.querySelector(".reply-three-dot-menu .dots");
-              const menu = replyDiv.querySelector(".reply-three-dot-menu .menu-options");
-              dots.addEventListener("click", function (e) {
-                e.stopPropagation();
-                menu.classList.toggle("show");
-              });
-              repliesList.appendChild(replyDiv);
-              repliesList.style.display = "block";
-              toggleRepliesBtn.style.display = "inline-block";
-              toggleRepliesBtn.innerText = "Hide Replies";
-              replyForm.querySelector(".reply-body").value = "";
-              updateToggleReplies(repliesList, toggleRepliesBtn);
             } catch (error) {
               console.error("Error posting reply:", error);
               alert("Error posting reply.");
@@ -521,10 +469,6 @@
             return;
           }
           window.location.href = '/Q&A';
-          document.getElementById("question-title").value = "";
-          document.getElementById("question-body").value = "";
-          document.getElementById("review-modal").style.display = "none";
-          loadLatestQuestions();
         } catch (error) {
           console.error("Error posting question:", error);
           alert("Error posting question.");
@@ -618,7 +562,6 @@
     
     // Update the profile link with the user's ID from the cookie
     const profileLink = document.getElementById('profileLink');
-    const currentUserId = getCookie('currentUserId');
     if (currentUserId) {
       profileLink.href = `/profile/${currentUserId}`;
     }

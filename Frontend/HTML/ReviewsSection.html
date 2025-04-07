@@ -207,10 +207,11 @@
           
           // Conditionally render the delete button.
           let reviewMenuHTML = "";
-          if (review.username && currentUser &&
-              review.username.toLowerCase() === currentUser.toLowerCase()) {
-            reviewMenuHTML += `<button class="delete-review-btn">Delete</button>`;
-          }
+          const currentUserId = getCookie('currentUserId');
+if (review.authorId === currentUserId) {
+  reviewMenuHTML += `<button class="delete-review-btn">Delete</button>`;
+}
+
           // Report button.
           reviewMenuHTML += `<button class="report-review-btn">Report</button>`;
           
