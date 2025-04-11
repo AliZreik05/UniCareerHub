@@ -11,9 +11,8 @@ oAuth2Client.setCredentials({refresh_token:REFRESH_TOKEN})
 
 async function sendVerificationEmail(userEmail,generatedCode)
 {
-    try{
-        const { credentials } = await oAuth2Client.refreshAccessToken();
-        const accessToken = credentials.access_token;
+    try{ 
+         const accessToken = await oAuth2Client.getAccessToken();
         const transport = nodemailer.createTransport({
             service:'gmail',
             auth:
@@ -26,7 +25,6 @@ async function sendVerificationEmail(userEmail,generatedCode)
                 accessToken: accessToken
             }
         })
-
         const mailOptions =
         {
             from: '"UniCareerHub" <no-reply@UniCareerHub.com>',
@@ -39,7 +37,8 @@ async function sendVerificationEmail(userEmail,generatedCode)
         return result
     }catch (error)
     {
-        error
+        console.error("Error sending verification email:", error);
+        throw error;
     }
 }
 module.exports = sendVerificationEmail;
