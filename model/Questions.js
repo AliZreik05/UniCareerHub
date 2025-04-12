@@ -11,6 +11,7 @@ const questionSchema = new mongoose.Schema({
     type: [
       {
         user: { type: String, required: true },
+        authorId: { type: mongoose.Schema.Types.ObjectId, required: true }, // NEW FIELD
         reply: { type: String, required: true },
         time: { type: Date, default: Date.now },
         flagged: { type: Boolean, default: false },

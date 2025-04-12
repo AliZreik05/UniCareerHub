@@ -1,17 +1,18 @@
 const Review = require('../model/Reviews');
 const crypto = require('crypto');
-const {logEvents} = require('../middleware/logEvents');
+const { logEvents } = require('../middleware/logEvents');
 const { format } = require('date-fns');
 
 const postReview = async (req, res) => {
   const postId = crypto.randomUUID();
   const user = req.user.username;
   const authorId = req.user._id;
-  const { operation, title, review, company,rating, industry, ID } = req.body; // Expect an "ID" for removal
+  const { operation, title, review, company, rating, industry, ID } = req.body; // Expect an "ID" for removal
 
   if (operation === 'remove') {
     try {
-      await Review.deleteOne({ ID, username: user });
+      // Only remove if the review's authorId matches the logged-in user.
+      await Review.deleteOne({ ID, authorId: req.user._id });
       return res.redirect('/reviews');
     } catch (error) {
       console.error(error);
@@ -55,10 +56,10 @@ const getLatestReviews = async (req, res) => {
 const editReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
-    const { review: newReviewText , rating: newRating} = req.body;
+    const { review: newReviewText, rating: newRating } = req.body;
     const updatedReview = await Review.findOneAndUpdate(
       { ID: reviewId },
-      { review: newReviewText, rating: newRating},
+      { review: newReviewText, rating: newRating },
       { new: true }
     );
     if (!updatedReview) {
@@ -75,8 +76,8 @@ const editReview = async (req, res) => {
 const removeReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
-    const user = req.user.username;
-    const deletion = await Review.deleteOne({ ID: reviewId });
+    // Only allow deletion if the review's authorId matches the logged-in user.
+    const deletion = await Review.deleteOne({ ID: reviewId, authorId: req.user._id });
     if (deletion.deletedCount === 0) {
       return res.status(404).json({ error: 'Review not found or not authorized' });
     }
@@ -87,6 +88,7 @@ const removeReview = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 const flagReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
@@ -150,12 +152,11 @@ const toggleUpvoteReview = async (req, res) => {
   try {
     const reviewId = req.params.id;
     const username = req.user.username;
-    // Find the review by its ID (here we assume ID is unique in the Reviews collection)
+    // Find the review by its ID.
     const review = await Review.findOne({ ID: reviewId });
     if (!review) {
       return res.status(404).json({ error: "Review not found" });
     }
-    // If the user already upvoted, remove the vote; otherwise, add it.
     if (review.upvotedBy.includes(username)) {
       review.upvotes = Math.max(review.upvotes - 1, 0);
       review.upvotedBy = review.upvotedBy.filter(u => u !== username);
@@ -170,6 +171,14 @@ const toggleUpvoteReview = async (req, res) => {
     return res.status(500).json({ error: "Server error" });
   }
 };
-module.exports = { postReview, getLatestReviews, editReview, removeReview, flagReview ,approveReview,getReview,toggleUpvoteReview};
 
-
+module.exports = {
+  postReview,
+  getLatestReviews,
+  editReview,
+  removeReview,
+  flagReview,
+  approveReview,
+  getReview,
+  toggleUpvoteReview
+};
