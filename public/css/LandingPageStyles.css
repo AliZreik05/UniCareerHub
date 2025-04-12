@@ -200,15 +200,17 @@ section {
 
 /* Media query for mobile responsiveness */
 @media (max-width: 768px) {
-  /* Hide the regular navigation links and buttons initially */
-  .nav-links,
-  .nav-btns {
+  /* Existing mobile styles ... */
+  
+  /* For navigation links */
+  .nav-links, .nav-btns {
     display: none;
     flex-direction: column;
     width: 100%;
     text-align: center;
     margin-top: 10px;
   }
+
 
   /* Display the hamburger icon */
   .hamburger {
@@ -219,16 +221,98 @@ section {
     top: 20px;
     cursor: pointer;
   }
-
+  
   /* When toggled, show the nav links and nav buttons */
   .nav-links.active,
   .nav-btns.active {
     display: flex;
   }
-
+  
   /* Optional: Adjust the navbar layout */
   .navbar {
     flex-direction: column;
     align-items: flex-start;
+  }
+  
+  .logo {
+    font-size: 22px;
+  }
+  
+  /* Adjust hero text size and alignment */
+  .hero-text {
+    font-size: 35px;
+    text-align: center;
+    padding: 0 10px;
+  }
+  
+  /* Adjust images in the main image container */
+  .image-main {
+    gap: 15px;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .image-main img {
+    width: 80%;
+    height: auto;
+    margin: 10px 0;
+  }
+  
+  /* Adjust layout for content sections (About, Internships, Reviews & Q&As) */
+  .about-container, 
+  .internships-container, 
+  .reviews-container, 
+  .qas-container {
+    flex-direction: column;
+    text-align: center;
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  /* Reorder About and Reviews sections so image appears above text */
+  .about-container,
+  .reviews-container {
+    flex-direction: column-reverse;
+  }
+  
+  /* Adjust images - reduce height */
+  .image-about img,
+  .image-internships img,
+  .image-reviews img,
+  .image-qas img {
+    max-height: 300px;
+    object-fit: cover;
+  }
+  
+  /* Adjust text sizes in these content sections */
+  .about-text {
+    font-size: 22px;
+    margin: 10px 0;
+  }
+  
+  .internships-text {
+    font-size: 21px;
+    margin: 10px 0;
+  }
+  
+  .reviews-text {
+    font-size: 24px;
+    margin: 10px 0;
+  }
+  
+  .qas-text {
+    font-size: 22px;
+    margin: 10px 0;
+  }
+  
+  /* Adjust button container margin for a tighter layout */
+  .button-container {
+    margin-top: 30px;
+  }
+  
+  /* Decrease the height of buttons by reducing padding and font-size */
+  .button-container button {
+    padding: 15px 15px;
+    font-size: 20px;
   }
 }
