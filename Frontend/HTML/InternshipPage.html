@@ -21,7 +21,7 @@
       <a href="/" class="logo">UniCareerHub</a>
       <div class="nav-title">Internships</div>
       <div class="user-actions">
-        <a href="/profile" class="user-icon">
+        <a id="profileLink" href="/profile" class="user-icon">
           <i class="fas fa-user-circle"></i>
         </a>
         <a href="/logout">
@@ -57,6 +57,18 @@
   <ul id="jobList" class="job-list"></ul>
 
   <script>
+    // Utility: Get cookie value by name.
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    // Set the logged-in user's username and user id.
+    window.currentUser = getCookie('currentUser');
+    const currentUserId = getCookie('currentUserId');
+    console.log("Current User:", window.currentUser);
+    console.log("Current User ID:", currentUserId);
+
     let internshipsData = [];
   
     function displayInternships(internships) {
@@ -103,5 +115,18 @@
       document.getElementById('searchInput').addEventListener('input', handleSearch);
     });
   </script>  
+  <script>
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    // Update the profile link with the user's ID from the cookie
+    const profileLink = document.getElementById('profileLink');
+    if (currentUserId) {
+      profileLink.href = `/profile/${currentUserId}`;
+    }
+  </script>
 </body>
 </html>
