@@ -927,4 +927,16 @@
     font-size: 0.95rem;
     padding: 10px 15px;
   }
+  @media (max-width: 768px) {
+    .nav-title {
+      display: block;
+      position: static;        /* Removes absolute positioning */
+      transform: none;         /* Removes center shift */
+      font-size: 1.2rem;
+      margin: 10px 0 0 10px;   /* Top & left spacing */
+      text-align: left;        /* Aligns text to the left */
+      width: 100%;             /* Ensures full width */
+    }
+  }
+  
 }   
