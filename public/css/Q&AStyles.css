@@ -850,11 +850,11 @@
     
       .nav-title {
         display: block;
-        position: static;      /* Remove absolute positioning */
-        transform: none;       /* Remove the translateX(-50%) */
-        margin: 0 auto;        /* Center horizontally in a flex container, if desired */
-        text-align: center;    /* Or left, depending on your preference */
-        padding: 10px 0;       /* Optional spacing */
+        position: static;     
+        transform: none;      
+        margin: 0 auto;        
+        text-align: center;   
+        padding: 10px 0;       
       }
     
       .user-actions {

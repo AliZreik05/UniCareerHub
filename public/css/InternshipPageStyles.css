@@ -279,29 +279,60 @@ header {
     transform: translateY(0);
   }
 }
+
+.hamburger {
+  display: none;
+}
 @media (max-width: 768px) {
-  /* Header adjustments */
+  .header-top {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Optional tweak for logo on small screens */
+  .logo {
+    font-size: 1.6rem;
+    text-align: left;
+  }
+  
+  /* Hamburger already styled, just make sure it's inside .header-top */
+  .hamburger {
+    display: block;
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+
   .header-container {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
     padding: 10px 20px;
   }
 
   .nav-title {
-    position: static;
-    transform: none;
-    font-size: 1.2rem;
-    margin: 5px 0;
+    display: block;
+    position: static;     
+    transform: none;      
+    margin: 0 auto;        
+    text-align: center;   
+    padding: 10px 0;       
   }
 
-  .logout-btn {
-    font-size: 1rem;
-    padding: 7px 14px;
+  .user-actions {
+    display: none;
+    order: 1;
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 10px;
   }
 
-  .user-icon {
-    font-size: 28px;
+  .user-actions.active {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    gap: 10px; 
   }
 
   /* Hero section */
