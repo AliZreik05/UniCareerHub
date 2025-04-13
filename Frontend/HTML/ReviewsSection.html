@@ -11,7 +11,10 @@
 </head>
 <body>
   <div class="navbar">
-    <div class="logo"><a href="/">UniCareerHub</a></div>
+    <div class="header-top">
+      <a href="/" class="logo">UniCareerHub</a>
+      <div class="hamburger"><i class="fas fa-bars"></i></div>
+    </div>
     <div class="nav-title">Reviews</div>
     <div class="nav-icons">
       <a id="profileLink" href="/profile" class="user-icon">
@@ -457,6 +460,12 @@ if (review.authorId === currentUserId) {
     if (currentUserId) {
       profileLink.href = `/profile/${currentUserId}`;
     }
+  </script>
+  <script>
+    // Toggle the visibility of user actions on mobile
+    document.querySelector('.hamburger').addEventListener('click', function () {
+      document.querySelector('.nav-icons').classList.toggle('active');
+    });
   </script>
   
 </body>

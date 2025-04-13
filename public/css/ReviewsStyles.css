@@ -44,32 +44,34 @@ body {
     gap: 15px;
 }
 
-.profile-icon {
-    font-size: 30px;
-    color: black;
-    cursor: pointer;
-    transition: color 0.3s;
+.user-icon {
+  font-size: 35px;
+  color: black;
+  cursor: pointer;
+  transition: color 0.3s;
+  vertical-align: middle;
 }
 
-.profile-icon:hover {
+.user-icon:hover {
     color: #555;
 }
 
 .logout-btn {
-    background: none;
-    border: 2px solid black;
-    color: black;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s ease;
-    padding: 6px 15px;
-    border-radius: 20px;
+  background-color: #d1ae89;
+  color: #222222;
+  padding: 9px 18px;
+  font-size: 1.1rem;
+  border: 2px solid #222222;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.logout-btn:hover {
-    background-color: black;
-    color: white;
+.logout-btn:hover, .logout-btn:focus {
+  background-color: #222222;
+  color: #ffffff;
+  outline: none;
 }
 
 /* Section and Container */
@@ -530,30 +532,58 @@ a {
   color: inherit;
 }
 
-
+.hamburger {
+  display: none;
+}
   @media (max-width: 768px) {
+    .header-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      text-align: left;
+    }
+
     .navbar {
       flex-direction: column;
       align-items: flex-start;
-      padding: 15px;
+      padding: 10px 20px;
     }
   
     .nav-title {
       display: block;
-      position: static;
-      transform: none;
-      font-size: 1.2rem;
-      margin: 10px 0 0 10px;  /* Top and left spacing */
-      text-align: left;
-      width: 100%;
+      position: static;  
+      transform: none;       
+      margin: 0 auto;      
+      text-align: center;    
+      padding: 10px 0;       
     }
   
 
-  .nav-icons {
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 10px;
-  }
+    .hamburger {
+      display: block;
+      font-size: 1.8rem;
+      cursor: pointer;
+    }
+
+    .nav-icons {
+      display: none;
+      order: 1;
+      width: 100%;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+  
+    .nav-icons.active {
+      display: flex;
+      flex-direction: row; 
+      align-items: center;
+      gap: 10px; 
+    }
 
   .container {
     width: 95%;
