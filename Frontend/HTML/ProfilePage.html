@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-          integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-          crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="/css/profile-styles.css">
-  </head>
-  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="/css/profile-styles.css" />
+</head>
 <body>
   <div class="container">
     <div class="note-top-left">
       <i class="fa-solid fa-info-circle"></i> Click "Edit Profile" to add description and courses taken.
     </div>
-    
+
     <div class="profile-header">
       <div class="profile-pic-container">
         <i class="fa-solid fa-circle-user static-profile-icon"></i>
       </div>
-      
       <div class="info">
         <h1 id="display-name"></h1>
         <h3 id="display-major-year"></h3>
       </div>
     </div>
+
     <div class="section">
       <h2>Description</h2>
       <p id="display-description"></p>
     </div>
+
     <div class="section">
       <h2>Experience</h2>
       <ul id="display-experience">
@@ -37,15 +37,19 @@
       </ul>
       <button class="edit-btn" onclick="openExperienceForm()">Add Experience</button>
     </div>
+
     <div class="section">
       <h2>Courses Taken</h2>
       <ul id="display-courses">
         <li>No courses added yet.</li>
       </ul>
     </div>
+
     <button class="edit-btn" onclick="openProfileForm()">Edit Profile</button>
   </div>
-  <div id="profile-form" class="modal" style="display: none;">
+
+  <!-- Profile Modal -->
+  <div id="profile-form" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeProfileForm()">&times;</span>
       <h2>Edit Profile</h2>
@@ -62,7 +66,9 @@
       </form>
     </div>
   </div>
-  <div id="experience-form" class="modal" style="display: none;">
+
+  <!-- Experience Modal -->
+  <div id="experience-form" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeExperienceForm()">&times;</span>
       <h2>Add Experience</h2>
@@ -77,7 +83,10 @@
       </form>
     </div>
   </div>
+
   <script>
+    let experienceArray = []; // ✅ Main source of truth for experience
+
     function openProfileForm() {
       document.getElementById("profile-form").style.display = "flex";
     }
@@ -90,51 +99,65 @@
     function closeExperienceForm() {
       document.getElementById("experience-form").style.display = "none";
     }
+
     function loadProfile() {
-  // Extract the profile id from the URL, e.g. "/profile/605c72f1e0b4f531dcdf1234"
-  const parts = window.location.pathname.split('/');
-  const profileId = parts[parts.length - 1];
+      const parts = window.location.pathname.split('/');
+      const profileId = parts[parts.length - 1];
 
-  // Fetch the profile data using the id
-  fetch(`/profile/${profileId}/data`, { credentials: 'include' })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Profile not found');
+      fetch(`/profile/${profileId}/data`, { credentials: 'include' })
+        .then(response => {
+          if (!response.ok) throw new Error('Profile not found');
+          return response.json();
+        })
+        .then(profile => {
+          document.getElementById("display-name").innerText = profile.username;
+          document.getElementById("display-major-year").innerText = profile.majorYear;
+          document.getElementById("display-description").innerText = profile.description;
+
+          if (profile.courses?.length) {
+            document.getElementById("display-courses").innerHTML =
+              profile.courses.map(course => `<li>${course}</li>`).join("");
+          } else {
+            document.getElementById("display-courses").innerHTML = "<li>No courses added yet.</li>";
+          }
+
+          experienceArray = profile.experience || [];
+          renderExperience();
+
+          const currentUserId = getCookie('currentUserId');
+          if (profile._id !== currentUserId) {
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+              btn.style.display = 'none';
+            });
+          }
+
+          document.getElementById("name").value = profile.username;
+          document.getElementById("major-year").value = profile.majorYear;
+          document.getElementById("description").value = profile.description;
+          document.getElementById("courses").value = (profile.courses || []).join(", ");
+        })
+        .catch(console.error);
+    }
+
+    function renderExperience() {
+      const experienceList = document.getElementById("display-experience");
+      if (experienceArray.length === 0) {
+        experienceList.innerHTML = "<li>No experience added yet.</li>";
+        return;
       }
-      return response.json();
-    })
-    .then(profile => {
-      document.getElementById("display-name").innerText = profile.username;
-      document.getElementById("display-major-year").innerText = profile.majorYear;
-      document.getElementById("display-description").innerText = profile.description;
-      if (profile.courses && profile.courses.length > 0) {
-        document.getElementById("display-courses").innerHTML =
-          profile.courses.map(course => `<li>${course}</li>`).join("");
-      }
-      if (profile.experience && profile.experience.length > 0) {
-        document.getElementById("display-experience").innerHTML =
-          profile.experience.map(exp =>
-            `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}">
-              <span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span>
-            </li>`).join("");
-      }
 
-      // Get the current user's id from cookie
-      const currentUserId = getCookie('currentUserId');
-
-      // If the profile id does not match the current user's id, hide the edit buttons
-      if (profile._id !== currentUserId) {
-        // Hide edit buttons and any editing functionality
-        document.querySelectorAll('.edit-btn').forEach(btn => {
-          btn.style.display = 'none';
-        });
-      }
-    })
-    .catch(error => console.error(error));
-}
-
-
-document.addEventListener("DOMContentLoaded", loadProfile);
+      experienceList.innerHTML = experienceArray.map(exp => `
+        <li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}">
+          <span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span>
+          <div class="experience-menu">
+            <span class="dots" onclick="toggleMenu(this)">&#8226;&#8226;&#8226;</span>
+            <div class="dropdown-menu">
+              <button onclick="deleteExperience(this)">Delete</button>
+            </div>
+          </div>
+        </li>
+      `).join("");
+    }
 
     function updateProfile() {
       const username = document.getElementById("name").value;
@@ -142,15 +165,9 @@ document.addEventListener("DOMContentLoaded", loadProfile);
       const description = document.getElementById("description").value;
       const coursesInput = document.getElementById("courses").value;
       const courses = coursesInput ? coursesInput.split(",").map(item => item.trim()) : [];
-      const experiences = [];
-      document.querySelectorAll(".experience-item").forEach(item => {
-        experiences.push({
-          jobTitle: item.dataset.jobTitle,
-          company: item.dataset.company,
-          period: item.dataset.period
-        });
-      });
-      const profileData = { username, majorYear, description, courses, experience: experiences };
+
+      const profileData = { username, majorYear, description, courses, experience: experienceArray };
+
       fetch('/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -158,76 +175,54 @@ document.addEventListener("DOMContentLoaded", loadProfile);
         body: JSON.stringify(profileData)
       })
         .then(response => response.json())
-        .then(data => {
-          document.getElementById("display-name").innerText = data.profile.username;
-          document.getElementById("display-major-year").innerText = data.profile.majorYear;
-          document.getElementById("display-description").innerText = data.profile.description;
-          if (data.profile.courses && data.profile.courses.length > 0) {
-            document.getElementById("display-courses").innerHTML =
-              data.profile.courses.map(course => `<li>${course}</li>`).join("");
-          }
-          if (data.profile.experience && data.profile.experience.length > 0) {
-            document.getElementById("display-experience").innerHTML =
-            data.profile.experience.map(exp =>
-  `<li class="experience-item" data-job-title="${exp.jobTitle}" data-company="${exp.company}" data-period="${exp.period}">
-    <span><strong>${exp.jobTitle}</strong> at ${exp.company} (${exp.period})</span>
-    <div class="experience-menu">
-      <span class="dots" onclick="toggleMenu(this)">&#8226;&#8226;&#8226;</span>
-      <div class="dropdown-menu">
-        <button onclick="deleteExperience(this)">Delete</button>
-      </div>
-    </div>
-  </li>`).join("");
-
-          } else {
-            document.getElementById("display-experience").innerHTML = "<li>No experience added yet.</li>";
-          }
+        .then(() => {
+          closeProfileForm();
+          loadProfile(); // ✅ Refresh view after saving
         })
-        .catch(error => console.error(error));
-      closeProfileForm();
+        .catch(console.error);
     }
-    function addExperience() {
-      let company = document.getElementById("company").value;
-      let jobTitle = document.getElementById("job-title").value;
-      let period = document.getElementById("period").value;
-      if (company && jobTitle && period) {
-        let experienceList = document.getElementById("display-experience");
-        if (experienceList.children[0] && experienceList.children[0].innerText === "No experience added yet.") {
-          experienceList.innerHTML = "";
-        }
-        let experienceItem = document.createElement("li");
-        experienceItem.classList.add("experience-item");
-        experienceItem.setAttribute("data-job-title", jobTitle);
-        experienceItem.setAttribute("data-company", company);
-        experienceItem.setAttribute("data-period", period);
-        experienceItem.innerHTML = `<span><strong>${jobTitle}</strong> at ${company} (${period})</span><div class="experience-menu"><span class="dots" onclick="toggleMenu(this)">&#8226;&#8226;&#8226;</span><div class="dropdown-menu"><button onclick="deleteExperience(this)">Delete</button></div></div>`;
-        experienceList.appendChild(experienceItem);
-        closeExperienceForm();
-        updateProfile();
-      }
-    }
-    function toggleMenu(dotsElement) {
-      let menu = dotsElement.nextElementSibling;
-      menu.classList.toggle("show");
-    }
-    function deleteExperience(buttonElement) {
-      let experienceItem = buttonElement.closest(".experience-item");
-      experienceItem.remove();
-      let experienceList = document.getElementById("display-experience");
-      if (experienceList.children.length === 0) {
-        experienceList.innerHTML = "<li>No experience added yet.</li>";
-      }
-      updateProfile();
-    }
-    
-    document.addEventListener("DOMContentLoaded", loadProfile);
-    function getCookie(name) {
-  const value = `; ${document.cookie}`;
-  const parts = value.split(`; ${name}=`);
-  if (parts.length === 2) return parts.pop().split(';').shift();
-  return null;
-}
 
+    function addExperience() {
+      const company = document.getElementById("company").value;
+      const jobTitle = document.getElementById("job-title").value;
+      const period = document.getElementById("period").value;
+
+      if (company && jobTitle && period) {
+        experienceArray.push({ company, jobTitle, period });
+        renderExperience();
+        closeExperienceForm();
+
+        // Clear input fields
+        document.getElementById("company").value = '';
+        document.getElementById("job-title").value = '';
+        document.getElementById("period").value = '';
+      }
+    }
+
+    function deleteExperience(button) {
+      const item = button.closest(".experience-item");
+      const job = item.dataset.jobTitle;
+      const company = item.dataset.company;
+      const period = item.dataset.period;
+
+      experienceArray = experienceArray.filter(exp =>
+        !(exp.jobTitle === job && exp.company === company && exp.period === period)
+      );
+
+      renderExperience();
+    }
+
+    function toggleMenu(dotsElement) {
+      dotsElement.nextElementSibling.classList.toggle("show");
+    }
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      return parts.length === 2 ? parts.pop().split(';').shift() : null;
+    }
+
+    document.addEventListener("DOMContentLoaded", loadProfile);
   </script>
 </body>
 </html>
