@@ -27,12 +27,12 @@
     <h1>User Management</h1>
     <div class="search-container">
       <input type="text" placeholder="Search users..." id="userSearch" onkeyup="searchUsers()">
-      <select id="roleFilter">
+      <select id="roleFilter" onchange="searchUsers()">
         <option value="">All Roles</option>
         <option value="User">User</option>
         <option value="Admin">Admin</option>
       </select>
-      <select id="statusFilter">
+      <select id="statusFilter" onchange="searchUsers()">
         <option value="">All Statuses</option>
         <option value="Active">Active</option>
         <option value="Suspended">Suspended</option>
@@ -51,6 +51,8 @@
       <tbody id="usersTableBody"></tbody>
     </table>
   </div>
+
+  <!-- Edit Modal -->
   <div id="editModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeEditModal()">&times;</span>
@@ -61,7 +63,7 @@
         <label for="editEmail">Email</label>
         <input type="email" id="editEmail" name="email">
         <div id="editRolesContainer">
-          <span>Roles</span>
+          <span>Roles</span><br>
           <label><input type="checkbox" name="roles" value="User"> User</label>
           <label><input type="checkbox" name="roles" value="Admin"> Admin</label>
         </div>
@@ -74,134 +76,151 @@
       </form>
     </div>
   </div>
+
   <script>
     function searchUsers() {
-      const input = document.getElementById("userSearch");
+      const searchText = document.getElementById("userSearch").value.toLowerCase();
       const roleFilter = document.getElementById("roleFilter").value;
       const statusFilter = document.getElementById("statusFilter").value;
-      const filter = input.value.toLowerCase();
-      const table = document.getElementById("usersTable");
-      const trs = table.getElementsByTagName("tr");
-      for (let i = 1; i < trs.length; i++) {
-        let visible = false;
-        const tds = trs[i].getElementsByTagName("td");
-        const role = tds[2].textContent;
-        const status = tds[3].textContent;
-        if ((roleFilter === "" || role === roleFilter) && (statusFilter === "" || status === statusFilter)) {
-          for (let j = 0; j < tds.length; j++) {
-            if (tds[j].textContent.toLowerCase().includes(filter)) {
-              visible = true;
-              break;
-            }
-          }
-        }
-        trs[i].style.display = visible ? "" : "none";
-      }
+      const rows = document.querySelectorAll("#usersTable tbody tr");
+
+      rows.forEach(row => {
+        const username = row.children[0].textContent.toLowerCase();
+        const email = row.children[1].textContent.toLowerCase();
+        const role = row.children[2].textContent.trim();
+        const status = row.children[3].textContent.trim();
+
+        const matchesSearch = username.includes(searchText) || email.includes(searchText);
+        const matchesRole = !roleFilter || role.includes(roleFilter);
+        const matchesStatus = !statusFilter || status === statusFilter;
+
+        row.style.display = (matchesSearch && matchesRole && matchesStatus) ? "" : "none";
+      });
     }
+
     function openEditModal(username, email, verified, rolesMap, suspended) {
-      const modal = document.getElementById("editModal");
-      modal.style.display = "block";
+      document.getElementById("editModal").style.display = "block";
       document.getElementById("editUsername").value = username;
       document.getElementById("editEmail").value = email;
       document.getElementById("editVerified").value = verified ? "true" : "false";
+
       const checkboxes = document.querySelectorAll('input[name="roles"]');
       checkboxes.forEach(cb => cb.checked = false);
-      if (rolesMap) {
-        const userRoles = Object.keys(Object.fromEntries(rolesMap));
-        checkboxes.forEach(cb => { if (userRoles.includes(cb.value)) { cb.checked = true; } });
+
+      if (rolesMap && typeof rolesMap === "object") {
+        const roleNames = Object.keys(Object.fromEntries(rolesMap));
+        checkboxes.forEach(cb => {
+          if (roleNames.includes(cb.value)) cb.checked = true;
+        });
       }
     }
+
     function closeEditModal() {
       document.getElementById("editModal").style.display = "none";
     }
+
     function toggleUserStatus(username, currentStatus) {
       const form = document.createElement('form');
       form.method = 'POST';
       form.action = '/admin/users/toggle-status';
+
       const usernameInput = document.createElement('input');
       usernameInput.type = 'hidden';
       usernameInput.name = 'username';
       usernameInput.value = username;
       form.appendChild(usernameInput);
+
       const statusInput = document.createElement('input');
       statusInput.type = 'hidden';
       statusInput.name = 'currentStatus';
       statusInput.value = currentStatus;
       form.appendChild(statusInput);
+
       document.body.appendChild(form);
       form.submit();
     }
+
     async function deleteUser(username) {
       if (confirm("Are you sure you want to delete " + username + "?")) {
         try {
-          const response = await fetch('/admin/users/delete', {
+          const res = await fetch('/admin/users/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username })
           });
-          if (!response.ok) {
-            const errorData = await response.json();
-            alert("Error: " + errorData.message);
-            return;
-          }
-          const result = await response.json();
+
+          const result = await res.json();
+          if (!res.ok) return alert("Error: " + result.message);
           alert(result.message);
           loadUsers();
-        } catch (error) {
-          alert("Error deleting user");
+        } catch (err) {
+          alert("Failed to delete user.");
         }
       }
     }
-    document.getElementById("editUserForm").addEventListener("submit", function (e) {
-      e.preventDefault();
-      this.submit();
-    });
+
     async function loadUsers() {
       try {
-        const response = await fetch('/admin/users/latest');
-        if (!response.ok) {
-          return;
-        }
-        const users = await response.json();
+        const res = await fetch('/admin/users/latest');
+        if (!res.ok) return;
+
+        const users = await res.json();
         const tbody = document.getElementById("usersTableBody");
         tbody.innerHTML = "";
+
         users.forEach(user => {
           const tr = document.createElement("tr");
+
           const usernameTd = document.createElement("td");
           usernameTd.textContent = user.username;
           tr.appendChild(usernameTd);
+
           const emailTd = document.createElement("td");
           emailTd.textContent = user.email;
           tr.appendChild(emailTd);
+
           const roleTd = document.createElement("td");
-          let roles = [];
-          if (user.roles && typeof user.roles === "object") {
-            roles = Object.entries(user.roles);
-          }
-          roleTd.textContent = roles.length ? roles.map(r => r[0]).join(", ") : "User";
+          const roles = user.roles ? Object.keys(user.roles).join(", ") : "User";
+          roleTd.textContent = roles;
           tr.appendChild(roleTd);
+
           const statusTd = document.createElement("td");
           statusTd.textContent = user.suspended ? "Suspended" : "Active";
           tr.appendChild(statusTd);
+
           const actionsTd = document.createElement("td");
           actionsTd.className = "actions";
+
           const editBtn = document.createElement("button");
           editBtn.textContent = "Edit";
           editBtn.onclick = () => openEditModal(user.username, user.email, user.verified, user.roles, user.suspended);
           actionsTd.appendChild(editBtn);
+
           const toggleBtn = document.createElement("button");
           toggleBtn.textContent = user.suspended ? "Unsuspend" : "Suspend";
           toggleBtn.onclick = () => toggleUserStatus(user.username, user.suspended ? "Suspended" : "Active");
           actionsTd.appendChild(toggleBtn);
+
           const deleteBtn = document.createElement("button");
           deleteBtn.textContent = "Delete";
           deleteBtn.onclick = () => deleteUser(user.username);
           actionsTd.appendChild(deleteBtn);
+
           tr.appendChild(actionsTd);
           tbody.appendChild(tr);
         });
-      } catch (error) {}
+
+        searchUsers(); // Apply filters if already typed
+      } catch (err) {
+        console.error("Failed to load users", err);
+      }
     }
+
+    document.getElementById("editUserForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      this.submit();
+    });
+
     document.addEventListener("DOMContentLoaded", loadUsers);
   </script>
 </body>
