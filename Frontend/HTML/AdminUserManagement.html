@@ -57,21 +57,28 @@
     <div class="modal-content">
       <span class="close" onclick="closeEditModal()">&times;</span>
       <h2>Edit User</h2>
-      <form id="editUserForm" action="/admin/users/edit" method="POST">
+      <form id="editUserForm" method="POST" action="/admin/users/edit">
+        <!-- Hidden original username -->
+        <input type="hidden" name="oldUsername" id="oldUsername">
+        
         <label for="editUsername">Username</label>
-        <input type="text" id="editUsername" name="username" readonly>
+        <input type="text" id="editUsername" name="username">
+
         <label for="editEmail">Email</label>
-        <input type="email" id="editEmail" name="email">
+        <input type="email" name="email" id="editEmail">
+
         <div id="editRolesContainer">
           <span>Roles</span><br>
           <label><input type="checkbox" name="roles" value="User"> User</label>
           <label><input type="checkbox" name="roles" value="Admin"> Admin</label>
         </div>
+
         <label for="editVerified">Verified</label>
-        <select id="editVerified" name="verified">
+        <select name="verified" id="editVerified">
           <option value="true">Yes</option>
           <option value="false">No</option>
         </select>
+
         <button type="submit">Save Changes</button>
       </form>
     </div>
@@ -101,6 +108,7 @@
     function openEditModal(username, email, verified, rolesMap, suspended) {
       document.getElementById("editModal").style.display = "block";
       document.getElementById("editUsername").value = username;
+      document.getElementById("oldUsername").value = username;
       document.getElementById("editEmail").value = email;
       document.getElementById("editVerified").value = verified ? "true" : "false";
 
@@ -124,18 +132,10 @@
       form.method = 'POST';
       form.action = '/admin/users/toggle-status';
 
-      const usernameInput = document.createElement('input');
-      usernameInput.type = 'hidden';
-      usernameInput.name = 'username';
-      usernameInput.value = username;
-      form.appendChild(usernameInput);
-
-      const statusInput = document.createElement('input');
-      statusInput.type = 'hidden';
-      statusInput.name = 'currentStatus';
-      statusInput.value = currentStatus;
-      form.appendChild(statusInput);
-
+      form.innerHTML = `
+        <input type="hidden" name="username" value="${username}">
+        <input type="hidden" name="currentStatus" value="${currentStatus}">
+      `;
       document.body.appendChild(form);
       form.submit();
     }
@@ -171,46 +171,23 @@
         users.forEach(user => {
           const tr = document.createElement("tr");
 
-          const usernameTd = document.createElement("td");
-          usernameTd.textContent = user.username;
-          tr.appendChild(usernameTd);
-
-          const emailTd = document.createElement("td");
-          emailTd.textContent = user.email;
-          tr.appendChild(emailTd);
-
-          const roleTd = document.createElement("td");
-          const roles = user.roles ? Object.keys(user.roles).join(", ") : "User";
-          roleTd.textContent = roles;
-          tr.appendChild(roleTd);
-
-          const statusTd = document.createElement("td");
-          statusTd.textContent = user.suspended ? "Suspended" : "Active";
-          tr.appendChild(statusTd);
-
-          const actionsTd = document.createElement("td");
-          actionsTd.className = "actions";
-
-          const editBtn = document.createElement("button");
-          editBtn.textContent = "Edit";
-          editBtn.onclick = () => openEditModal(user.username, user.email, user.verified, user.roles, user.suspended);
-          actionsTd.appendChild(editBtn);
-
-          const toggleBtn = document.createElement("button");
-          toggleBtn.textContent = user.suspended ? "Unsuspend" : "Suspend";
-          toggleBtn.onclick = () => toggleUserStatus(user.username, user.suspended ? "Suspended" : "Active");
-          actionsTd.appendChild(toggleBtn);
-
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Delete";
-          deleteBtn.onclick = () => deleteUser(user.username);
-          actionsTd.appendChild(deleteBtn);
-
-          tr.appendChild(actionsTd);
+          tr.innerHTML = `
+            <td>${user.username}</td>
+            <td>${user.email}</td>
+            <td>${Object.keys(user.roles || {}).join(', ') || 'User'}</td>
+            <td>${user.suspended ? 'Suspended' : 'Active'}</td>
+            <td class="actions">
+              <button onclick='openEditModal("${user.username}", "${user.email}", ${user.verified}, ${JSON.stringify(user.roles)}, ${user.suspended})'>Edit</button>
+              <button onclick='toggleUserStatus("${user.username}", "${user.suspended ? 'Suspended' : 'Active'}")'>
+                ${user.suspended ? 'Unsuspend' : 'Suspend'}
+              </button>
+              <button onclick='deleteUser("${user.username}")'>Delete</button>
+            </td>
+          `;
           tbody.appendChild(tr);
         });
 
-        searchUsers(); // Apply filters if already typed
+        searchUsers(); // Apply current filters
       } catch (err) {
         console.error("Failed to load users", err);
       }

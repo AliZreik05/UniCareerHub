@@ -1,5 +1,5 @@
 const User = require('../model/User');
-const {logEvents} = require('../middleware/logEvents')
+const { logEvents } = require('../middleware/logEvents');
 
 const getAllUsers = async (req, res) => {
   try {
@@ -51,38 +51,48 @@ const toggleUserStatus = async (req, res) => {
     return res.redirect('/admin/users?error=' + encodeURIComponent("Error updating user status"));
   }
 };
-const updateUser = async (req, res) => {
-    try {
-      let { username, email, verified, roles } = req.body;
-      if (!username) {
-        return res.redirect('/admin/users?error=' + encodeURIComponent("Username is required"));
-      }
-      const updateData = {};
-      if (email) updateData.email = email;
-      if (typeof verified === "boolean") updateData.verified = verified;
-      if (!Array.isArray(roles)) {
-        roles = [roles];
-      }
-      const roleMap = {};
-      roles.forEach(role => {
-        if (role === "Admin") {
-          roleMap[role] = 5150;
-        } else if (role === "User") {
-          roleMap[role] = 2001;
-        }
-      });
-      updateData.roles = roleMap;
-      const updatedUser = await User.findOneAndUpdate({ username }, updateData, { new: true });
-      if (!updatedUser) {
-        return res.redirect('/admin/users?error=' + encodeURIComponent("User not found"));
-      }
-      return res.redirect('/admin/users?success=' + encodeURIComponent("User updated successfully"));
-    } catch (error) {
-      logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
-      console.error("Error updating user:", error);
-      return res.redirect('/admin/users?error=' + encodeURIComponent("Server error updating user"));
-    }
-  };
-  
 
-module.exports = { getAllUsers, removeUser, toggleUserStatus, updateUser };
+const updateUser = async (req, res) => {
+  try {
+    let { oldUsername, username, email, verified, roles } = req.body;
+    if (!oldUsername || !username) {
+      return res.redirect('/admin/users?error=' + encodeURIComponent("Old and new username are required"));
+    }
+
+    const updateData = { username };
+    if (email) updateData.email = email;
+    updateData.verified = verified === 'true';
+
+    if (!Array.isArray(roles)) {
+      roles = [roles];
+    }
+    const roleMap = {};
+    roles.forEach(role => {
+      if (role === "Admin") roleMap[role] = 5150;
+      else if (role === "User") roleMap[role] = 2001;
+    });
+    updateData.roles = roleMap;
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: oldUsername },
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.redirect('/admin/users?error=' + encodeURIComponent("User not found"));
+    }
+    return res.redirect('/admin/users?success=' + encodeURIComponent("User updated successfully"));
+  } catch (error) {
+    logEvents(`${error.name}: ${error.message}`, 'errLog.txt');
+    console.error("Error updating user:", error);
+    return res.redirect('/admin/users?error=' + encodeURIComponent("Server error updating user"));
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  removeUser,
+  toggleUserStatus,
+  updateUser
+};
