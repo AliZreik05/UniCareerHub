@@ -62,7 +62,7 @@
         <textarea id="description" placeholder="Tell something about yourself..."></textarea>
         <label for="courses">Courses Taken (comma separated):</label>
         <textarea id="courses" placeholder="Enter Courses"></textarea>
-        <button type="button" class="confirm-btn" onclick="updateProfile()">Save</button>
+        <button type="submit" class = "confirm-btn">Save</button>
       </form>
     </div>
   </div>
@@ -221,8 +221,14 @@
       const parts = value.split(`; ${name}=`);
       return parts.length === 2 ? parts.pop().split(';').shift() : null;
     }
-
+    
     document.addEventListener("DOMContentLoaded", loadProfile);
+    document.getElementById('edit-form').addEventListener('submit',
+      function(e){
+        e.preventDefault();
+        updateProfile();
+      }
+    )
   </script>
 </body>
 </html>
